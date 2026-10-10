@@ -35,20 +35,21 @@ function PartyMember({ member, onPokemon }) {
   return <button className="life-party" onClick={() => onPokemon(member.id)}>
     <img src={sprite(member.id, member.shiny)} alt=""/>
     <span><b>{pokemonName(member.id)} {member.locked && <Lock size={11} aria-label="전설 · 파티 고정"/>}</b>
-      <small>Lv.{xpLevel(member)} · 친밀도 {member.affection}{member.origin === 'partner' ? ' · 첫 파트너' : ''}</small></span>
+      <small>Lv.{xpLevel(member)} · 친밀도 {member.affection}{member.origin === 'partner' ? ' · 첫 파트너' : ''}</small><progress className="party-xp" max="25" value={xpLevel(member)>=100?25:member.xp%25} aria-label={`${pokemonName(member.id)} 다음 레벨 경험치`}/></span>
   </button>;
 }
 
-export function LifeSidebar({ life, onPokemon }) {
+export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
   const hometown = TOWNS.find(t => t.id === life.hometown), town = TOWNS.find(t => t.id === life.town);
   const region = REGIONS.find(r => r.id === town.map), state = life.world.regions[town.map];
   const conditions = life.world.conditions;
   const rel = life.relationship, disposition = dominantDisposition(life);
   const cast = Object.entries(life.cast).filter(([id, p]) => id !== 'rival' || p.met);
-  return <aside className="life-sidebar">
+  return <aside className={`life-sidebar sidebar-${side}`} aria-label={side === 'trainer' ? '트레이너 정보' : '파티와 세계 정보'}>
+    {side === 'trainer' ? <>
     <section className="dex-panel passport">
-      <div className="dex-panel-title">TRAINER PASS <span>●</span></div>
-      <h2>{life.name}<small>{life.age}세</small></h2>
+      <div className="dex-panel-title">TRAINER LICENSE <span>● 등록됨</span></div>
+      <div className="trainer-identity"><img className="pixel" src={asset(life.gender === 'female' ? 'assets/trainers/leaf.png' : 'assets/trainers/red.png')} alt="트레이너"/><div><small>포켓몬 트레이너</small><h2>{life.name}</h2><span>{life.age}세 · {GENDERS[life.gender]}</span></div></div>
       <dl>
         <dt>성별</dt><dd>{GENDERS[life.gender]}</dd>
         <dt>출신 지방</dt><dd>{hometown.region} · {hometown.name}</dd>
@@ -63,11 +64,27 @@ export function LifeSidebar({ life, onPokemon }) {
       <div className="money-display">소지금 <b>{life.money.toLocaleString()} P</b></div>
       {life.ledger && <small className="ledger">작년 수입 {life.ledger.income.toLocaleString()}P · 지출 {life.ledger.expense.toLocaleString()}P</small>}
     </section>
-
     <section className="dex-panel"><h3>트레이너 상태</h3>
       {Object.entries(STATS).map(([key, label]) => <Meter key={key} label={label} value={life.stats[key]}/>)}
     </section>
-
+    <section className="dex-panel cast-panel"><h3>인연</h3>
+      {cast.map(([id, person]) => <div className="cast-row" key={id}>
+        {id === 'rival' && <img className="pixel" src={asset('assets/trainers/rival.png')} alt=""/>}
+        <span><b>{person.name}</b> <small>{person.role} · {PATHS[person.path] || ''}{id === 'family' && person.path !== 'gone' ? ` · 건강 ${person.health}` : ''}</small></span>
+        {person.affinity !== undefined && <meter min="0" max="100" value={person.affinity} aria-label={`${person.name} 관계`}/>}
+      </div>)}
+      <p>{rel.status === 'single' ? RELATIONSHIP.single : `${rel.name} · ${RELATIONSHIP[rel.status]} · 신뢰 ${rel.trust}`}<br/>자녀 {rel.children}명{rel.marriedAt ? ` · ${rel.marriedAt}세에 결혼` : ''}</p>
+    </section>
+    </> : <>
+    <section className="dex-panel"><h3>포켓몬 파티 <small>{life.party.length}/{PARTY_LIMIT}</small></h3>
+      {life.party.length ? life.party.map(member => <PartyMember key={member.uid} member={member} onPokemon={onPokemon}/>) : <p>6세에 첫 파트너를 만납니다.</p>}
+      <div className="party-empty-slots" aria-label="남은 파티 자리">{Array.from({length:Math.max(0,PARTY_LIMIT-life.party.length)},(_,i)=><span key={i}>＋ 빈 슬롯</span>)}</div><details className="pc-box"><summary>PC 박스 · {life.box.length}마리</summary>
+        {life.box.length ? <div className="box-grid">{life.box.map(member =>
+          <button key={member.uid} onClick={() => onPokemon(member.id)} title={`${pokemonName(member.id)} Lv.${xpLevel(member)}`}><img className="pixel" src={sprite(member.id, member.shiny)} alt={pokemonName(member.id)}/></button>)}</div>
+          : <p>아직 맡긴 포켓몬이 없다.</p>}
+      </details>
+      <small>6마리를 넘으면 성향에 따라 스스로 파티를 다시 짠다. 전설의 포켓몬은 언제나 파티에 둔다.</small>
+    </section>
     <section className="dex-panel world-panel"><h3>{region.name}지방 정세</h3>
       {Object.entries(WORLD_KEYS).map(([key, label]) => <Meter key={key} label={label} value={state[key]} detail={levelLabel(state[key])}/>)}
       <ul className="condition-list">
@@ -79,31 +96,12 @@ export function LifeSidebar({ life, onPokemon }) {
       </ul>
       <small>세계는 매년 스스로 변한다. 경기는 수입을, 치안과 생태는 찾아오는 사건을 바꾼다.</small>
     </section>
-
-    <section className="dex-panel cast-panel"><h3>인연</h3>
-      {cast.map(([id, person]) => <div className="cast-row" key={id}>
-        {id === 'rival' && <img className="pixel" src={asset('assets/trainers/rival.png')} alt=""/>}
-        <span><b>{person.name}</b> <small>{person.role} · {PATHS[person.path] || ''}{id === 'family' && person.path !== 'gone' ? ` · 건강 ${person.health}` : ''}</small></span>
-        {person.affinity !== undefined && <meter min="0" max="100" value={person.affinity} aria-label={`${person.name} 관계`}/>}
-      </div>)}
-      <p>{rel.status === 'single' ? RELATIONSHIP.single : `${rel.name} · ${RELATIONSHIP[rel.status]} · 신뢰 ${rel.trust}`}<br/>자녀 {rel.children}명{rel.marriedAt ? ` · ${rel.marriedAt}세에 결혼` : ''}</p>
-    </section>
-
-    <section className="dex-panel"><h3>포켓몬 파티 <small>{life.party.length}/{PARTY_LIMIT}</small></h3>
-      {life.party.length ? life.party.map(member => <PartyMember key={member.uid} member={member} onPokemon={onPokemon}/>) : <p>6세에 첫 파트너를 만납니다.</p>}
-      <details className="pc-box"><summary>PC 박스 · {life.box.length}마리</summary>
-        {life.box.length ? <div className="box-grid">{life.box.map(member =>
-          <button key={member.uid} onClick={() => onPokemon(member.id)} title={`${pokemonName(member.id)} Lv.${xpLevel(member)}`}><img className="pixel" src={sprite(member.id, member.shiny)} alt={pokemonName(member.id)}/></button>)}</div>
-          : <p>아직 맡긴 포켓몬이 없다.</p>}
-      </details>
-      <small>6마리를 넘으면 성향에 따라 스스로 파티를 다시 짠다. 전설의 포켓몬은 언제나 파티에 둔다.</small>
-    </section>
-
     <section className="dex-panel"><h3>장비와 리그</h3>
       {Object.entries(MECHANICS).map(([id, m]) => <p key={id}>{life.game.gear.includes(id) ? '●' : '○'} {m.name}</p>)}
       <p>획득 배지 {badgeCount(life)}개 · 배틀 승리 {life.game.wins}회 · 몬스터볼 {life.game.balls}개</p>
       <small>배틀과 장비 해금은 사건의 선택 결과로 진행된다.</small>
     </section>
+    </>}
   </aside>;
 }
 
