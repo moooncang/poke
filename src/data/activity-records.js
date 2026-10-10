@@ -1,3 +1,4 @@
+import { EVENTS, WORK_EVENTS } from './world.js';
 const RECORDS = {
   wisdom: [
     ['관찰 노트 정리','포켓몬의 출현 장소와 시간대를 도감 기록과 비교했다.'],
@@ -52,4 +53,16 @@ export function activityRecord(state, town) {
   const [title, body] = RECORDS[mode][step % RECORDS[mode].length];
   if (activity) activity.step += 1;
   return {kind:'life',automatic:true,title,body:`${town.name}. ${step===0&&activity ? `「${activity.label}」 이후, ${activity.failed?'지난 결과를 검토하며 다음 활동을 준비했다. ':''}`:''}${body}`,effects:{},...(activity?{parentId:activity.parentId}:{})};
+}
+
+// Small slices of life (childhood memories, workplace moments) used between decisions. Each is shown once.
+export function vignetteRecord(state, town, roll) {
+  const work = state.career && !state.work?.retired
+    ? WORK_EVENTS[state.career].map(([title, body, effects], i) => ({ id: `work-${state.career}-${i}`, title, body, effects }))
+    : [];
+  const pool = [...EVENTS.filter(e => state.age >= e.min && state.age <= e.max), ...work].filter(e => !state.used.includes(e.id));
+  if (!pool.length) return null;
+  const event = pool[Math.floor(roll() * pool.length)];
+  state.used.push(event.id);
+  return { kind: work.includes(event) ? 'work' : 'life', automatic: true, title: event.title, body: event.body.replaceAll('{town}', town.name), effects: event.effects, sourceId: event.id };
 }

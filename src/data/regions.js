@@ -1,14 +1,14 @@
 // Canon locations and species; travel costs and field layouts are original game rules.
 export const REGIONS = [
- {id:'kanto',name:'관동',color:'#63c9a7',theme:'숲과 해안',legend:[144,145,146,150,151],starters:[1,4,7],special:'포켓몬 리그'},
- {id:'johto',name:'성도',color:'#d9b86c',theme:'유적과 전통',legend:[243,244,245,249,250,251],starters:[152,155,158],special:'유적 조사'},
- {id:'hoenn',name:'호연',color:'#5ebde0',theme:'바다와 화산',legend:[377,378,379,380,381,382,383,384],starters:[252,255,258],special:'메가진화'},
- {id:'sinnoh',name:'신오',color:'#a5a9ee',theme:'설산과 신화',legend:[480,481,482,483,484,487,488],starters:[387,390,393],special:'지하대동굴'},
- {id:'unova',name:'하나',color:'#e3a278',theme:'도시와 자연',legend:[638,639,640,641,642,643,644,645,646],starters:[495,498,501],special:'배틀 서브웨이'},
- {id:'kalos',name:'칼로스',color:'#e799ca',theme:'도시와 고성',legend:[716,717,718],starters:[650,653,656],special:'메가진화'},
- {id:'alola',name:'알로라',color:'#e4cd71',theme:'열대의 섬',legend:[785,786,787,788,791,792],starters:[722,725,728],special:'Z기술'},
- {id:'galar',name:'가라르',color:'#eb809c',theme:'와일드에리어',legend:[888,889,890],starters:[810,813,816],special:'다이맥스'},
- {id:'paldea',name:'팔데아',color:'#b5a3ff',theme:'오픈 필드',legend:[1007,1008,1001,1002,1003,1004],starters:[906,909,912],special:'테라스탈'},
+ {id:'kanto',villain:'로켓단',name:'관동',color:'#63c9a7',theme:'숲과 해안',legend:[144,145,146,150,151],starters:[1,4,7],special:'포켓몬 리그'},
+ {id:'johto',villain:'로켓단 잔당',name:'성도',color:'#d9b86c',theme:'유적과 전통',legend:[243,244,245,249,250,251],starters:[152,155,158],special:'유적 조사'},
+ {id:'hoenn',villain:'마그마단',name:'호연',color:'#5ebde0',theme:'바다와 화산',legend:[377,378,379,380,381,382,383,384],starters:[252,255,258],special:'메가진화'},
+ {id:'sinnoh',villain:'갤럭시단',name:'신오',color:'#a5a9ee',theme:'설산과 신화',legend:[480,481,482,483,484,487,488],starters:[387,390,393],special:'지하대동굴'},
+ {id:'unova',villain:'플라스마단',name:'하나',color:'#e3a278',theme:'도시와 자연',legend:[638,639,640,641,642,643,644,645,646],starters:[495,498,501],special:'배틀 서브웨이'},
+ {id:'kalos',villain:'플레어단',name:'칼로스',color:'#e799ca',theme:'도시와 고성',legend:[716,717,718],starters:[650,653,656],special:'메가진화'},
+ {id:'alola',villain:'스컬단',name:'알로라',color:'#e4cd71',theme:'열대의 섬',legend:[785,786,787,788,791,792],starters:[722,725,728],special:'Z기술'},
+ {id:'galar',villain:'에일단 과격파',name:'가라르',color:'#eb809c',theme:'와일드에리어',legend:[888,889,890],starters:[810,813,816],special:'다이맥스'},
+ {id:'paldea',villain:'밀렵 조직',name:'팔데아',color:'#b5a3ff',theme:'오픈 필드',legend:[1007,1008,1001,1002,1003,1004],starters:[906,909,912],special:'테라스탈'},
 ];
 const rows = [
  ['johto','new-bark','연두마을','숲',[161,163,179,187,152]],['johto','violet','도라지시티','산',[163,177,194,216,155]],['johto','goldenrod','금빛시티','도시',[133,175,183,209,158]],['johto','ecruteak','인주시티','산',[92,200,234,163,215]],

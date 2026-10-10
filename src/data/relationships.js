@@ -1,3 +1,4 @@
+import {josa} from '../sim/text.js';
 const stories=[
  ['첫 만남','지역 포켓몬 행사에서 활동을 함께한 사람이 다음 만남을 제안했다.','둘이 다시 만나기','친구로 지내기','dating'],
  ['서로 다른 생활 방식','상대는 안정적인 생활을 원하지만 당신의 일정에는 여행이 많다.','함께 지킬 일정을 정한다','서로의 독립적인 시간을 보장한다','schedule'],
@@ -18,16 +19,23 @@ const stories=[
  ['아이의 첫 파트너','아이가 첫 포켓몬과 함께할 준비를 하고 있다.','함께 연구소를 방문한다','돌봄 연습부터 함께 한다','child-partner'],
  ['노후의 거주지','두 사람의 일하는 시간이 줄어들었다. 앞으로 살 곳을 이야기한다.','지금의 이웃들과 계속 산다','가족 가까이에서 살 계획을 세운다','retirement'],
 ];
+// The next chapter index, skipping the child-partner chapter for couples without children. Pure.
+function nextChapter(s){
+ const rel=s.relationship;let index=rel.chapter||0;
+ if(index===16&&!rel.children)index=17;
+ if(s.age<18||index>=stories.length||(index===17&&s.age<62))return null;
+ return index;
+}
+export const romanceAvailable=s=>nextChapter(s)!==null;
 export function relationshipEvent(s){
- const rel=s.relationship;if(s.age<18)return null;
- const index=rel.chapter||0;if(index>=stories.length||(index===17&&s.age<62))return null;
- if(index===16&&!rel.children){rel.chapter++;return relationshipEvent(s);}
+ const rel=s.relationship,index=nextChapter(s);if(index===null)return null;
+ rel.chapter=index;
  const [title,body,a,b,key]=stories[index];
- const choice=(label,variant)=>({label,description:variant?'대화와 합의 · 유대 +4':'관계에 투자 · 유대 +6',relationship:{key,variant},effects:{bond:variant?4:6,joy:3},outcome:`${rel.name||'상대'}와 이야기한 뒤 ${label}로 합의했다.`});
+ const choice=(label,variant)=>({label,tone:'caring',description:variant?'대화와 합의 · 유대 +4':'관계에 투자 · 유대 +6',relationship:{key,variant},effects:{bond:variant?4:6,joy:3},outcome:`${josa(rel.name||'상대','과','와')} 이야기한 뒤 ${josa(label,'으로','로')} 합의했다.`});
  const options=[choice(a,0),choice(b,1)];
- if(index>0&&index<7)options.push({label:'교제를 끝내고 각자의 길로',description:'관계 종료 · 이후 새로운 만남 가능',relationship:{key:'separate'},effects:{joy:-3,wisdom:4},outcome:'대화 끝에 관계를 정리했다. 서로의 결정을 존중하기로 했다.'});
- if(index===0)options.push({label:'지금은 만남을 원하지 않는다',description:'혼자 지내기 · 다음 만남은 나중에',relationship:{key:'decline'},effects:{wisdom:2},outcome:'제안을 정중히 거절하고 현재 생활에 집중한다.'});
- return {kind:'choice',title,body:`${rel.name||'지역 연구원 유진'}${index?'와의 생활. ':'. '}${body}`,choices:options};
+ if(index>0&&index<7)options.push({label:'교제를 끝내고 각자의 길로',tone:'pragmatic',description:'관계 종료 · 이후 새로운 만남 가능',relationship:{key:'separate'},effects:{joy:-3,wisdom:4},outcome:'대화 끝에 관계를 정리했다. 서로의 결정을 존중하기로 했다.'});
+ if(index===0)options.push({label:'지금은 만남을 원하지 않는다',tone:'easygoing',description:'혼자 지내기 · 다음 만남은 나중에',relationship:{key:'decline'},effects:{wisdom:2},outcome:'제안을 정중히 거절하고 현재 생활에 집중한다.'});
+ return {kind:'choice',title,body:`${index?`${josa(rel.name,'과','와')}의 생활. `:`${rel.name}. `}${body}`,choices:options};
 }
 export function resolveRelationship(s,action){const r=s.relationship;
  if(action.key==='decline')return;
