@@ -154,7 +154,7 @@ export default function App() {
           </button>)}
           <span className="nav-life-id">LIFE № {String(life.seed).replace(/[^0-9a-z]/gi, '').slice(-6).toUpperCase() || '000001'}</span>
         </nav>
-        <div className="main-grid"><main>
+        <div className="main-grid"><LifeSidebar life={life} onPokemon={setDetail} side="trainer"/><main>
           {tab === 'story' && <>
             <section className="chapter-header">
               <div><span className="eyebrow">CHAPTER {String(chapterOf(life.age)).padStart(2, '0')}</span><h2>{stageOf(life.age)}<span>{life.age}세</span></h2>
@@ -186,7 +186,7 @@ export default function App() {
               <span className="memory-age">{entry.age}살의 {SEASONS[entry.season]}</span><StoryCard entry={entry} life={life} onMemory={keep} onReplay={replayEvent} compact/></div>)}
             {life.memories.length === 0 && <div className="empty-state"><Bookmark/><h3>저장된 사건이 없습니다</h3><p>사건 기록에 있는 책갈피를 눌러 주세요.</p></div>}
           </section>}
-        </main><LifeSidebar life={life} onPokemon={setDetail}/></div>
+        </main><LifeSidebar life={life} onPokemon={setDetail} side="world"/></div>
         <footer className="site-footer"><span><PokeBall/>POKÉLIFE / FAN-MADE SIMULATION</span><button onClick={() => openModal('about')}>게임 정보 <ArrowUpRight size={12}/></button><small>UNOFFICIAL FAN PROJECT · POKÉMON © NINTENDO / CREATURES / GAME FREAK</small></footer>
       </div>
     </div>
