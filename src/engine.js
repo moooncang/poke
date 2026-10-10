@@ -1,3 +1,4 @@
+import { activityRecord } from './data/activity-records.js';
 import { BACKGROUNDS, ENVIRONMENTS, seasonalEvent, resolveSimulation } from './data/life-events.js';
 import { relationshipEvent, resolveRelationship } from './data/relationships.js';
 import { MEGA, maxHP, trainParty } from './game.js';
@@ -38,6 +39,10 @@ function remember(state, entry) {
   if (!state.memories.includes(entry.id)) state.memories.push(entry.id);
 }
 function log(state, event) {
+  if (event.choices && recordsSinceDecision(state) < recordGap(state)) {
+    state.scheduledEvent = event;
+    return log(state, activityRecord(state, townOf(state)));
+  }
   const entry = { age: state.age, season: state.season ?? 0,
     town: state.town, partnerId: state.party[0]?.id || null, kind: 'life', effects: {}, ...event, sourceId: event.id || null,
     id: `${state.seed}-${state.age}-${state.log.length}` };
@@ -78,8 +83,22 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   return state;
 }
 
+function recordsSinceDecision(state) {
+  const index = state.log.findLastIndex(e => e.choices);
+  return index < 0 ? state.log.length : state.log.length - index - 1;
+}
+function recordGap(state) {
+  return 4 + hashSeed(`${state.seed}-gap-${state.log.filter(e=>e.choices).length}`) % 4;
+}
 export function advance(input) {
   if(input.ended||input.pending||input.encounter||input.game?.battle)return input;
+  if (input.scheduledEvent) {
+    const s = structuredClone(input);
+    if (recordsSinceDecision(s) < recordGap(s)) return log(s, activityRecord(s, townOf(s)));
+    const event = s.scheduledEvent;
+    delete s.scheduledEvent;
+    return log(s, event);
+  }
   return advanceYear(input);
 }
 function advanceYear(input) {
@@ -236,19 +255,10 @@ export function choose(input, index) {
   s.pending = null;
   if(choice.simulation){const message=resolveSimulation(s,choice);const current=s.log.find(e=>e.id===entry.id);current.resolution.text+=' '+message;s.party.forEach(p=>p.hp=maxHP(p));}
 
-  const route = BRANCH_EVENTS.find(event => event.id === entry.sourceId);
-  if (choice.flag && !entry.followup && route && !route.requires) {
-    return log(s, {
-      kind: 'choice', followup: true, parentId: entry.id,
-      title: `${entry.title} · 실행 방식`,
-      body: `${choice.label}을(를) 선택했습니다. 활동을 어떻게 진행할지 결정합니다.`,
-      choices: [
-        { label: '파트너 포켓몬과 직접 진행', description: '용기 +4 · 비용 없음', effects: { courage: 4 }, flag: `${choice.flag}-solo`, outcome: '파트너와 직접 활동을 진행했다.' },
-        { label: '전문가의 도움을 받기', description: '300P · 지혜 +10', cost: 300, effects: { money: -300, wisdom: 10 }, flag: `${choice.flag}-expert`, outcome: '전문가의 조언을 받아 활동에 필요한 지식을 배웠다.' },
-        { label: '지역 트레이너들과 협력', description: '유대 +5 · 활동비 100P', effects: { bond: 5, money: 100 }, flag: `${choice.flag}-community`, outcome: '지역 트레이너들과 공동 활동을 마치고 활동비를 받았다.' },
-      ],
-    });
-  }
+  const mode = choice.education && ['school','home','academy','study'].includes(choice.education) ? 'wisdom'
+    : choice.relationship ? 'bond'
+    : Object.keys(STAT_LABELS).sort((a,b)=>(choice.effects?.[b]||0)-(choice.effects?.[a]||0))[0];
+  s.activity = { label: choice.label, mode, parentId: entry.id, step: 0, failed: check?.success === false };
 
   return s;
 }
@@ -298,6 +308,8 @@ export function parseSave(raw) {
       || !s.people.every(p => NPCS[p.id] && Number.isInteger(p.age) && p.age <= s.age)
       || (s.pending && !s.log.some(e => e.id === s.pending && Array.isArray(e.choices)))
       || (s.encounter && (!s.log.some(e => e.id === s.encounter.logId) || !validEncounter(s.encounter)))) return null;
+    if (s.scheduledEvent && (s.pending || !Array.isArray(s.scheduledEvent.choices) || !s.scheduledEvent.choices.length || !s.scheduledEvent.choices.every(validChoice) || typeof s.scheduledEvent.title !== 'string' || typeof s.scheduledEvent.body !== 'string')) return null;
+    if (s.activity && (!(s.activity.mode in STAT_LABELS) || typeof s.activity.label !== 'string' || !Number.isInteger(s.activity.step) || s.activity.step < 0)) return null;
     // Migrate v1 saves without dropping a pending decision or the original RNG state.
     if (s.lifespan === undefined) s.lifespan = Math.max(s.age+1,64 + hashSeed(s.seed+'lifespan') % 37);
     if (!Number.isInteger(s.lifespan) || s.lifespan < 60 || s.lifespan > 106) return null;

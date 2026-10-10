@@ -5,7 +5,7 @@ import { TOWNS } from '../src/data/world.js';
 
 function toAge(age, seed = 'garden', town = 'pallet', path = 0) {
   let s = createLife({ seed, town });
-  while (s.age < age && !s.ended) {
+  while ((s.age < age || s.scheduledEvent) && !s.ended) {
     const next = s.encounter ? acknowledge(s) : s.pending ? choose(s, path) : advance(s);
     s = next === s && s.pending ? autoChoice(s) : next;
   }
