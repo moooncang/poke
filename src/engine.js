@@ -12,6 +12,7 @@ import { TOWNS, CAREERS, NPCS, EVENTS, WORK_EVENTS, FAMILY, TRAITS } from './dat
 
 export const SAVE_KEY = 'pokelife.story.v1';
 export const VERSION = 1;
+export const GENDERS = {male:'남성',female:'여성',unspecified:'미지정'};
 export const STAT_LABELS = { joy: '행복', vitality: '건강', courage: '용기', wisdom: '지혜', bond: '유대' };
 const EVOLUTIONS = { 10: 12, 13: 15, 16: 17, 19: 20, 25: 26, 29: 30, 35: 36, 37: 38, 41: 42, 43: 44, 52: 53, 54: 55, 60: 61, 69: 70, 72: 73, 74: 75, 81: 82, 92: 93, 98: 99, 104: 105, 118: 119, 120: 121, 129: 130, 133: 196, 218: 219, 261: 262, 263: 264, 265: 267, 270: 271, 273: 274, 276: 277, 278: 279, 280: 281, 285: 286, 287: 288, 298: 183, 300: 301, 320: 321, 322: 323, 353: 354, 363: 364 };
 
@@ -63,11 +64,12 @@ function encounter(state, data) {
   return log(state, { title: data.title, body: data.body, kind: 'encounter', effects: data.effects || { joy: 8 }, encounter: data });
 }
 
-export function createLife({ name = '하루', seed = String(Date.now()), town = 'random' } = {}) {
+export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random' } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0,
     town: '', hometown: '', family: '', trait: '', career: null, money: 1800,
     stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 }, party: [], people: [], seen: [],
     log: [], memories: [], used: [], flags: {}, pending: null, encounter: null, ended: false, visited: [], lifespan: 0, game: freshGame() };
+  state.gender = Object.hasOwn(GENDERS,gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
   state.lifespan = 64 + Math.floor(random(state) * 37);
   state.season = 0;
@@ -310,6 +312,8 @@ export function parseSave(raw) {
       || (s.encounter && (!s.log.some(e => e.id === s.encounter.logId) || !validEncounter(s.encounter)))) return null;
     if (s.scheduledEvent && (s.pending || !Array.isArray(s.scheduledEvent.choices) || !s.scheduledEvent.choices.length || !s.scheduledEvent.choices.every(validChoice) || typeof s.scheduledEvent.title !== 'string' || typeof s.scheduledEvent.body !== 'string')) return null;
     if (s.activity && (!(s.activity.mode in STAT_LABELS) || typeof s.activity.label !== 'string' || !Number.isInteger(s.activity.step) || s.activity.step < 0)) return null;
+    s.gender ??= 'unspecified';
+    if (!Object.hasOwn(GENDERS,s.gender)) return null;
     // Migrate v1 saves without dropping a pending decision or the original RNG state.
     if (s.lifespan === undefined) s.lifespan = Math.max(s.age+1,64 + hashSeed(s.seed+'lifespan') % 37);
     if (!Number.isInteger(s.lifespan) || s.lifespan < 60 || s.lifespan > 106) return null;

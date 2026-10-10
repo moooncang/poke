@@ -12,3 +12,12 @@
 .check-result {display:block;font-size:12px;margin:6px 0;}
 .check-result.success {color:#187544;}
 .check-result.failure {color:#ad4332;}
+
+.decision-hide {margin-bottom:16px;}
+.decision-dock {position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:45;display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(620px,calc(100% - 24px));padding:14px 18px;background:#fffdf7;color:#294158;border:2px solid #dc4251;border-radius:14px;box-shadow:0 6px 24px #18364c33;}
+.decision-dock span {display:grid;gap:5px;min-width:0;}
+.decision-dock small {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.decision-dock button {flex-shrink:0;}
+body:has(.decision-dock) {padding-bottom:100px;}
+.birth-report select,.new-life-form select {padding:10px;border:1px solid #b9cfdd;border-radius:8px;background:#fff;color:#294158;font:inherit;}
+@media(max-width:540px){.decision-dock{flex-wrap:wrap;font-size:13px;}.decision-dock button{width:100%;justify-content:center;}body:has(.decision-dock){padding-bottom:150px;}}
