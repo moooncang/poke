@@ -72,7 +72,7 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   state.visited.push(state.town);
   state.family = state.background.family;
   state.trait = pick(state, TRAITS);
-  log(state, { title: '출생 등록', body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났습니다. 6세에 첫 파트너를 만나고 7세에 학교에 입학합니다.`, kind: 'milestone', memory: true });
+  log(state, { title: '출생 등록', body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났습니다. 6세에 첫 파트너를 만나고 7세에 배울 방식을 정합니다.`, kind: 'milestone', memory: true });
   return state;
 }
 
@@ -106,14 +106,15 @@ function advanceYear(input) {
     return encounter(s, { type: 'npc', npc, title: '공식 트레이너와의 만남', subtitle: 'TRAINER ENCOUNTER',
       body: `${NPCS[npc].name}에게 배틀과 도감 수집에 관한 조언을 받았습니다. 다른 지방의 초대와 이동 제안이 도착하기 시작합니다.`, effects: { wisdom: 10, courage: 6 } });
   }
+  const education = s.education || 'undecided';
   const school = {
-    7: {title:'트레이너 스쿨 입학',body:'기초 교육을 시작한다. 학교에서 중점적으로 배울 활동을 정한다.',options:[['포켓몬 생태 수업','school-research',{wisdom:6}],['야외 실습 수업','school-field',{courage:6}],['돌봄과 협동 수업','school-care',{bond:6}]]},
-    12: {title:'중등 과정 진학',body:'기초 과정을 마쳤다. 심화 과정의 전공을 선택한다.',options:[['배틀 전술 과정','major-battle',{courage:8}],['생태 연구 과정','major-research',{wisdom:8}],['포켓몬 돌봄 과정','major-care',{bond:8}]]},
-    18: {title:'졸업 후 진학 결정',body:'학교를 졸업했다. 선택한 진로를 바탕으로 전문 교육을 계속할지, 현장 경험을 쌓을지 결정한다.',options:[['전문 아카데미에 진학','higher-education',{wisdom:8}],['현장 실습과 취업 준비','field-training',{courage:6,money:300}],['포켓몬 돌봄 견습','care-training',{bond:8}]]},
-    22: {title:s.flags['higher-education']?'전문 과정 졸업':'견습 종료와 정식 활동',body:'교육과 실습을 마쳤다. 직업 활동의 다음 목표를 정한다.',options:[['전문 자격을 취득','qualified',{wisdom:7}],['현재 직업에서 경력 확장','experienced',{courage:5,money:400}],['지역 공동체에서 활동','community-worker',{bond:7}]]},
+    7: {title:'어린 시절의 학습 방식',body:'가족과 앞으로 배울 방식을 정한다. 학교에 다니지 않는 길도 선택할 수 있다.',options:[['트레이너 스쿨 입학','school-enrolled',{wisdom:6},'school'],['가족과 가정학습','home-learning',{bond:6},'home'],['보호자와 현장 체험','guided-learning',{courage:5,vitality:2},'field']]},
+    12: {title:'성장기 활동 방향',body:'지금까지의 생활을 돌아보고 다음 활동을 정한다. 학교로 진학하거나 다른 방식으로 배울 수 있다.',options:[['중등 학교에 진학','secondary-school',{wisdom:8},'school'],['가정학습과 자율 연구','independent-study',{wisdom:5,bond:3},'home'],['돌봄 센터에서 체험 학습','care-experience',{bond:8},'field'],['지역 탐방과 체력 회복','youth-break',{vitality:8,joy:4},'pause']]},
+    18: {title:education==='school'?'학교 졸업 후의 선택':'성인기의 새로운 방향',body:education==='school'?'학교 과정을 마쳤다. 진학은 여러 선택 중 하나다.':'학교 밖에서 쌓은 경험을 바탕으로 앞으로의 생활을 결정한다.',options:[['전문 아카데미에 진학','higher-education',{wisdom:8},'academy'],['현장 견습 시작','field-training',{courage:6,money:300},'apprentice'],['돌봄 센터에 바로 취업','direct-work',{money:500,courage:4},'work'],['지방을 여행하며 탐색','gap-travel',{courage:8,joy:4},'travel'],['휴식하며 다음 계획 준비','adult-break',{vitality:10,joy:5},'pause']]},
+    22: {title:education==='academy'?'전문 과정 졸업':education==='apprentice'?'견습 과정 수료':'앞으로의 활동 계획',body:'현재까지의 경험을 바탕으로 활동 방향을 다시 선택한다. 진학이나 취업을 미뤄도 된다.',options:[['전문 교육으로 역량 보완','continued-study',{wisdom:7},'study'],[s.career?'현재 진로에서 경력 확장':'포켓몬 돌봄 업무 시작','experienced',{courage:5,money:400},'work'],['지역 공동체에서 활동','community-worker',{bond:7},'community'],['여행과 자율 연구를 계속','independent-life',{courage:4,wisdom:4},'travel'],['가족과 지내며 재충전','family-break',{bond:5,vitality:7},'pause']]},
   }[s.age];
-  if(school)return log(s,{kind:'choice',title:school.title,body:school.body,choices:school.options.map(([label,flag,effects])=>({label,flag,effects,description:'진학·진로 기록에 반영',outcome:`${label}을 선택했다. 이후 활동의 기반을 마련했다.`}))});
-  if (s.age === 16) return log(s, { kind: 'choice', title: '진로 선택', body: '진로에 따라 연간 수입과 직업 사건이 달라집니다.', choices: Object.entries(CAREERS).map(([career, data]) => ({ label: data.short, description: data.description, career, effects: { courage: 5, wisdom: 3 }, outcome: `${data.name} 진로를 선택했습니다. 다음 해부터 직업 수입을 받습니다.` })) });
+  if(school)return log(s,{kind:'choice',title:school.title,body:school.body,choices:school.options.map(([label,flag,effects,education])=>({label,flag,effects,education,...(education==='work'?{career:s.career||'keeper'}:{}),description:'선택한 방식에 따라 이후 사건이 달라집니다',outcome:`${label}을 선택했다. 이후 생활 계획에 반영한다.`}))});
+  if (s.age === 16) return log(s, { kind: 'choice', title: '진로 선택', body: '진로에 따라 연간 수입과 직업 사건이 달라집니다.', choices: Object.entries(CAREERS).map(([career, data]) => ({ label: data.short, description: data.description, career, effects: { courage: 5, wisdom: 3 }, outcome: `${data.name} 진로를 선택했습니다. 다음 해부터 직업 수입을 받습니다.` })).concat([{label:'아직 진로를 정하지 않는다',description:'탐색과 자율 학습 · 고정 직업 수입 없음',effects:{wisdom:4,joy:3},flag:'career-exploring',outcome:'진로 결정을 미루고 여러 활동을 경험한다.'},{label:'가족과 지역 활동에 집중',description:'유대 +7 · 고정 직업 수입 없음',effects:{bond:7},flag:'career-community',outcome:'고정 직업 없이 가족과 지역 공동체 활동에 참여한다.'}]) });
   if (s.age === 20) return log(s, { kind: 'choice', title: '거주지 변경 제안', body: '새 거주지와 활동 기반을 선택합니다. 이주하면 출현 포켓몬과 지방 사건이 달라집니다.', choices: [
     { label: '새로운 마을로 떠난다', description: '이사 비용 600P · 새로운 만남', cost: 600, move: true, effects: { courage: 8, money: -600 }, outcome: '새 지방으로 이주했습니다. 현재 위치와 방문 기록이 갱신되었습니다.' },
     { label: '이곳에 나의 자리를 만든다', description: '행복 +7 · 고향에서의 삶', effects: { joy: 7, bond: 3 }, flag: 'rooted', outcome: '현재 마을에 정착했습니다. 지역 활동을 계속합니다.' },
@@ -129,7 +130,7 @@ function advanceYear(input) {
     { label: '보호소 후원', description: '행복 +5 · 돌봄을 위한 기부 100P', cost: 100, effects: { money: -100, joy: 5 }, outcome: '보호소 운영비를 후원했습니다.' },
   ] });
   if (s.age === 40) return log(s, { kind: 'choice', title: '직업 재설계', body: '현재 직업을 유지하거나 다른 진로로 전환할 수 있습니다.', choices: [
-    { label: '현재 직업 유지', description: '지혜 +8 · 지금의 직업 유지', effects: { wisdom: 8, joy: 4 }, outcome: '현 직업의 전문 교육을 이수했습니다.' },
+    { label: s.career?'현재 직업 유지':'현재 생활 방식 유지', description: '지혜 +8 · 현재 활동 지속', effects: { wisdom: 8, joy: 4 }, outcome: '현 직업의 전문 교육을 이수했습니다.' },
     ...Object.entries(CAREERS).filter(([id]) => id !== s.career).slice(0, 2).map(([id, c]) => ({ label: `${c.short}으로 전직`, description: c.description, career: id, effects: { courage: 8 }, outcome: `${c.name}으로 전직했습니다. 다음 해부터 수입이 바뀝니다.` })),
   ] });
   if (s.age === 55 && s.town !== s.hometown) return log(s, { kind: 'choice', title: '귀향 제안', body: '출생지의 빈집을 제공받을 수 있습니다. 이동 비용 없이 고향으로 돌아갈 수 있습니다.', choices: [
@@ -202,6 +203,7 @@ export function choose(input, index) {
   const choice = entry?.choices?.[index];
   if (!choice || (choice.cost || 0) > s.money || (choice.join && s.party.length >= 6)) return input;
   apply(s, choice.effects);
+  if(choice.education)s.education=choice.education;
   if(choice.destination&&TOWNS.some(t=>t.id===choice.destination))s.town=choice.destination;
   if(choice.observe)seen(s,choice.observe);
   if(choice.training)trainParty(s,choice.training);
