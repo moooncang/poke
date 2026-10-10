@@ -1,3 +1,4 @@
+import {LEAGUE_REGIONS,championFlag} from '../data/league-sagas.js';
 import { Lock } from 'lucide-react';
 import { GENDERS, PARTY_LIMIT } from '../engine.js';
 import { TOWNS, SEASONS, CAREERS } from '../data/world.js';
@@ -95,6 +96,15 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
           </li>)}
       </ul>
       <small>세계는 매년 스스로 변한다. 경기는 수입을, 치안과 생태는 찾아오는 사건을 바꾼다.</small>
+    </section>
+    <section className="dex-panel league-progress"><h3>리그 도전 · 명예의 전당</h3>
+      <p>지역 인증 8개 → 예선 → 상위 4관문 → 최종전</p>
+      {LEAGUE_REGIONS.filter(r=>r.id===town.map||life.flags[`league-${r.id}-licensed`]||life.flags[championFlag(r)]).map(r=>{
+        const root=`league-${r.id}`,cleared=r.elites.filter((_,i)=>life.flags[`${root}-elite-${i}`]).length;
+        const status=life.flags[championFlag(r)]?(r.id==='paldea'?'챔피언 랭크':'명예의 전당 등록'):life.flags[`${root}-withdrawn`]?'도전 종료':cleared?`상위 관문 ${cleared}/4 통과`:life.flags[`${root}-qualified`]?'본선 진출':life.flags[`${root}-licensed`]?'인증 순회 중':'도전자 등록 전';
+        return <div className="league-progress-row" key={r.id}><b>{r.name}{life.flags[championFlag(r)]?' ★':''}</b><span>{status}</span><small>지역 배지 {life.game.badges[r.id]||0}/8 · 최종 상대 {r.champion}</small></div>;
+      })}
+      <small>초대 조건: 명성 15 이상 트레이너 또는 현재 지방 배지 2개. 파트너가 있어야 도전할 수 있습니다.</small>
     </section>
     <section className="dex-panel"><h3>장비와 리그</h3>
       {Object.entries(MECHANICS).map(([id, m]) => <p key={id}>{life.game.gear.includes(id) ? '●' : '○'} {m.name}</p>)}

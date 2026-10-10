@@ -32,7 +32,9 @@ function validActions(a) {
     && (a.training === undefined || num(a.training, 0, 10000)) && (!a.captureJoin || speciesId(a.captureJoin)) && (a.affection === undefined || num(a.affection, -100, 100)) && (!a.tone || a.tone in DISPOSITIONS)
     && (a.cast === undefined || isObject(a.cast) && Object.values(a.cast).every(isObject))
     && (a.follow === undefined || list(a.follow, 5, f => isObject(f) && Boolean(CONSEQUENCES[f.id])))
-    && (a.battle === undefined || isObject(a.battle) && BATTLE_KINDS.includes(a.battle.kind) && (a.battle.opponent === undefined || speciesId(a.battle.opponent)))
+    && (a.battle === undefined || isObject(a.battle) && BATTLE_KINDS.includes(a.battle.kind) && (a.battle.opponent === undefined || speciesId(a.battle.opponent))
+      && (a.battle.level === undefined || int(a.battle.level,1,100))
+      && (a.battle.opponents === undefined || a.battle.kind === 'league' && list(a.battle.opponents,6,speciesId) && a.battle.opponents.length>0 && !a.battle.capture))
     && (a.simulation === undefined || ['capture', 'gym', 'raid'].includes(a.simulation))
     && (a.after === undefined || isObject(a.after) && Object.values(a.after).every(validActions));
 }

@@ -1,3 +1,5 @@
+import { CAREER_SAGAS } from '../data/career-sagas.js';
+import { LEAGUE_SAGAS } from '../data/league-sagas.js';
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
@@ -119,11 +121,12 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...CAREER_SAGAS, ...LEAGUE_SAGAS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
 const CATEGORY_WEIGHT = {
+  league: s => Object.keys(s.flags).some(k=>k.startsWith('league-')&&k.endsWith('-licensed')) ? 7 : s.career==='traveler' ? 3 : 1,
   childhood: () => 3,
   career: () => 3,
   stage: () => 1.8,

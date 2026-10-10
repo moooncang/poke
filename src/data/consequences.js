@@ -15,6 +15,12 @@ const choice = (title, body, choices) => ({ kind: 'choice', title, body, choices
 const opt = (label, description, outcome, extra = {}) => ({ label, description, outcome, effects: {}, ...extra });
 
 export const CONSEQUENCES = {
+  'career-legacy': {type:'echo',build:(s,{data})=>echo(`다시 들려온 소식 · ${data.title}`, ({traveler:'당시 함께 훈련하던 동료가 새 대회에서 입상하고 파트너들과 찍은 사진을 보내왔다.',researcher:'공개했던 연구 자료가 다른 지방의 재현 실험에 인용됐다. 연구소가 공동 저자의 이름을 다시 확인해 왔다.',keeper:'함께 돌보던 포켓몬과 새 가족의 정기 소식이 도착했다. 배운 돌봄 방식을 다른 보호소도 사용하고 있다.',merchant:'함께 일하던 상인들이 계약을 이어가며 지역 초보 트레이너를 위한 공동 기금을 만들었다.'})[data.career]||'함께했던 동료가 활동의 후속 소식을 전해 왔다.',{reputation:2,joy:3})},
+  'hall-of-fame': {type:'echo',build:(s,{data})=>echo(`${data.name} 명예의 전당 등록`, `${data.champion}에게 도전했던 경기와 파트너들의 기록이 명예의 전당에 보존됐다. 첫 파트너와 시작한 여정이 이 지방의 리그 역사에 남았다.`,{joy:5,reputation:3})},
+  'champion-student': {type:'choice',build:()=>choice('기념 몬스터볼을 들고 돌아온 후배','후원받았던 아이가 첫 배지를 보여 주며 언젠가 당신에게 도전하겠다고 말했다.',[
+    opt('파트너와 기념 대련을 한다','유대 +3 · 파티 경험치 +25','승패보다 준비 과정을 이야기하며 첫 대련을 마쳤다.',{effects:{bond:3},training:25}),
+    opt('다음 여행을 위한 조언을 한다','지혜 +3','포켓몬센터 위치와 파트너의 피로를 살피는 법부터 알려 주었다.',{effects:{wisdom:3}}),
+  ])},
   // ── Rival ──
   'rival-rematch': { type: 'choice', when: s => ['trainer', 'elite', 'gymleader'].includes(s.cast.rival.path) && s.party.length,
     build: s => choice('라이벌의 재도전', `${josa(s.cast.rival.name, '이', '가')} 그동안 키운 포켓몬을 데리고 찾아왔다. "이번에는 안 질 거야."`, [
