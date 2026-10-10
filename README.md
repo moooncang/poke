@@ -12,11 +12,15 @@ npm run dev
 
 개발 서버는 5173 포트를 사용합니다. 현재 환경에서 Node 24로 검증했습니다. 배포 파일 생성은 `npm run build`, 빌드 결과의 로컬 검증은 `npm run preview`입니다. 자료와 한글 웹폰트를 로컬에서 제공하므로 플레이할 때 외부 API나 Google Fonts에 접속하지 않습니다.
 
-## GitHub에서 빌드 받기
+## 게시된 페이지와 자동 배포
 
-`main`에 푸시하거나 Pull Request를 만들면 `.github/workflows/build.yml`이 의존성 설치, 엔진 테스트, 프로덕션 빌드를 실행합니다. GitHub 저장소의 **Actions → Build Pokelife → 성공한 실행 → Artifacts → pokelife-dist**에서 결과물을 내려받을 수 있습니다. Actions의 **Run workflow**로 수동 실행할 수도 있습니다.
+배포가 완료되면 **https://moooncang.github.io/poke/** 에서 접속할 수 있습니다. 최초 설정은 저장소의 **Settings → Pages → Build and deployment → Source → GitHub Actions**를 선택합니다. 이 설정에는 저장소의 Pages 관리 권한이 필요합니다.
 
-`dist/`는 생성물이므로 소스 커밋에는 포함하지 않고 GitHub Actions 아티팩트로 14일간 보관합니다. 자동 빌드는 웹사이트 배포와 별개입니다.
+`main`에 푸시하면 `.github/workflows/build.yml`이 의존성 설치, 엔진 테스트, 프로덕션 빌드 후 GitHub Pages에 게시합니다. Pull Request에서는 빌드·테스트만 실행하며 게시하지 않습니다. Actions의 **Run workflow**로 수동 실행할 수도 있습니다.
+
+GitHub 저장소의 **Actions → Build and deploy Pokelife → 성공한 실행 → Artifacts → pokelife-dist**에서 빌드 결과물을 내려받을 수 있습니다. `dist/`는 생성물이므로 소스 커밋에는 포함하지 않고 아티팩트로 14일간 보관합니다.
+
+게시용 빌드는 `PAGES_BASE_PATH=/poke/ npm run build`로 실행합니다. 모든 이미지·폰트·스크립트 경로에 이 접두사가 적용됩니다. 같은 경로로 로컬 검증하려면 `PAGES_BASE_PATH=/poke/ npm run preview`를 사용합니다. 기본 개발 모드는 루트 경로를 사용합니다.
 
 ## 플레이
 

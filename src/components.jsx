@@ -4,8 +4,9 @@ import pokemon from './data/pokemon.json';
 import { NPCS } from './data/world.js';
 
 export const POKEMON = Object.fromEntries(pokemon.map(p => [p.id, p]));
-export const sprite = (id, shiny = false) => `/assets/pokemon/${shiny ? 'shiny' : 'front'}/${id}.png`;
-export const artwork = id => `/assets/pokemon/artwork/${id}.png`;
+export const asset = path => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
+export const sprite = (id, shiny = false) => asset(`assets/pokemon/${shiny ? 'shiny' : 'front'}/${id}.png`);
+export const artwork = id => asset(`assets/pokemon/artwork/${id}.png`);
 
 export function PokeBall({ className = '' }) {
   return <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6"/><path d="M3 12h18" stroke="currentColor" strokeWidth="1.6"/><circle cx="12" cy="12" r="3" fill="var(--ball-fill, #f6f5ed)" stroke="currentColor" strokeWidth="1.6"/></svg>;
@@ -111,7 +112,7 @@ export function Encounter({ data, age, onClose, sound, toggleSound, replay = fal
       <span className="eyebrow encounter-subtitle">{data.subtitle}</span>
       <p className="encounter-label"><Sparkles size={14}/> {label}</p>
       <div className="encounter-stage"><div className="encounter-orbit orbit-one"/><div className="encounter-orbit orbit-two"/><div className="encounter-glow"/>
-        {person ? <img className="encounter-npc pixel" src={`/assets/trainers/${person.image}.png`} alt={name}/> : <img className={`encounter-pokemon ${data.type === 'shiny' ? 'pixel shiny-image' : ''}`} src={data.type === 'shiny' ? sprite(data.pokemonId, true) : artwork(data.pokemonId)} alt={name}/>}
+        {person ? <img className="encounter-npc pixel" src={asset(`assets/trainers/${person.image}.png`)} alt={name}/> : <img className={`encounter-pokemon ${data.type === 'shiny' ? 'pixel shiny-image' : ''}`} src={data.type === 'shiny' ? sprite(data.pokemonId, true) : artwork(data.pokemonId)} alt={name}/>}
         {isLegend && <span className="encounter-number">No. {String(data.pokemonId).padStart(4, '0')}</span>}
       </div>
       <h2>{name}</h2>
