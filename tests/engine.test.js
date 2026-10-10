@@ -5,8 +5,9 @@ import { TOWNS } from '../src/data/world.js';
 
 function toAge(age, seed = 'garden', town = 'pallet', path = 0) {
   let s = createLife({ seed, town });
-  while (s.age < age) {
-    s = s.encounter ? acknowledge(s) : s.pending ? choose(s, path) : advance(s);
+  while (s.age < age && !s.ended) {
+    const next = s.encounter ? acknowledge(s) : s.pending ? choose(s, path) : advance(s);
+    s = next === s && s.pending ? autoChoice(s) : next;
   }
   return s;
 }
@@ -107,16 +108,16 @@ test('150 varied complete lifetimes keep valid stats, unique events and usable s
   for (let i = 0; i < 150; i++) {
     let s = createLife({ seed: `long-run-${i}`, town: TOWNS[i % TOWNS.length].id });
     let iterations = 0;
-    while (!s.ended && iterations++ < 200) {
+    while (!s.ended && iterations++ < 400) {
       s = s.encounter ? acknowledge(s) : s.pending ? autoChoice(s) : advance(s);
       for (const value of Object.values(s.stats)) assert.ok(value >= 0 && value <= 100);
     }
-    assert.equal(s.age, 80);
+    assert.ok(s.age >= 60 && s.age <= 100);
     assert.equal(s.ended, true);
-    assert.equal(s.log.length, 81);
+    assert.ok(s.log.length >= s.age + 1);
     assert.equal(advance(s), s);
-    assert.equal(new Set(s.log.map(e => e.id)).size, 81);
-    assert.ok(s.party.length >= 1 && s.party.length <= 4);
+    assert.equal(new Set(s.log.map(e => e.id)).size, s.log.length);
+    assert.ok(s.party.length >= 1 && s.party.length <= 6);
     assert.ok(parseSave(JSON.stringify(s)));
     for (const e of s.log) if (e.encounter) kinds.add(e.encounter.type);
     const sources = s.log.map(e => e.sourceId).filter(Boolean);

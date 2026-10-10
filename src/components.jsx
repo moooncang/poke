@@ -103,7 +103,7 @@ export function Encounter({ data, age, onClose, sound, toggleSound, replay = fal
   const chimed = useRef(false);
   useEffect(() => { if (sound && !chimed.current) { chimed.current = true; playChime(data.type); } }, [data.logId]);
   const isLegend = data.type === 'legendary';
-  const label = { legendary: creature?.mythical ? '환상의 만남' : '전설과 마주하다', shiny: '색이 다른 포켓몬', npc: '운명 같은 인연', partner: '우리의 첫 만남', evolution: '함께 자라는 시간' }[data.type];
+  const label = { legendary: creature?.mythical ? '환상의 만남' : '전설과 마주하다', shiny: '색이 다른 포켓몬', npc: '주요 NPC', partner: '첫 파트너', evolution: '포켓몬 진화' }[data.type];
   return <Modal title={`${label}: ${name}`} onClose={onClose} className={`encounter-backdrop ${data.type}`}>
     <div className="cinema-grain"/>
     <div className="cinema-top"><span>POKÉLIFE <b>·</b> {replay ? 'MEMORY' : `${age} YEARS`}</span><button className="icon-button" onClick={toggleSound} aria-label={sound ? '소리 끄기' : '소리 켜기'}>{sound ? <Volume2 size={18}/> : <VolumeX size={18}/>}</button></div>
@@ -118,8 +118,8 @@ export function Encounter({ data, age, onClose, sound, toggleSound, replay = fal
       <h2>{name}</h2>
       <p className="encounter-role">{person?.role || creature?.genus} <span>—</span> {person ? '오늘, 우리의 길이 교차했습니다' : creature?.types?.join(' · ')}</p>
       {person ? <blockquote>“{person.quote}”</blockquote> : <p className="encounter-description">{data.body}</p>}
-      <button className="cinema-continue" onClick={onClose}>{replay ? '기억을 덮어두기' : '이 순간을 마음에 담기'} <ArrowRight size={18}/></button>
-      <span className="cinema-footnote">{replay ? '그날의 빛은, 아직 여기 남아 있습니다.' : '당신의 소중한 기억에 기록됩니다.'}</span>
+      <button className="cinema-continue" onClick={onClose}>{replay ? '다시 보기 종료' : '확인 · 계속하기'} <ArrowRight size={18}/></button>
+      <span className="cinema-footnote">{replay ? '저장된 만남 다시 보기' : '도감과 주요 사건 기록에 등록됩니다.'}</span>
     </div>
   </Modal>;
 }

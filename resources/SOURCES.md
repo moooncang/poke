@@ -28,3 +28,10 @@
 ## 저장 형태
 
 `manifest.json`은 원본 파일별 출처를, `catalog/derived-maps.json`은 지도 포맷 변환의 입력·출력 해시를 보존한다. `catalog/*.json`의 데이터는 위 PokéAPI CSV와 pret 맵 JSON에서 생성한 색인이다. 한국어 누락값을 임의의 공식 명칭으로 채우지 않았다.
+
+## 2026-10-10 게임 확장 자료
+
+- 메가진화/거다이맥스 폼 PNG 78개: PokeAPI/sprites의 `sprites/pokemon/{form_id}.png`. 폼 번호는 보존된 PokéAPI `pokemon.csv`와 대조했다. 지원 범위는 8세대까지의 해당 폼이다. 다운로드 경로와 파일별 SHA-256은 `catalog/game-expansion-assets.json`에 기록한다.
+- 필드 트레이너 시트: 이미 수집한 pret/pokefirered `graphics/object_events/pics/people/red_normal.png`를 그대로 사용한다. CSS로 프레임을 선택하며 원본 이미지는 수정하지 않았다.
+- 타입 상성: 보존된 `type_efficacy.csv`, 기본 타입: `src/data/pokemon.json`에서 `src/data/battle-data.js`를 생성했다.
+- 새 지방 노선도·공통 필드 SVG·분기 사건은 이 프로젝트에서 작성했다. 원작 지도나 공식 사건으로 표시하지 않는다.

@@ -1,3 +1,4 @@
+import { EXTRA_TOWNS } from './regions.js';
 export const TOWNS = [
   { id: 'pallet', name: '태초마을', region: '관동', map: 'kanto', caption: '모든 이야기가 시작되는 곳', environment: '숲', x: 34, y: 76, pool: [16, 19, 25, 43, 133], description: '바닷바람이 낮은 지붕을 지나고, 풀숲에서는 작은 울음소리가 들려옵니다.' },
   { id: 'viridian', name: '상록시티', region: '관동', map: 'kanto', caption: '사계절 내내 푸르른 도시', environment: '숲', x: 34, y: 64, pool: [10, 13, 16, 25, 29], description: '상록숲으로 향하는 길목. 집 앞까지 찾아오는 포켓몬과 함께 아침을 맞습니다.' },
@@ -11,6 +12,7 @@ export const TOWNS = [
   { id: 'fortree', name: '검방울시티', region: '호연', map: 'hoenn', caption: '나뭇가지 위에서 살아가는 사람들', environment: '숲', x: 58, y: 17, pool: [43, 276, 285, 352, 357], description: '나무 위의 집들을 잇는 다리. 아침이면 지붕 바로 옆에서 새들이 노래합니다.' },
   { id: 'lavaridge', name: '용암마을', region: '호연', map: 'hoenn', caption: '따뜻한 온천과 느긋한 오후', environment: '산', x: 30, y: 27, pool: [37, 74, 218, 322, 324], description: '화산의 온기가 땅속에 머무는 곳. 온천에 발을 담그고 느리게 살아갑니다.' },
   { id: 'lilycove', name: '해안시티', region: '호연', map: 'hoenn', caption: '파도와 예술이 만나는 해안', environment: '바다', x: 76, y: 32, pool: [120, 278, 300, 353, 363], description: '해변에서 주운 조개껍데기 하나도 작은 미술관의 작품이 되는 도시입니다.' },
+  ...EXTRA_TOWNS,
 ];
 
 export const CAREERS = {
@@ -21,17 +23,17 @@ export const CAREERS = {
 };
 
 export const NPCS = {
-  oak: { name: '오박사', role: '포켓몬 연구의 권위자', image: 'oak', quote: '포켓몬과 함께 지낸 시간은, 어떤 도감에도 다 담을 수 없지.' },
-  misty: { name: '이슬', role: '블루시티 체육관 관장', image: 'misty', quote: '같이 헤엄치다 보면 알게 돼. 서로 다른 속도를 맞추는 법을.' },
-  brock: { name: '웅', role: '회색시티 체육관 관장', image: 'brock', quote: '강해지는 일보다 먼저 배워야 할 건, 잘 돌보는 일이야.' },
-  erika: { name: '민화', role: '무지개시티 체육관 관장', image: 'erika', quote: '서두르지 않아도 괜찮아요. 꽃마다 피어나는 계절이 다르니까요.' },
-  steven: { name: '성호', role: '희귀한 돌을 찾아 여행하는 트레이너', image: 'steven', quote: '흔해 보이는 돌에도 자기만의 무늬가 있지. 사람도 그렇지 않을까?' },
-  red: { name: '레드', role: '말보다 강한 마음을 가진 트레이너', image: 'red', quote: '……! 그의 피카츄가 먼저 다가와 인사를 건넸습니다.' },
+  oak: { name: '오박사', role: '포켓몬 연구의 권위자', image: 'oak', quote: '도감을 채우려면 여러 서식지를 조사해야 한다.' },
+  misty: { name: '이슬', role: '블루시티 체육관 관장', image: 'misty', quote: '물타입도 상대의 기술과 보조 타입을 확인해야 해.' },
+  brock: { name: '웅', role: '회색시티 체육관 관장', image: 'brock', quote: '배틀 전에 파트너의 체력부터 점검하자.' },
+  erika: { name: '민화', role: '무지개시티 체육관 관장', image: 'erika', quote: '풀타입의 약점과 상태 변화 기술을 함께 공부하세요.' },
+  steven: { name: '성호', role: '희귀한 돌을 찾아 여행하는 트레이너', image: 'steven', quote: '메가스톤은 특정 포켓몬에게만 반응하지.' },
+  red: { name: '레드', role: '관동의 숙련된 트레이너', image: 'red', quote: '……! 그의 피카츄가 먼저 다가와 인사를 건넸습니다.' },
 };
 
 export const SEASONS = ['봄', '여름', '가을', '겨울'];
 export const FAMILY = ['작은 나무열매 농장을 가꾸는 가족', '여행자를 맞는 식당을 운영하는 가족', '포켓몬과 함께 우편을 배달하는 가족', '오래된 책방을 지키는 가족', '마을의 포켓몬을 돌보는 가족'];
-export const TRAITS = ['다정한 관찰자', '호기심 많은 몽상가', '겁 없는 모험가', '느긋한 낙천가', '조용한 이야기꾼'];
+export const TRAITS = ['신중한 관찰자', '탐구형 트레이너', '겁 없는 모험가', '느긋한 낙천가', '계획형 트레이너'];
 
 // Original life stories. Canon characters/places are the setting; dialogue and events are fan fiction.
 export const EVENTS = [
