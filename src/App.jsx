@@ -1,5 +1,3 @@
-import './game.css';
-import './life.css';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Volume2, VolumeX, X } from 'lucide-react';
 import { SEASONS } from './data/world.js';

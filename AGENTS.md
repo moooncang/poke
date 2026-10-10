@@ -38,7 +38,7 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/data/species-rules.js` | **생성 파일.** `node scripts/build_species_rules.mjs`로 다시 만듭니다. 직접 수정하지 마세요 |
 | `src/ui/` | 화면 구성 요소. `App.jsx`는 상태와 레이아웃만 담당 |
 
-CSS는 `styles.css` → `game.css` → `life.css` 순서로 겹칩니다. 새 스타일은 `life.css` 끝에 추가하세요.
+CSS는 `src/main.jsx`에서 `styles.css` → `game.css` → `life.css` 순서로 불러오며, 뒤의 파일이 이깁니다. 이 순서를 바꾸거나 다른 파일에서 CSS를 다시 import하지 마세요. 새 스타일은 `life.css` 끝에 추가하고, 예전 밝은 테마 규칙에 `!important`를 새로 붙이지 마세요.
 
 ## 꼭 지켜야 할 규칙
 
