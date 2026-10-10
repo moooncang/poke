@@ -65,9 +65,9 @@ function opponentLevel(s, kind, lead, regionId) {
  * Returns { result: 'win'|'lose'|'caught'|'escape', lead, transformation, captured? }.
  * A captured species is returned rather than added so the caller can run party reorganisation.
  */
-export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false }) {
+export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false, level: specifiedLevel, reward = true }) {
   const g = s.game, lead = chooseLead(s.party, opponentId);
-  const level = opponentLevel(s, kind, lead, regionId);
+  const level = specifiedLevel ?? opponentLevel(s, kind, lead, regionId);
   const foeTypes = typesOf(opponentId), attack = bestAttack(lead.id, foeTypes);
   const transformation = transformationFor(s, lead, kind, regionId);
   if (transformation === 'tera') g.teraType = attack.type;
@@ -96,19 +96,19 @@ export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false
   if (result === 'win') {
     g.wins += 1;
     lead.xp = (lead.xp || 0) + (kind === 'wild' ? 35 : 70);
-    s.money += { gym: 500, league: 1200, villain: 300, rival: 200, raid: 300 }[kind] ?? 150;
-    s.reputation = clamp((s.reputation || 0) + ({ gym: 4, league: 12, villain: 5, rival: 3, raid: 3 }[kind] ?? 1), 0, 100);
+    s.money += reward ? ({ gym: 500, league: 1200, villain: 300, rival: 200, raid: 300 }[kind] ?? 150) : 0;
+    s.reputation = clamp((s.reputation || 0) + (reward ? ({ gym: 4, league: 12, villain: 5, rival: 3, raid: 3 }[kind] ?? 1) : 0), 0, 100);
     if (kind === 'gym') g.badges[regionId] = Math.min(8, (g.badges[regionId] || 0) + 1);
     if (kind === 'raid' && GMAX_FORMS[opponentId] && !g.gmax.includes(opponentId)) g.gmax.push(opponentId);
   } else lead.xp = (lead.xp || 0) + 15;
   if (result === 'caught') g.catches += 1;
-  return { result, lead, transformation, captured, level };
+  return { result, lead, transformation, captured, level, reward };
 }
 
-export function battleSummary({ result, lead, transformation, level }, name = id => `#${id}`) {
+export function battleSummary({ result, lead, transformation, level, reward }, name = id => `#${id}`) {
   const opening = `${name(lead.id)} 선두로 내보냈다(상대 Lv.${level}). ${transformation ? `${MECHANICS[transformation].name}를 사용했다. ` : ''}`;
   return opening + {
-    win: '배틀에서 승리했다. 경험치와 보상을 받았다.',
+    win: reward === false ? '이번 대전에서 승리해 경험치를 얻었다. 상금은 연전 전체를 통과해야 지급된다.' : '배틀에서 승리했다. 경험치와 보상을 받았다.',
     lose: '배틀에서 패배했다. 파트너는 센터에서 회복했다.',
     caught: '포획에 성공했다.',
     escape: '승부가 나지 않아 안전하게 물러났다.',

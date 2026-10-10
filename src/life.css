@@ -127,3 +127,6 @@ meter::-webkit-meter-bar{background:#243b45;border:0;border-radius:2px}meter::-w
 .pokemon-detail .type-label{background:none;color:#a9c7cd}
 .pokemon-detail .detail-bond{border:1px solid #40635b;border-radius:8px;padding:12px;margin-top:18px}
 .dex-companion{background:#1d3b30;color:#a8f0dc!important;border:1px solid #3f6b5c;font-size:9px}
+
+/* League paths use existing flags, so old saves show their current badges immediately. */
+.league-progress-row{display:grid;grid-template-columns:auto 1fr;gap:6px;padding:12px 0;border-bottom:1px solid var(--ui-line)}.league-progress-row b{color:var(--ui-mint);font-size:12px}.league-progress-row span{text-align:right;font-size:11px;color:var(--ui-text)}.league-progress-row small{grid-column:1/-1}.league-progress>small{display:block;margin-top:10px;line-height:1.8}

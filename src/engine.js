@@ -290,14 +290,18 @@ function runBattle(s, choice, origin) {
   if (!spec) return '';
   if (!s.party.length) return ' 아직 파트너가 없어 현장 관찰로 대신했다.';
   if (spec.kind === 'gym' && (s.game.badges[currentRegion(s)] || 0) >= 8) return ' 이 지방의 배지는 이미 모두 모았다. 대신 후배들의 연습 상대가 되어 주었다.';
-  const opponentId = spec.opponent ?? opponentFor(s, spec.kind);
-  if (!s.seen.includes(opponentId)) s.seen.push(opponentId);
-  const result = autoBattle(s, { kind: spec.kind, opponentId, regionId: currentRegion(s), allowCapture: Boolean(spec.capture) });
-  let text = ` ${battleSummary(result, id => poke(id, '을', '를'))}`;
-  if (result.captured) {
-    const { record } = addPokemon(s, result.captured, { xp: Math.max(0, (result.level - 5) * 25) });
-    text += ` ${poke(result.captured, '이', '가')} 파티에 합류했다.${record ? ' 파티가 가득 차 구성을 다시 짰다.' : ''}`;
-    queue(s, [record]);
+  const opponents = spec.opponents || [spec.opponent ?? opponentFor(s, spec.kind)];
+  let result, text = '';
+  for (const [index, opponentId] of opponents.entries()) {
+    if (!s.seen.includes(opponentId)) s.seen.push(opponentId);
+    result = autoBattle(s, { kind: spec.kind, opponentId, regionId: currentRegion(s), allowCapture: Boolean(spec.capture), level: spec.level, reward:index===opponents.length-1 });
+    text += ` ${opponents.length>1?`${index+1}/${opponents.length}차전 · `:''}${poke(opponentId)} 상대. ${battleSummary(result, id => poke(id, '을', '를'))}`;
+    if (result.captured) {
+      const { record } = addPokemon(s, result.captured, { xp: Math.max(0, (result.level - 5) * 25) });
+      text += ` ${poke(result.captured, '이', '가')} 파티에 합류했다.${record ? ' 파티가 가득 차 구성을 다시 짰다.' : ''}`;
+      queue(s, [record]);
+    }
+    if (!['win','caught'].includes(result.result)) break;
   }
   queue(s, evolveMembers(s));
   const after = choice.after?.[['win', 'caught'].includes(result.result) ? 'win' : 'lose'];

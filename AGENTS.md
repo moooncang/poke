@@ -31,6 +31,7 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/sim/text.js` | 한국어 조사 `josa`, 포켓몬 이름 토큰 `poke` |
 | `src/data/storylets.js` | 상태 조건으로 열리는 사건(인물·지방 상황·기회) |
 | `src/data/more-life.js` · `more-work.js` · `more-places.js` | 표 형식으로 쓴 사건 184개(인생 단계·성향·가족·포켓몬·직업·마을 환경·지방 문화·지방 상황) |
+| `src/data/career-sagas.js` · `league-sagas.js` | 직업 32개 프로젝트(96단계 사건), 지방별 리그·챔피언 경로(90개). 진행은 기존 flags/cooldowns 사용. [작업 기록](docs/CHANGES-career-sagas.md) |
 | `src/data/event-kit.js` | 표 형식 사건 작성 도구(`table`, `check`, `later`, `fill`) |
 | `src/data/vignettes.js` | 결정 사이에 나오는 일상 기록(계절·환경·나이·가족·파티 조건) |
 | `src/data/consequences.js` | 선택의 여파 정의 |
@@ -98,7 +99,7 @@ table('stage', [
 | `world` | 현재 지방의 `economy·safety·ecology` 증감 |
 | `cast` | `{ friend: { affinity: 10, path: 'worker' } }`처럼 인물 상태 변경 |
 | `follow` | `[{ id, delay: [최소, 최대], p, data }]` 몇 년 뒤의 여파. `id`는 `src/data/consequences.js`의 키 |
-| `battle` | `{ kind: 'wild'·'gym'·'raid'·'rival'·'villain'·'league', opponent?, capture? }` 자동 배틀 |
+| `battle` | `{ kind: 'wild'·'gym'·'raid'·'rival'·'villain'·'league', opponent?, opponents?, level?, capture? }` 자동 배틀 |
 | `after` | `{ win: {...}, lose: {...} }` 배틀 결과별 추가 효과 |
 | `join`, `joinOrigin` | 포켓몬 합류(`egg·gift·rescued·adopted·starter·legend`) |
 | `career`, `education`, `work` | 진로·학습 방식·직업 상태(`satisfaction`, `cut`, `retired`) |
@@ -117,3 +118,5 @@ table('stage', [
 ## 테스트
 
 `tests/world.test.js`의 "every storylet builds a valid event" 테스트가 모든 storylet을 실제 상태에서 만들어 보고, 선택지를 하나씩 적용한 뒤 저장 파일이 유효한지 확인합니다. 사건을 추가했다면 이 테스트가 통과하는지 꼭 확인하세요. `tests/fixtures/v1-save.json`은 이전 엔진으로 만든 실제 저장 파일로, 형식 변환 테스트에 씁니다.
+
+리그 연전의 `battle.opponents`는 league 전용 종 ID 1–6개이며 `battle.level`은 1–100 정수입니다. 전체 연전을 이겨야 `after.win`이 적용되고 상금은 마지막 승리에서만 지급됩니다. 필드 검증은 `save.js`에 함께 있습니다.
