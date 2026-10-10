@@ -21,3 +21,5 @@
 body:has(.decision-dock) {padding-bottom:100px;}
 .birth-report select,.new-life-form select {padding:10px;border:1px solid #b9cfdd;border-radius:8px;background:#fff;color:#294158;font:inherit;}
 @media(max-width:540px){.decision-dock{flex-wrap:wrap;font-size:13px;}.decision-dock button{width:100%;justify-content:center;}body:has(.decision-dock){padding-bottom:150px;}}
+
+.dock-speed{display:grid;gap:4px;font-size:11px;flex-shrink:0}.dock-speed select{padding:8px;background:white;color:#294158;border:1px solid #b9cfdd;border-radius:7px}.decision-dock{width:min(740px,calc(100% - 24px))}

@@ -1,5 +1,6 @@
+import { annualTraining, careerMilestone } from './data/progression.js';
 import { activityRecord } from './data/activity-records.js';
-import { BACKGROUNDS, ENVIRONMENTS, seasonalEvent, resolveSimulation } from './data/life-events.js';
+import { BACKGROUNDS, ENVIRONMENTS, seasonalEvent, wildEncounter, resolveSimulation } from './data/life-events.js';
 import { relationshipEvent, resolveRelationship } from './data/relationships.js';
 import { MEGA, maxHP, trainParty } from './game.js';
 import { BRANCH_EVENTS } from './data/quests.js';
@@ -67,7 +68,7 @@ function encounter(state, data) {
 export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random' } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0,
     town: '', hometown: '', family: '', trait: '', career: null, money: 1800,
-    stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 }, party: [], people: [], seen: [],
+    stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 }, party: [], box: [], people: [], seen: [],
     log: [], memories: [], used: [], flags: {}, pending: null, encounter: null, ended: false, visited: [], lifespan: 0, game: freshGame() };
   state.gender = Object.hasOwn(GENDERS,gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
@@ -109,12 +110,13 @@ function advanceYear(input) {
   s.age += 1;
   s.season = Math.floor(random(s) * 4);
 
-  for (const p of s.party) p.xp += 10;
+  trainParty(s, annualTraining(s));
+  s.game.balls = Math.min(30,s.game.balls + 3);
   if (s.age >= 60 && (s.age >= s.lifespan || random(s) < (100-s.stats.vitality)/3500)) {
     s.ended = true;
     return log(s, {kind: "ending", title: "생애 종료", body: `${s.name}의 생애가 ${s.age}세에 끝났습니다. 방문 마을 ${s.visited.length}곳, 관측 포켓몬 ${s.seen.length}종. 기록을 내보내거나 새 게임을 시작할 수 있습니다.`});
   }
-  if (s.career && s.age < 65) s.money += CAREERS[s.career].income;
+  if (s.career && s.age < 65) s.money += Math.round(CAREERS[s.career].income * (1 + (s.careerRank || 0) * .15));
   if (s.age >= 65) s.money += 100;
   if (s.party.length) apply(s, { bond: 1 });
   if (s.age > 60) apply(s, { vitality: -1 });
@@ -137,7 +139,8 @@ function advanceYear(input) {
     22: {title:education==='academy'?'전문 과정 졸업':education==='apprentice'?'견습 과정 수료':'앞으로의 활동 계획',body:'현재까지의 경험을 바탕으로 활동 방향을 다시 선택한다. 진학이나 취업을 미뤄도 된다.',options:[['전문 교육으로 역량 보완','continued-study',{wisdom:7},'study'],[s.career?'현재 진로에서 경력 확장':'포켓몬 돌봄 업무 시작','experienced',{courage:5,money:400},'work'],['지역 공동체에서 활동','community-worker',{bond:7},'community'],['여행과 자율 연구를 계속','independent-life',{courage:4,wisdom:4},'travel'],['가족과 지내며 재충전','family-break',{bond:5,vitality:7},'pause']]},
   }[s.age];
   if(school)return log(s,{kind:'choice',title:school.title,body:school.body,choices:school.options.map(([label,flag,effects,education])=>({label,flag,effects,education,...(education==='work'?{career:s.career||'keeper'}:{}),description:'선택한 방식에 따라 이후 사건이 달라집니다',outcome:`${label}을 선택했다. 이후 생활 계획에 반영한다.`})).concat(s.age===18||s.age===22?[academyExam]:[])});
-  if (s.age === 16) return log(s, { kind: 'choice', title: '진로 선택', body: '진로에 따라 연간 수입과 직업 사건이 달라집니다.', choices: Object.entries(CAREERS).map(([career, data]) => ({ label: data.short, description: data.description, career, effects: { courage: 5, wisdom: 3 }, outcome: `${data.name} 진로를 선택했습니다. 다음 해부터 직업 수입을 받습니다.` })).concat([{label:'아직 진로를 정하지 않는다',description:'탐색과 자율 학습 · 고정 직업 수입 없음',effects:{wisdom:4,joy:3},flag:'career-exploring',outcome:'진로 결정을 미루고 여러 활동을 경험한다.'},{label:'가족과 지역 활동에 집중',description:'유대 +7 · 고정 직업 수입 없음',effects:{bond:7},flag:'career-community',outcome:'고정 직업 없이 가족과 지역 공동체 활동에 참여한다.'}]) });
+  const careerEvent = careerMilestone(s);
+  if(careerEvent)return log(s,careerEvent);
   if (s.age === 20) return log(s, { kind: 'choice', title: '거주지 변경 제안', body: '새 거주지와 활동 기반을 선택합니다. 이주하면 출현 포켓몬과 지방 사건이 달라집니다.', choices: [
     { label: '새로운 마을로 떠난다', description: '이사 비용 600P · 새로운 만남', cost: 600, move: true, effects: { courage: 8, money: -600 }, outcome: '새 지방으로 이주했습니다. 현재 위치와 방문 기록이 갱신되었습니다.' },
     { label: '이곳에 나의 자리를 만든다', description: '행복 +7 · 고향에서의 삶', effects: { joy: 7, bond: 3 }, flag: 'rooted', outcome: '현재 마을에 정착했습니다. 지역 활동을 계속합니다.' },
@@ -152,10 +155,6 @@ function advanceYear(input) {
     {label:'무료 보호 활동',description:'유대 +3 · 비용 없음',effects:{bond:3},outcome:'보호소 활동을 도왔습니다.'},
     { label: '보호소 후원', description: '행복 +5 · 돌봄을 위한 기부 100P', cost: 100, effects: { money: -100, joy: 5 }, outcome: '보호소 운영비를 후원했습니다.' },
   ] });
-  if (s.age === 40) return log(s, { kind: 'choice', title: '직업 재설계', body: '현재 직업을 유지하거나 다른 진로로 전환할 수 있습니다.', choices: [
-    { label: s.career?'현재 직업 유지':'현재 생활 방식 유지', description: '지혜 +8 · 현재 활동 지속', effects: { wisdom: 8, joy: 4 }, outcome: '현 직업의 전문 교육을 이수했습니다.' },
-    ...Object.entries(CAREERS).filter(([id]) => id !== s.career).slice(0, 2).map(([id, c]) => ({ label: `${c.short}으로 전직`, description: c.description, career: id, effects: { courage: 8 }, outcome: `${c.name}으로 전직했습니다. 다음 해부터 수입이 바뀝니다.` })),
-  ] });
   if (s.age === 55 && s.town !== s.hometown) return log(s, { kind: 'choice', title: '귀향 제안', body: '출생지의 빈집을 제공받을 수 있습니다. 이동 비용 없이 고향으로 돌아갈 수 있습니다.', choices: [
     { label: '고향으로 돌아간다', description: '익숙한 풍경과의 재회', home: true, effects: { joy: 8 }, outcome: '거주지를 출생지로 변경했습니다.' },
     { label: '여기서 조금 더 살아간다', description: '지금의 마을도 나의 고향', effects: { joy: 5, wisdom: 4 }, outcome: '현재 거주지에서 활동을 계속하기로 결정했습니다.' },
@@ -166,6 +165,15 @@ function advanceYear(input) {
     return log(s, { kind: 'ending', title: '평범해서, 다시 없을 나의 삶', body: `${s.name}의 이야기는 ${townOf(s).name}의 조용한 햇살 속에서 마지막 장에 닿았습니다. ${s.party.length}마리의 동행, ${s.visited.length}개의 마을, 수많은 작은 순간들. 플레이 기록을 저장할 수 있습니다.`, memory: true });
   }
 
+  const roll = random(s);
+  const legendChance = s.flags['legend-quest'] && s.age >= 29 ? 0.15 : 0.022;
+  if (s.age >= 22 && !s.flags.legendary && roll < legendChance) {
+    s.flags.legendary = true;
+    const pokemonId = pick(s, regionOf(townOf(s)).legend);
+    return encounter(s, { type: 'legendary', pokemonId, title: '전설의 포켓몬 출현', subtitle: 'LEGENDARY ENCOUNTER',
+      body: '지방 조사 중 전설의 포켓몬을 관측했습니다. 도감에 관측 기록을 등록했습니다. 이 사건은 포획 이벤트가 아닙니다.', effects: { joy: 15, courage: 10, wisdom: 8 } });
+  }
+  if(s.age>=8 && s.party.length && (s.age-(s.lastWildOffer??5)>=3 || random(s)<(s.career==='traveler'?.22:s.career==='researcher'?.16:.10))){s.lastWildOffer=s.age;return log(s,wildEncounter(s));}
   if(s.age>=19&&s.age%2===1){const relationship=relationshipEvent(s);if(relationship)return log(s,relationship);}
   const challenges = CHALLENGE_EVENTS.filter(e => s.age >= e.min && s.age <= e.max && !s.used.includes(e.id) && (!e.married || s.relationship.status === 'married'));
   if (s.age >= 23 && !s.flags['elite-academy'] && !s.used.includes('academy-retry')) challenges.push({id:'academy-retry',kind:'choice',title:'아카데미 특별전형 추가 모집',body:'학교 밖 경험도 지원 자격으로 인정한다. 진학 여부를 다시 선택할 수 있다.',choices:[academyExam,{label:'현재 활동을 이어간다',description:'확정 결과 · 지혜 +3',effects:{wisdom:3},outcome:'현재 활동을 계속하기로 했다.'}]});
@@ -185,14 +193,6 @@ function advanceYear(input) {
     s.party[0].id = EVOLUTIONS[oldId];
     return encounter(s, { type: 'evolution', pokemonId: s.party[0].id, oldId, title: '파트너 진화', subtitle: 'EVOLUTION',
       body: '파트너가 성장 조건을 충족해 진화했습니다. 도감 정보가 갱신됩니다.', effects: { bond: 8, joy: 8 } });
-  }
-  const roll = random(s);
-  const legendChance = s.flags['legend-quest'] && s.age >= 29 ? 0.15 : 0.022;
-  if (s.age >= 22 && !s.flags.legendary && roll < legendChance) {
-    s.flags.legendary = true;
-    const pokemonId = pick(s, regionOf(townOf(s)).legend);
-    return encounter(s, { type: 'legendary', pokemonId, title: '전설의 포켓몬 출현', subtitle: 'LEGENDARY ENCOUNTER',
-      body: '지방 조사 중 전설의 포켓몬을 관측했습니다. 도감에 관측 기록을 등록했습니다. 이 사건은 포획 이벤트가 아닙니다.', effects: { joy: 15, courage: 10, wisdom: 8 } });
   }
   if (s.age >= 12 && roll > 0.92 && !s.flags.shiny) {
     s.flags.shiny = true;
@@ -244,7 +244,10 @@ export function choose(input, index) {
   if(choice.training)trainParty(s,choice.training);
   if(choice.equipment){s.game.gear.push(choice.equipment);if(choice.equipment==='mega')s.game.megaStones=Object.keys(MEGA).map(Number);if(choice.equipment==='z')s.game.crystals=['노말','불꽃','물','풀','전기','비행','독','땅','바위','격투','벌레','고스트','강철','얼음','에스퍼','드래곤','악','페어리'];}
   if(choice.relationship)resolveRelationship(s,choice.relationship);
-  if (choice.career) s.career = choice.career;
+  if (choice.career) {if(s.career!==choice.career)s.careerRank=0;s.career = choice.career;}
+  if(choice.promotion)s.careerRank=Math.min(5,(s.careerRank||0)+1);
+  if(choice.leaveCareer){s.career=null;s.careerRank=0;}
+  if(choice.captureJoin){const p={id:choice.captureJoin,joined:s.age,shiny:false,xp:Math.floor(Math.max(0,(s.party[0]?.xp||0)*.65))};p.hp=maxHP(p);(s.party.length<6?s.party:s.box).push(p);seen(s,p.id);s.game.catches++;}
   if (choice.flag) s.flags[choice.flag] = true;
   if (choice.move) s.town = pick(s, TOWNS.filter(t => t.id !== s.town)).id;
   if (choice.home) s.town = s.hometown;
@@ -286,6 +289,7 @@ export function parseSave(raw) {
       && Object.entries(effects).every(([key, value]) => (key in STAT_LABELS || key === 'money') && Number.isFinite(value));
     const validChoice = c => c && typeof c.label === 'string' && typeof c.description === 'string'
       && typeof c.outcome === 'string' && validEffects(c.effects)
+      && (!c.captureJoin || validId(c.captureJoin))
       && (!c.career || Boolean(CAREERS[c.career])) && (!c.join || validId(c.join))
       && (c.cost === undefined || Number.isFinite(c.cost) && c.cost >= 0)
       && (!c.challenge || c.challenge.stat in STAT_LABELS && Number.isFinite(c.challenge.difficulty) && typeof c.challenge.failure?.outcome === 'string' && validEffects(c.challenge.failure.effects));
@@ -312,6 +316,9 @@ export function parseSave(raw) {
       || (s.encounter && (!s.log.some(e => e.id === s.encounter.logId) || !validEncounter(s.encounter)))) return null;
     if (s.scheduledEvent && (s.pending || !Array.isArray(s.scheduledEvent.choices) || !s.scheduledEvent.choices.length || !s.scheduledEvent.choices.every(validChoice) || typeof s.scheduledEvent.title !== 'string' || typeof s.scheduledEvent.body !== 'string')) return null;
     if (s.activity && (!(s.activity.mode in STAT_LABELS) || typeof s.activity.label !== 'string' || !Number.isInteger(s.activity.step) || s.activity.step < 0)) return null;
+    s.box ??= [];
+    if(!Array.isArray(s.box)||s.box.length>1000||!s.box.every(p=>validId(p.id)&&Number.isInteger(p.joined)&&p.joined>=0&&p.joined<=s.age&&typeof p.shiny==='boolean'&&Number.isInteger(p.xp)&&p.xp>=0&&p.xp<=1000000))return null;
+    if(s.careerRank!==undefined&&(!Number.isInteger(s.careerRank)||s.careerRank<0||s.careerRank>5))return null;
     s.gender ??= 'unspecified';
     if (!Object.hasOwn(GENDERS,s.gender)) return null;
     // Migrate v1 saves without dropping a pending decision or the original RNG state.

@@ -34,6 +34,6 @@ test('60 unique events have two stat checks, meaningful outcomes and a guarantee
   assert.notEqual(event.choices[0].challenge.stat,event.choices[1].challenge.stat);
   for(const option of event.choices.slice(0,2))assert.notEqual(option.outcome,option.challenge.failure.outcome);
   const s=exam(50,10);s.log.at(-1).choices=event.choices;
-  const result=choose(s,2);assert.equal(result.pending,null);assert.equal(result.rng,s.rng);assert.equal(result.money,1080);assert.ok(parseSave(JSON.stringify(result)));
+  const result=choose(s,2);assert.equal(result.pending,null);assert.equal(result.rng,s.rng);assert.equal(result.money,1020);assert.ok(parseSave(JSON.stringify(result)));
  }
 });

@@ -10,7 +10,7 @@ export const xpLevel = p => Math.min(100,5+Math.floor((p.xp||0)/25));
 export const maxHP = p => 35+xpLevel(p)*3;
 export const typeMultiplier = (type,defenders)=>defenders.reduce((n,t)=>n*(TYPE_CHART[`${type}>${t}`]??1),1);
 export function freshGame(){return {position:{x:8,y:7},badges:{},gear:[],megaStones:[],crystals:[],gmax:[],teraType:'노말',teraCharge:true,balls:8,battle:null,feed:[],steps:0,focus:'balanced',wins:0,catches:0,claimed:[]};}
-export function ensureGame(s){s.game ||= freshGame();for(const p of s.party){p.xp??=Math.max(0,(s.age-p.joined)*5);p.hp??=maxHP(p);}return s;}
+export function ensureGame(s){s.game ||= freshGame();s.box ||= [];for(const p of s.party){p.xp??=Math.max(0,(s.age-p.joined)*5);p.hp??=maxHP(p);}return s;}
 function rng(s){s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;}
 function sample(s,a){return a[Math.floor(rng(s)*a.length)];}
 function report(s,text){s.game.feed.unshift({text,age:s.age,id:`${s.age}-${s.game.steps++}`});s.game.feed=s.game.feed.slice(0,30);return s;}
@@ -97,9 +97,9 @@ export function battleAction(input,action,value){
  }
  if(action==='run'){return finish(s,'escape');}
  if(action==='catch'){
-  if(b.kind!=='wild'||g.balls<=0||s.party.length>=6)return input;g.balls--;
+  if(b.kind!=='wild'||g.balls<=0)return input;g.balls--;
   if(rng(s)<0.15+0.7*(1-b.hp/b.maxHp)){
-   const member={id:b.id,joined:s.age,shiny:false,xp:Math.max(0,(b.level-5)*25)};member.hp=maxHP(member);s.party.push(member);g.catches++;report(s,`포획 성공! 도감 #${b.id}.`);return finish(s,'caught');
+   const member={id:b.id,joined:s.age,shiny:false,xp:Math.max(0,(b.level-5)*25)};member.hp=maxHP(member);(s.party.length<6?s.party:s.box).push(member);g.catches++;report(s,`포획 성공! 도감 #${b.id}.`);return finish(s,'caught');
   }b.messages.unshift('볼에서 빠져나왔다!');
  }else if(action==='guard'){b.shield=true;b.messages.unshift('방어 태세! 받는 피해가 감소한다.');}
  else if(action==='move'){

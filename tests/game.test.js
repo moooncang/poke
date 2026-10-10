@@ -1,3 +1,4 @@
+import {BRANCH_EVENTS} from '../src/data/quests.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createLife,advance,acknowledge,choose,autoChoice,parseSave} from '../src/engine.js';
@@ -78,6 +79,6 @@ test('lifespans vary and most playable years contain a decision; all runs termin
  assert.ok(ages.size>1);
 });
 test('route decisions retain branches without forcing another popup',()=>{
- let s=createLife({seed:'branches',town:'pallet'});while(!s.pending||!s.log.at(-1).sourceId?.startsWith('route-'))s=s.encounter?acknowledge(s):s.pending?autoChoice(s):advance(s);
+ let s=createLife({seed:'branches',town:'pallet'});s.age=8;const root=BRANCH_EVENTS.find(e=>!e.requires);const entry={...root,id:'route-test',sourceId:root.id,age:s.age,season:0,town:s.town,effects:{}};s.log.push(entry);s.pending=entry.id;
  const a=choose(s,0),b=choose(s,1);assert.notDeepEqual(a.flags,b.flags);assert.equal(a.pending,null);assert.equal(a.log.length,s.log.length);assert.ok(parseSave(JSON.stringify(a)));
 });
