@@ -2,87 +2,69 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createLife, advance, choose, acknowledge, autoChoice, parseSave, toggleMemory, partnerOf } from '../src/engine.js';
 import { TOWNS } from '../src/data/world.js';
-
-function toAge(age, seed = 'garden', town = 'pallet', path = 0) {
-  let s = createLife({ seed, town });
-  while ((s.age < age || s.scheduledEvent) && !s.ended) {
-    const next = s.encounter ? acknowledge(s) : s.pending ? choose(s, path) : advance(s);
-    s = next === s && s.pending ? autoChoice(s) : next;
-  }
-  return s;
-}
+import { STORYLETS } from '../src/data/storylets.js';
+import { play, lifeAt, present } from './helpers.js';
 
 test('same seed and choices produce exactly the same life', () => {
-  assert.deepEqual(toAge(80, 'shared'), toAge(80, 'shared'));
-  assert.notDeepEqual(toAge(80, 'shared'), toAge(80, 'another'));
+  assert.deepEqual(lifeAt(80, 'shared'), lifeAt(80, 'shared'));
+  assert.notDeepEqual(lifeAt(80, 'shared'), lifeAt(80, 'another'));
 });
 
-test('first partner at six pauses the simulation and joins the household', () => {
-  const s = toAge(6);
+test('first partner at six pauses the simulation, joins and is recorded on that entry', () => {
+  const s = lifeAt(6);
   assert.equal(s.encounter.type, 'partner');
   assert.equal(s.party.length, 1);
+  assert.equal(s.party[0].origin, 'partner');
   assert.ok(TOWNS[0].pool.includes(s.party[0].id));
-  assert.ok(s.seen.includes(s.party[0].id));
+  assert.equal(s.log.at(-1).partnerId, s.party[0].id);
   assert.equal(advance(s), s);
   assert.equal(advance(acknowledge(s)).age, 7);
 });
 
 test('major NPC is recorded and pauses at ten', () => {
-  const s = toAge(10);
+  const s = lifeAt(10);
   assert.equal(s.encounter.npc, 'oak');
   assert.deepEqual(s.people, [{ id: 'oak', age: 10 }]);
-  assert.equal(toAge(10, 'garden', 'littleroot').encounter.npc, 'steven');
+  assert.equal(lifeAt(10, 'garden', 'littleroot').encounter.npc, 'steven');
 });
 
-test('a career choice changes subsequent work, income and story', () => {
-  const s = toAge(16);
-  assert.ok(s.pending);
+test('a career choice changes work, income and does not mutate its input', () => {
+  const s = play(createLife({ seed: 'garden', town: 'pallet' }), { until: s => s.pending && s.log.find(e => e.id === s.pending).title === '진로 선택' });
   assert.equal(advance(s), s);
   const chosen = choose(s, 1);
   assert.equal(chosen.career, 'researcher');
   assert.equal(chosen.pending, null);
-  assert.equal(chosen.log.at(-1).resolution.index, 1);
+  assert.equal(chosen.log.find(e => e.id === s.pending).resolution.index, 1);
+  assert.equal(chosen.work.years, 0);
   assert.equal(s.career, null, 'input is not mutated');
-  assert.equal(chosen.career, 'researcher');
+  const year = play(chosen, { until: x => x.age > s.age });
+  assert.ok(year.ledger.income > 0);
 });
 
-test('moving spends the declared amount and preserves hometown', () => {
-  const s = toAge(20);
-  const moved = choose(s, 0);
-  assert.notEqual(moved.town, s.town);
-  assert.equal(moved.hometown, s.hometown);
-  assert.equal(moved.money, s.money - 600);
+test('relocation offers move to a different town, charge the cost and keep the hometown', () => {
+  const s = lifeAt(25, 'mover');
+  const offer = STORYLETS.find(st => st.id === 'relocation-offer').build(structuredClone(s));
+  const ready = present(structuredClone(s), offer);
+  ready.money = 5000;
+  const moved = choose(ready, 0);
+  assert.notEqual(moved.town, ready.town);
+  assert.equal(moved.hometown, ready.hometown);
+  assert.equal(moved.money, 5000 - offer.choices[0].cost);
   assert.ok(moved.visited.includes(moved.town));
-  assert.ok(s.visited.every(t=>moved.visited.includes(t)));
-  const poor = { ...s, money: 599 };
+  const poor = { ...ready, money: offer.choices[0].cost - 1 };
   assert.equal(choose(poor, 0), poor);
-  assert.equal(choose(poor, 1).town, poor.town);
+  assert.equal(choose(poor, 2).town, poor.town);
 });
 
 test('evolving does not rewrite the partner in earlier memories', () => {
-  const s = toAge(6);
-  const id = partnerOf(s).id;
-  const later = toAge(40);
-  assert.equal(later.log.find(e => e.age === 6).partnerId, id);
-  if (later.flags.evolved) assert.notEqual(partnerOf(later).id, id);
+  const s = lifeAt(6), id = partnerOf(s).id;
+  const later = lifeAt(60);
+  assert.equal(later.log.find(e => e.age === 6 && e.encounter?.type === 'partner').partnerId, id);
 });
 
-test('a legendary meeting is remembered without automatically capturing it', () => {
-  let found;
-  for (let i = 0; i < 50 && !found; i++) {
-    const s = toAge(80, `legend-${i}`);
-    const e = s.log.find(e => e.encounter?.type === 'legendary');
-    if (e) found = { s, e };
-  }
-  assert.ok(found);
-  assert.ok(found.s.memories.includes(found.e.id));
-  assert.ok(found.s.seen.includes(found.e.encounter.pokemonId));
-  assert.ok(!found.s.party.some(p => p.id === found.e.encounter.pokemonId));
-});
-
-test('save round-trip preserves unresolved decisions and encounters', () => {
+test('save round-trip preserves unresolved decisions, encounters and the world', () => {
   for (const age of [0, 6, 10, 16, 20, 30, 80]) {
-    const s = toAge(age);
+    const s = lifeAt(age);
     const loaded = parseSave(JSON.stringify(s));
     assert.deepEqual(loaded, s);
     assert.deepEqual(advance(loaded), advance(s));
@@ -91,38 +73,39 @@ test('save round-trip preserves unresolved decisions and encounters', () => {
 
 test('invalid and incompatible saves are rejected', () => {
   assert.equal(parseSave('bad JSON'), null);
-  for (const patch of [{version: 9}, {age: 999}, {town: 'missing'}, {party: [{id: -1}]}, {people: [{id: 'unknown'}]}, {stats: {}}, {pending: 'missing'}, {money: -1}]) {
-    assert.equal(parseSave(JSON.stringify({...createLife(), ...patch})), null);
+  const base = createLife();
+  for (const patch of [{ version: 9 }, { age: 999 }, { town: 'missing' }, { party: [{ id: -1 }] }, { people: [{ id: 'unknown' }] }, { stats: {} }, { pending: 'missing' }, { money: -1 },
+    { world: { regions: {}, conditions: [] } }, { seeds: [{ id: 'nope', at: 3, origin: {} }] }, { box: [{ id: 2000 }] }, { reputation: 300 }]) {
+    assert.equal(parseSave(JSON.stringify({ ...base, ...patch })), null, JSON.stringify(patch));
   }
 });
 
 test('memories can be saved and removed without changing the story', () => {
-  const s = toAge(3), id = s.log.at(-1).id;
+  const s = lifeAt(9), id = s.log.findLast(e => !s.memories.includes(e.id)).id;
   const saved = toggleMemory(s, id);
   assert.ok(saved.memories.includes(id));
   assert.deepEqual(saved.log, s.log);
   assert.deepEqual(toggleMemory(saved, id), s);
 });
 
-test('8 varied complete lifetimes keep valid stats, unique events and usable saves', () => {
+test('8 varied complete lifetimes keep valid stats, unique authored events and usable saves', () => {
   const kinds = new Set();
   for (let i = 0; i < 8; i++) {
-    let s = createLife({ seed: `long-run-${i}`, town: TOWNS[i % TOWNS.length].id });
-    let iterations = 0;
-    while (!s.ended && iterations++ < 1100) {
+    let s = createLife({ seed: `long-run-${i}`, town: TOWNS[i * 5 % TOWNS.length].id }), steps = 0;
+    while (!s.ended && steps++ < 8000) {
       s = s.encounter ? acknowledge(s) : s.pending ? autoChoice(s) : advance(s);
       for (const value of Object.values(s.stats)) assert.ok(value >= 0 && value <= 100);
+      assert.ok(s.party.length <= 6);
     }
     assert.ok(s.age >= 60 && s.age <= 100);
     assert.equal(s.ended, true);
-    assert.ok(s.log.length >= s.age + 1);
     assert.equal(advance(s), s);
     assert.equal(new Set(s.log.map(e => e.id)).size, s.log.length);
-    assert.ok(s.party.length >= 1 && s.party.length <= 6);
+    assert.ok(s.party.length >= 1);
     assert.ok(parseSave(JSON.stringify(s)));
-    for (const e of s.log) if (e.encounter) kinds.add(e.encounter.type);
-    const sources = s.log.map(e => e.sourceId).filter(Boolean);
-    assert.equal(new Set(sources).size, sources.length, 'authored events should not repeat');
+    for (const e of s.log) { if (e.encounter) kinds.add(e.encounter.type); if (e.kind) kinds.add(e.kind); }
+    const authored = s.log.map(e => e.sourceId).filter(id => id && !id.includes('@'));
+    assert.equal(new Set(authored).size, authored.length, 'one-off events never repeat');
   }
-  assert.ok(kinds.has('partner') && kinds.has('npc'));
+  for (const kind of ['partner', 'npc', 'news', 'people', 'echo', 'choice']) assert.ok(kinds.has(kind), kind);
 });

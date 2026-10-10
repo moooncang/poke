@@ -32,7 +32,6 @@ export const NPCS = {
 };
 
 export const SEASONS = ['봄', '여름', '가을', '겨울'];
-export const FAMILY = ['작은 나무열매 농장을 가꾸는 가족', '여행자를 맞는 식당을 운영하는 가족', '포켓몬과 함께 우편을 배달하는 가족', '오래된 책방을 지키는 가족', '마을의 포켓몬을 돌보는 가족'];
 export const TRAITS = ['신중한 관찰자', '탐구형 트레이너', '겁 없는 모험가', '느긋한 낙천가', '계획형 트레이너'];
 
 // Original life stories. Canon characters/places are the setting; dialogue and events are fan fiction.
