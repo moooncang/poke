@@ -19,7 +19,7 @@ const stories=[
  ['노후의 거주지','두 사람의 일하는 시간이 줄어들었다. 앞으로 살 곳을 이야기한다.','지금의 이웃들과 계속 산다','가족 가까이에서 살 계획을 세운다','retirement'],
 ];
 export function relationshipEvent(s){
- const rel=s.relationship;if(s.age<18||s.season!==2||s.age%2!==0)return null;
+ const rel=s.relationship;if(s.age<18)return null;
  const index=rel.chapter||0;if(index>=stories.length||(index===17&&s.age<62))return null;
  if(index===16&&!rel.children){rel.chapter++;return relationshipEvent(s);}
  const [title,body,a,b,key]=stories[index];

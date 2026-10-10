@@ -24,7 +24,7 @@ test('first partner at six pauses the simulation and joins the household', () =>
   assert.ok(TOWNS[0].pool.includes(s.party[0].id));
   assert.ok(s.seen.includes(s.party[0].id));
   assert.equal(advance(s), s);
-  assert.equal(advance(acknowledge(s)).season, 1);
+  assert.equal(advance(acknowledge(s)).age, 7);
 });
 
 test('major NPC is recorded and pauses at ten', () => {

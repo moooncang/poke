@@ -72,20 +72,19 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   state.visited.push(state.town);
   state.family = state.background.family;
   state.trait = pick(state, TRAITS);
-  log(state, { title: '출생 등록', body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났습니다. 6세부터 파트너와 필드 활동을 시작합니다.`, kind: 'milestone', memory: true });
+  log(state, { title: '출생 등록', body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났습니다. 6세에 첫 파트너를 만나고 7세에 학교에 입학합니다.`, kind: 'milestone', memory: true });
   return state;
 }
 
 export function advance(input) {
   if(input.ended||input.pending||input.encounter||input.game?.battle)return input;
-  const s=structuredClone(input);
-  if(s.season<3){s.season++;return log(s,relationshipEvent(s)||seasonalEvent(s));}
-  s.season=0;return advanceYear(s);
+  return advanceYear(input);
 }
 function advanceYear(input) {
   if (input.ended || input.pending || input.encounter || input.game?.battle) return input;
   const s = ensureGame(structuredClone(input));
   s.age += 1;
+  s.season = Math.floor(random(s) * 4);
 
   for (const p of s.party) p.xp += 10;
   if (s.age >= 60 && (s.age >= s.lifespan || random(s) < (100-s.stats.vitality)/3500)) {
@@ -107,6 +106,13 @@ function advanceYear(input) {
     return encounter(s, { type: 'npc', npc, title: '공식 트레이너와의 만남', subtitle: 'TRAINER ENCOUNTER',
       body: `${NPCS[npc].name}에게 배틀과 도감 수집에 관한 조언을 받았습니다. 다른 지방의 초대와 이동 제안이 도착하기 시작합니다.`, effects: { wisdom: 10, courage: 6 } });
   }
+  const school = {
+    7: {title:'트레이너 스쿨 입학',body:'기초 교육을 시작한다. 학교에서 중점적으로 배울 활동을 정한다.',options:[['포켓몬 생태 수업','school-research',{wisdom:6}],['야외 실습 수업','school-field',{courage:6}],['돌봄과 협동 수업','school-care',{bond:6}]]},
+    12: {title:'중등 과정 진학',body:'기초 과정을 마쳤다. 심화 과정의 전공을 선택한다.',options:[['배틀 전술 과정','major-battle',{courage:8}],['생태 연구 과정','major-research',{wisdom:8}],['포켓몬 돌봄 과정','major-care',{bond:8}]]},
+    18: {title:'졸업 후 진학 결정',body:'학교를 졸업했다. 선택한 진로를 바탕으로 전문 교육을 계속할지, 현장 경험을 쌓을지 결정한다.',options:[['전문 아카데미에 진학','higher-education',{wisdom:8}],['현장 실습과 취업 준비','field-training',{courage:6,money:300}],['포켓몬 돌봄 견습','care-training',{bond:8}]]},
+    22: {title:s.flags['higher-education']?'전문 과정 졸업':'견습 종료와 정식 활동',body:'교육과 실습을 마쳤다. 직업 활동의 다음 목표를 정한다.',options:[['전문 자격을 취득','qualified',{wisdom:7}],['현재 직업에서 경력 확장','experienced',{courage:5,money:400}],['지역 공동체에서 활동','community-worker',{bond:7}]]},
+  }[s.age];
+  if(school)return log(s,{kind:'choice',title:school.title,body:school.body,choices:school.options.map(([label,flag,effects])=>({label,flag,effects,description:'진학·진로 기록에 반영',outcome:`${label}을 선택했다. 이후 활동의 기반을 마련했다.`}))});
   if (s.age === 16) return log(s, { kind: 'choice', title: '진로 선택', body: '진로에 따라 연간 수입과 직업 사건이 달라집니다.', choices: Object.entries(CAREERS).map(([career, data]) => ({ label: data.short, description: data.description, career, effects: { courage: 5, wisdom: 3 }, outcome: `${data.name} 진로를 선택했습니다. 다음 해부터 직업 수입을 받습니다.` })) });
   if (s.age === 20) return log(s, { kind: 'choice', title: '거주지 변경 제안', body: '새 거주지와 활동 기반을 선택합니다. 이주하면 출현 포켓몬과 지방 사건이 달라집니다.', choices: [
     { label: '새로운 마을로 떠난다', description: '이사 비용 600P · 새로운 만남', cost: 600, move: true, effects: { courage: 8, money: -600 }, outcome: '새 지방으로 이주했습니다. 현재 위치와 방문 기록이 갱신되었습니다.' },
@@ -135,6 +141,9 @@ function advanceYear(input) {
     s.ended = true;
     return log(s, { kind: 'ending', title: '평범해서, 다시 없을 나의 삶', body: `${s.name}의 이야기는 ${townOf(s).name}의 조용한 햇살 속에서 마지막 장에 닿았습니다. ${s.party.length}마리의 동행, ${s.visited.length}개의 마을, 수많은 작은 순간들. 플레이 기록을 저장할 수 있습니다.`, memory: true });
   }
+
+  if(s.age>=19&&s.age%2===1){const relationship=relationshipEvent(s);if(relationship)return log(s,relationship);}
+  if(s.age>=6&&random(s)<0.35)return log(s,seasonalEvent(s));
 
   const branchPool = [...REGIONAL_EVENTS, ...BRANCH_EVENTS].filter(e => s.age >= e.min && s.age <= e.max && !s.used.includes(e.id) && (!e.region || e.region === townOf(s).map) && (!e.requires || s.flags[e.requires]));
   const continuations = branchPool.filter(e => e.requires);
@@ -209,13 +218,7 @@ export function choose(input, index) {
   entry.newTown = s.town;
   s.pending = null;
   if(choice.simulation){const message=resolveSimulation(s,choice);const current=s.log.find(e=>e.id===entry.id);current.resolution.text+=' '+message;s.party.forEach(p=>p.hp=maxHP(p));}
-  if (choice.flag && !entry.followup && entry.sourceId?.startsWith('route-') && !entry.sourceId.endsWith('-a') && !entry.sourceId.endsWith('-b')) {
-    return log(s, {kind:'choice',followup:true,title:'실행 방식 결정',body:`${choice.label}: 활동 예산과 협력 방식을 결정합니다.`,choices:[
-      {label:'독자적으로 실행',description:'용기 +4 · 비용 없음',effects:{courage:4},flag:choice.flag+'-solo',outcome:'독자 계획을 확정했다.'},
-      {label:'전문가를 고용',description:'300P · 지혜 +10',cost:300,effects:{money:-300,wisdom:10},flag:choice.flag+'-expert',outcome:'전문가의 조언을 받아 전문 지식을 확보했다.'},
-      {label:'지역 팀과 협력',description:'유대 +5 · 활동비 100P',effects:{bond:5,money:100},flag:choice.flag+'-community',outcome:'공동 작업을 완료하고 활동비를 받았다.'}
-    ]});
-  }
+
   return s;
 }
 

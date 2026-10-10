@@ -28,7 +28,7 @@ test('travel spends money/AP and updates visits; insufficient funds cannot move'
 test('field actions consume training evolves starters without an action-point system',()=>{
  let s=ready('pallet',4);s.party[0].xp=250;for(let i=0;i<6;i++)s=gameAction(s,'train');
  assert.equal(s.game.ap,undefined);assert.equal(s.party[0].id,5);assert.ok(gameAction(s,'train'));
- const next=advance(s);assert.equal(next.game.ap,undefined);assert.equal(next.age,18);
+ const next=advance(s);assert.equal(next.game.ap,undefined);assert.equal(next.age,19);
 });
 test('research lab gives a regional starter once and respects party capacity',()=>{
  const s=ready('mesagoza');const n=gameAction(s,'starter',906);assert.equal(n.party.at(-1).id,906);assert.equal(n.money,4700);assert.equal(gameAction(n,'starter',909),n);assert.equal(gameAction(s,'starter',1),s);
@@ -77,7 +77,7 @@ test('lifespans vary and most playable years contain a decision; all runs termin
  const ages=new Set();for(let i=0;i<4;i++){let s=createLife({seed:`lifetime-${i}`,town:TOWNS[i%40].id}),steps=0;while(!s.ended&&steps++<1100)s=s.encounter?acknowledge(s):s.pending?autoChoice(s):advance(s);assert.ok(s.ended);assert.ok(s.age>=60&&s.age<=100);assert.ok(s.log.filter(e=>e.choices).length>s.age*.65);ages.add(s.age);}
  assert.ok(ages.size>1);
 });
-test('route decisions open immediate follow-ups and persist distinct branch flags',()=>{
+test('route decisions retain branch flags without immediate extra choices',()=>{
  let s=createLife({seed:'branches',town:'pallet'});while(!s.pending||!s.log.at(-1).sourceId?.startsWith('route-'))s=s.encounter?acknowledge(s):s.pending?autoChoice(s):advance(s);
- const a=choose(s,0),b=choose(s,1);assert.notDeepEqual(a.flags,b.flags);assert.ok(a.pending);assert.equal(a.log.at(-1).followup,true);assert.equal(a.age,s.age);assert.ok(parseSave(JSON.stringify(a)));
+ const a=choose(s,0),b=choose(s,1);assert.notDeepEqual(a.flags,b.flags);assert.equal(a.pending,null);assert.equal(a.log.length,s.log.length);assert.equal(a.age,s.age);assert.ok(parseSave(JSON.stringify(a)));
 });
