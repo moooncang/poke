@@ -1,0 +1,24 @@
+{
+  "pokemon_species": 1025,
+  "pokemon_korean_names": 1025,
+  "pokemon_with_korean_flavor": 898,
+  "korean_flavor_rows": 5818,
+  "korean_flavor_unique_per_species": 4762,
+  "regions": 11,
+  "regions_with_korean_names": 10,
+  "locations": 1104,
+  "locations_with_korean_names": 286,
+  "locations_with_encounters": 627,
+  "encounter_rows": 117127,
+  "items": 2223,
+  "items_with_sprites": 225,
+  "map_records": 943,
+  "town_city_maps": 35,
+  "pokemon_images": {
+    "front": 1025,
+    "shiny": 1025,
+    "artwork": 1025,
+    "back": 251
+  },
+  "csv_files": 187
+}

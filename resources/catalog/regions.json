@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "slug": "kanto",
+    "name_ko": "관동"
+  },
+  {
+    "id": 2,
+    "slug": "johto",
+    "name_ko": "성도"
+  },
+  {
+    "id": 3,
+    "slug": "hoenn",
+    "name_ko": "호연"
+  },
+  {
+    "id": 4,
+    "slug": "sinnoh",
+    "name_ko": "신오"
+  },
+  {
+    "id": 5,
+    "slug": "unova",
+    "name_ko": "하나"
+  },
+  {
+    "id": 6,
+    "slug": "kalos",
+    "name_ko": "칼로스"
+  },
+  {
+    "id": 7,
+    "slug": "alola",
+    "name_ko": "알로라"
+  },
+  {
+    "id": 8,
+    "slug": "galar",
+    "name_ko": "가라르"
+  },
+  {
+    "id": 9,
+    "slug": "hisui",
+    "name_ko": "히스이"
+  },
+  {
+    "id": 10,
+    "slug": "paldea",
+    "name_ko": "팔데아"
+  },
+  {
+    "id": 11,
+    "slug": "orre",
+    "name_ko": null
+  }
+]

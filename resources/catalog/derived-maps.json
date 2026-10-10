@@ -1,0 +1,122 @@
+[
+  {
+    "path": "assets/maps/kanto.png",
+    "size": [
+      240,
+      160
+    ],
+    "sha256": "0257e3be1580d431dc8c664c1689d017c58e0e457bafb7ed056803b4cefa8390",
+    "source": "pokefirered",
+    "conversion": "text-bg-4bpp",
+    "inputs": [
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.png",
+        "sha256": "7c402c5461d5547191cbfefb279727964e19c6dd60d33f5b0bb052ea20545184"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/kanto.bin",
+        "sha256": "c9f38c5d52099958c18efe737a45ba04ce8101b0eb349e9d2243bf8324d82b49"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.pal",
+        "sha256": "35fc49a8f807f4d934381dfecd4440b1e5de24f7bab86bcb15859cc6adfcc83e"
+      }
+    ]
+  },
+  {
+    "path": "assets/maps/sevii_123.png",
+    "size": [
+      240,
+      160
+    ],
+    "sha256": "eea18efc15c36a36bf92cfe304d7db131565351dbb583867314cbe06344a820a",
+    "source": "pokefirered",
+    "conversion": "text-bg-4bpp",
+    "inputs": [
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.png",
+        "sha256": "7c402c5461d5547191cbfefb279727964e19c6dd60d33f5b0bb052ea20545184"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/sevii_123.bin",
+        "sha256": "72c0b2615eaf061f5490779a3caf0470dbb88b08dd010c4887b8ed6d61eac124"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.pal",
+        "sha256": "35fc49a8f807f4d934381dfecd4440b1e5de24f7bab86bcb15859cc6adfcc83e"
+      }
+    ]
+  },
+  {
+    "path": "assets/maps/sevii_45.png",
+    "size": [
+      240,
+      160
+    ],
+    "sha256": "3bf31d2641e4e17a99d7d64ea44e7716eff39574d51d1ea66eae316647d15069",
+    "source": "pokefirered",
+    "conversion": "text-bg-4bpp",
+    "inputs": [
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.png",
+        "sha256": "7c402c5461d5547191cbfefb279727964e19c6dd60d33f5b0bb052ea20545184"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/sevii_45.bin",
+        "sha256": "cd68b8a70e21ac1f53344160234d1eabb7221040c62102c3a648faa550eb40db"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.pal",
+        "sha256": "35fc49a8f807f4d934381dfecd4440b1e5de24f7bab86bcb15859cc6adfcc83e"
+      }
+    ]
+  },
+  {
+    "path": "assets/maps/sevii_67.png",
+    "size": [
+      240,
+      160
+    ],
+    "sha256": "a96ed20b5914c2a626eb22f7e34535cc461b6b6cefb1cc8e9f2e48101ae76130",
+    "source": "pokefirered",
+    "conversion": "text-bg-4bpp",
+    "inputs": [
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.png",
+        "sha256": "7c402c5461d5547191cbfefb279727964e19c6dd60d33f5b0bb052ea20545184"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/sevii_67.bin",
+        "sha256": "2d0f7a665f88f15d28c213f7e490c232c3eeea8ffc12156aafce32499caa2400"
+      },
+      {
+        "path": "raw/pokefirered/graphics/region_map/region_map.pal",
+        "sha256": "35fc49a8f807f4d934381dfecd4440b1e5de24f7bab86bcb15859cc6adfcc83e"
+      }
+    ]
+  },
+  {
+    "path": "assets/maps/hoenn.png",
+    "size": [
+      512,
+      512
+    ],
+    "sha256": "734872521ed7b1a4f2ab0c97109ed1e285e1f2573cc928eaf348e47997479d9e",
+    "source": "pokeemerald",
+    "conversion": "affine-8bpp",
+    "inputs": [
+      {
+        "path": "raw/pokeemerald/graphics/pokenav/region_map/map.png",
+        "sha256": "c297c624313f1421c0ed5e4dd460b61720da00adeaac25a799dad94ce24051ab"
+      },
+      {
+        "path": "raw/pokeemerald/graphics/pokenav/region_map/map.bin",
+        "sha256": "dcf3d464dad11083ece52687184c89ab069c108340ecf5540eb0f14c6d8c8096"
+      },
+      {
+        "path": "raw/pokeemerald/graphics/pokenav/region_map/map.pal",
+        "sha256": "e5d0bef82e10e49644bc96a8b0d064ca370727b8e17bcab173e953c13c3d17e0"
+      }
+    ]
+  }
+]

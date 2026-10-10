@@ -1,0 +1,7730 @@
+[
+  {
+    "id": 1,
+    "slug": "canalave-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Canalave City"
+  },
+  {
+    "id": 2,
+    "slug": "eterna-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Eterna City"
+  },
+  {
+    "id": 3,
+    "slug": "pastoria-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Pastoria City"
+  },
+  {
+    "id": 4,
+    "slug": "sunyshore-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sunyshore City"
+  },
+  {
+    "id": 5,
+    "slug": "sinnoh-pokemon-league",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Pokémon League"
+  },
+  {
+    "id": 6,
+    "slug": "oreburgh-mine",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Oreburgh Mine"
+  },
+  {
+    "id": 7,
+    "slug": "valley-windworks",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Valley Windworks"
+  },
+  {
+    "id": 8,
+    "slug": "eterna-forest",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Eterna Forest"
+  },
+  {
+    "id": 9,
+    "slug": "fuego-ironworks",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Fuego Ironworks"
+  },
+  {
+    "id": 10,
+    "slug": "mt-coronet",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Mt. Coronet"
+  },
+  {
+    "id": 11,
+    "slug": "great-marsh",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Great Marsh"
+  },
+  {
+    "id": 12,
+    "slug": "solaceon-ruins",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Solaceon Ruins"
+  },
+  {
+    "id": 13,
+    "slug": "sinnoh-victory-road",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 14,
+    "slug": "ravaged-path",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Ravaged Path"
+  },
+  {
+    "id": 15,
+    "slug": "oreburgh-gate",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Oreburgh Gate"
+  },
+  {
+    "id": 16,
+    "slug": "stark-mountain",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Stark Mountain"
+  },
+  {
+    "id": 17,
+    "slug": "spring-path",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Spring Path"
+  },
+  {
+    "id": 18,
+    "slug": "turnback-cave",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Turnback Cave"
+  },
+  {
+    "id": 19,
+    "slug": "snowpoint-temple",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Snowpoint Temple"
+  },
+  {
+    "id": 20,
+    "slug": "wayward-cave",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Wayward Cave"
+  },
+  {
+    "id": 22,
+    "slug": "ruin-maniac-cave",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Ruin Maniac Cave"
+  },
+  {
+    "id": 23,
+    "slug": "trophy-garden",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Trophy Garden"
+  },
+  {
+    "id": 24,
+    "slug": "iron-island",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Iron Island"
+  },
+  {
+    "id": 25,
+    "slug": "old-chateau",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Old Chateau"
+  },
+  {
+    "id": 26,
+    "slug": "lake-verity",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Lake Verity"
+  },
+  {
+    "id": 27,
+    "slug": "lake-valor",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Lake Valor"
+  },
+  {
+    "id": 28,
+    "slug": "lake-acuity",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Lake Acuity"
+  },
+  {
+    "id": 29,
+    "slug": "valor-lakefront",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Valor Lakefront"
+  },
+  {
+    "id": 30,
+    "slug": "acuity-lakefront",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Acuity Lakefront"
+  },
+  {
+    "id": 31,
+    "slug": "sinnoh-route-201",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 201"
+  },
+  {
+    "id": 32,
+    "slug": "sinnoh-route-202",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 202"
+  },
+  {
+    "id": 33,
+    "slug": "sinnoh-route-203",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 203"
+  },
+  {
+    "id": 34,
+    "slug": "sinnoh-route-204",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 204"
+  },
+  {
+    "id": 35,
+    "slug": "sinnoh-route-205",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 205"
+  },
+  {
+    "id": 36,
+    "slug": "sinnoh-route-206",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 206"
+  },
+  {
+    "id": 37,
+    "slug": "sinnoh-route-207",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 207"
+  },
+  {
+    "id": 38,
+    "slug": "sinnoh-route-208",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 208"
+  },
+  {
+    "id": 39,
+    "slug": "sinnoh-route-209",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 209"
+  },
+  {
+    "id": 40,
+    "slug": "lost-tower",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Lost Tower"
+  },
+  {
+    "id": 41,
+    "slug": "sinnoh-route-210",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 210"
+  },
+  {
+    "id": 42,
+    "slug": "sinnoh-route-211",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 211"
+  },
+  {
+    "id": 43,
+    "slug": "sinnoh-route-212",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 212"
+  },
+  {
+    "id": 44,
+    "slug": "sinnoh-route-213",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 213"
+  },
+  {
+    "id": 45,
+    "slug": "sinnoh-route-214",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 214"
+  },
+  {
+    "id": 46,
+    "slug": "sinnoh-route-215",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 215"
+  },
+  {
+    "id": 47,
+    "slug": "sinnoh-route-216",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 216"
+  },
+  {
+    "id": 48,
+    "slug": "sinnoh-route-217",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 217"
+  },
+  {
+    "id": 49,
+    "slug": "sinnoh-route-218",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 218"
+  },
+  {
+    "id": 50,
+    "slug": "sinnoh-route-219",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 219"
+  },
+  {
+    "id": 51,
+    "slug": "sinnoh-route-221",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 221"
+  },
+  {
+    "id": 52,
+    "slug": "sinnoh-route-222",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 222"
+  },
+  {
+    "id": 53,
+    "slug": "sinnoh-route-224",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 224"
+  },
+  {
+    "id": 54,
+    "slug": "sinnoh-route-225",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 225"
+  },
+  {
+    "id": 55,
+    "slug": "sinnoh-route-227",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 227"
+  },
+  {
+    "id": 56,
+    "slug": "sinnoh-route-228",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 228"
+  },
+  {
+    "id": 57,
+    "slug": "sinnoh-route-229",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Route 229"
+  },
+  {
+    "id": 58,
+    "slug": "twinleaf-town",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Twinleaf Town"
+  },
+  {
+    "id": 59,
+    "slug": "celestic-town",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Celestic Town"
+  },
+  {
+    "id": 60,
+    "slug": "resort-area",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Resort Area"
+  },
+  {
+    "id": 61,
+    "slug": "sinnoh-sea-route-220",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sea Route 220"
+  },
+  {
+    "id": 62,
+    "slug": "sinnoh-sea-route-223",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sea Route 223"
+  },
+  {
+    "id": 63,
+    "slug": "sinnoh-sea-route-226",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sea Route 226"
+  },
+  {
+    "id": 64,
+    "slug": "sinnoh-sea-route-230",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sea Route 230"
+  },
+  {
+    "id": 65,
+    "slug": "blackthorn-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Blackthorn City"
+  },
+  {
+    "id": 66,
+    "slug": "burned-tower",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Burned Tower"
+  },
+  {
+    "id": 67,
+    "slug": "celadon-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Celadon City"
+  },
+  {
+    "id": 68,
+    "slug": "cerulean-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Cerulean City"
+  },
+  {
+    "id": 69,
+    "slug": "cherrygrove-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Cherrygrove City"
+  },
+  {
+    "id": 70,
+    "slug": "cianwood-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Cianwood City"
+  },
+  {
+    "id": 71,
+    "slug": "cinnabar-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Cinnabar Island"
+  },
+  {
+    "id": 72,
+    "slug": "dark-cave",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Dark Cave"
+  },
+  {
+    "id": 73,
+    "slug": "digletts-cave",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Diglett's Cave"
+  },
+  {
+    "id": 74,
+    "slug": "dragons-den",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Dragon's Den"
+  },
+  {
+    "id": 75,
+    "slug": "ecruteak-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Ecruteak City"
+  },
+  {
+    "id": 76,
+    "slug": "fuchsia-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Fuchsia City"
+  },
+  {
+    "id": 77,
+    "slug": "ice-path",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Ice Path"
+  },
+  {
+    "id": 78,
+    "slug": "ilex-forest",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Ilex Forest"
+  },
+  {
+    "id": 79,
+    "slug": "lake-of-rage",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Lake of Rage"
+  },
+  {
+    "id": 80,
+    "slug": "mt-moon",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Mt. Moon"
+  },
+  {
+    "id": 81,
+    "slug": "mt-mortar",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Mt. Mortar"
+  },
+  {
+    "id": 82,
+    "slug": "mt-silver",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Mt. Silver"
+  },
+  {
+    "id": 83,
+    "slug": "national-park",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "National Park"
+  },
+  {
+    "id": 84,
+    "slug": "new-bark-town",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "New Bark Town"
+  },
+  {
+    "id": 85,
+    "slug": "olivine-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Olivine City"
+  },
+  {
+    "id": 86,
+    "slug": "pallet-town",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Pallet Town"
+  },
+  {
+    "id": 87,
+    "slug": "rock-tunnel",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Rock Tunnel"
+  },
+  {
+    "id": 88,
+    "slug": "kanto-route-1",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 1"
+  },
+  {
+    "id": 89,
+    "slug": "kanto-route-10",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 10"
+  },
+  {
+    "id": 90,
+    "slug": "kanto-route-11",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 11"
+  },
+  {
+    "id": 91,
+    "slug": "kanto-route-12",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 12"
+  },
+  {
+    "id": 92,
+    "slug": "kanto-route-13",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 13"
+  },
+  {
+    "id": 93,
+    "slug": "kanto-route-14",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 14"
+  },
+  {
+    "id": 94,
+    "slug": "kanto-route-15",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 15"
+  },
+  {
+    "id": 95,
+    "slug": "kanto-route-16",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 16"
+  },
+  {
+    "id": 96,
+    "slug": "kanto-route-17",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 17"
+  },
+  {
+    "id": 97,
+    "slug": "kanto-route-18",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 18"
+  },
+  {
+    "id": 98,
+    "slug": "kanto-sea-route-19",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Sea Route 19"
+  },
+  {
+    "id": 99,
+    "slug": "kanto-route-2",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 2"
+  },
+  {
+    "id": 100,
+    "slug": "kanto-sea-route-20",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Sea Route 20"
+  },
+  {
+    "id": 101,
+    "slug": "kanto-sea-route-21",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Sea Route 21"
+  },
+  {
+    "id": 102,
+    "slug": "kanto-route-22",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 22"
+  },
+  {
+    "id": 103,
+    "slug": "kanto-route-24",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 24"
+  },
+  {
+    "id": 104,
+    "slug": "kanto-route-25",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 25"
+  },
+  {
+    "id": 105,
+    "slug": "kanto-route-26",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 26"
+  },
+  {
+    "id": 106,
+    "slug": "kanto-route-27",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 27"
+  },
+  {
+    "id": 107,
+    "slug": "kanto-route-28",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 28"
+  },
+  {
+    "id": 108,
+    "slug": "johto-route-29",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 29"
+  },
+  {
+    "id": 109,
+    "slug": "kanto-route-3",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 3"
+  },
+  {
+    "id": 110,
+    "slug": "johto-route-30",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 30"
+  },
+  {
+    "id": 111,
+    "slug": "johto-route-31",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 31"
+  },
+  {
+    "id": 112,
+    "slug": "johto-route-32",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 32"
+  },
+  {
+    "id": 113,
+    "slug": "johto-route-33",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 33"
+  },
+  {
+    "id": 114,
+    "slug": "johto-route-34",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 34"
+  },
+  {
+    "id": 115,
+    "slug": "johto-route-35",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 35"
+  },
+  {
+    "id": 116,
+    "slug": "johto-route-36",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 36"
+  },
+  {
+    "id": 117,
+    "slug": "johto-route-37",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 37"
+  },
+  {
+    "id": 118,
+    "slug": "johto-route-38",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 38"
+  },
+  {
+    "id": 119,
+    "slug": "johto-route-39",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 39"
+  },
+  {
+    "id": 120,
+    "slug": "kanto-route-4",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 4"
+  },
+  {
+    "id": 121,
+    "slug": "johto-sea-route-40",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Sea Route 40"
+  },
+  {
+    "id": 122,
+    "slug": "johto-sea-route-41",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Sea Route 41"
+  },
+  {
+    "id": 123,
+    "slug": "johto-route-42",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 42"
+  },
+  {
+    "id": 124,
+    "slug": "johto-route-43",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 43"
+  },
+  {
+    "id": 125,
+    "slug": "johto-route-44",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 44"
+  },
+  {
+    "id": 126,
+    "slug": "johto-route-45",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 45"
+  },
+  {
+    "id": 127,
+    "slug": "johto-route-46",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 46"
+  },
+  {
+    "id": 128,
+    "slug": "johto-route-47",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 47"
+  },
+  {
+    "id": 129,
+    "slug": "johto-route-48",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Route 48"
+  },
+  {
+    "id": 130,
+    "slug": "kanto-route-5",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 5"
+  },
+  {
+    "id": 131,
+    "slug": "kanto-route-6",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 6"
+  },
+  {
+    "id": 132,
+    "slug": "kanto-route-7",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 7"
+  },
+  {
+    "id": 133,
+    "slug": "kanto-route-8",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 8"
+  },
+  {
+    "id": 134,
+    "slug": "kanto-route-9",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 9"
+  },
+  {
+    "id": 135,
+    "slug": "ruins-of-alph",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Ruins of Alph"
+  },
+  {
+    "id": 136,
+    "slug": "seafoam-islands",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Seafoam Islands"
+  },
+  {
+    "id": 137,
+    "slug": "slowpoke-well",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Slowpoke Well"
+  },
+  {
+    "id": 138,
+    "slug": "sprout-tower",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Sprout Tower"
+  },
+  {
+    "id": 139,
+    "slug": "bell-tower",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Bell Tower"
+  },
+  {
+    "id": 140,
+    "slug": "tohjo-falls",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Tohjo Falls"
+  },
+  {
+    "id": 141,
+    "slug": "union-cave",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Union Cave"
+  },
+  {
+    "id": 147,
+    "slug": "cerulean-cave",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Cerulean Cave"
+  },
+  {
+    "id": 148,
+    "slug": "unknown-all-poliwag",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Unknown; all Poliwag"
+  },
+  {
+    "id": 149,
+    "slug": "unknown-all-rattata",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Unknown; all Rattata"
+  },
+  {
+    "id": 150,
+    "slug": "unknown-all-bugs",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Unknown; all bugs"
+  },
+  {
+    "id": 151,
+    "slug": "vermilion-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Vermilion City"
+  },
+  {
+    "id": 152,
+    "slug": "kanto-victory-road-1",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 153,
+    "slug": "violet-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Violet City"
+  },
+  {
+    "id": 154,
+    "slug": "viridian-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Viridian City"
+  },
+  {
+    "id": 155,
+    "slug": "viridian-forest",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Viridian Forest"
+  },
+  {
+    "id": 156,
+    "slug": "whirl-islands",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Whirl Islands"
+  },
+  {
+    "id": 157,
+    "slug": "kanto-route-23",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Route 23"
+  },
+  {
+    "id": 158,
+    "slug": "kanto-power-plant",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Kanto Power Plant"
+  },
+  {
+    "id": 159,
+    "slug": "kanto-victory-road-2",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 160,
+    "slug": "pokemon-tower",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Pokémon Tower"
+  },
+  {
+    "id": 161,
+    "slug": "pokemon-mansion",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Pokémon Mansion"
+  },
+  {
+    "id": 162,
+    "slug": "kanto-safari-zone",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Safari Zone"
+  },
+  {
+    "id": 163,
+    "slug": "sandgem-town",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sandgem Town"
+  },
+  {
+    "id": 164,
+    "slug": "floaroma-town",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Floaroma Town"
+  },
+  {
+    "id": 165,
+    "slug": "solaceon-town",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Solaceon Town"
+  },
+  {
+    "id": 167,
+    "slug": "jubilife-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Jubilife City"
+  },
+  {
+    "id": 168,
+    "slug": "oreburgh-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Oreburgh City"
+  },
+  {
+    "id": 169,
+    "slug": "hearthome-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Hearthome City"
+  },
+  {
+    "id": 170,
+    "slug": "veilstone-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Veilstone City"
+  },
+  {
+    "id": 171,
+    "slug": "snowpoint-city",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Snowpoint City"
+  },
+  {
+    "id": 172,
+    "slug": "spear-pillar",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Spear Pillar"
+  },
+  {
+    "id": 173,
+    "slug": "pal-park",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Pal Park"
+  },
+  {
+    "id": 174,
+    "slug": "amity-square",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Amity Square"
+  },
+  {
+    "id": 175,
+    "slug": "floaroma-meadow",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Floaroma Meadow"
+  },
+  {
+    "id": 177,
+    "slug": "fullmoon-island",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Fullmoon Island"
+  },
+  {
+    "id": 178,
+    "slug": "sendoff-spring",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sendoff Spring"
+  },
+  {
+    "id": 179,
+    "slug": "flower-paradise",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Flower Paradise"
+  },
+  {
+    "id": 180,
+    "slug": "maniac-tunnel",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Maniac Tunnel"
+  },
+  {
+    "id": 181,
+    "slug": "galactic-hq",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Galactic HQ"
+  },
+  {
+    "id": 182,
+    "slug": "verity-lakefront",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Verity Lakefront"
+  },
+  {
+    "id": 183,
+    "slug": "newmoon-island",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Newmoon Island"
+  },
+  {
+    "id": 184,
+    "slug": "sinnoh-battle-tower",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Tower"
+  },
+  {
+    "id": 185,
+    "slug": "fight-area",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Fight Area"
+  },
+  {
+    "id": 186,
+    "slug": "survival-area",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Survival Area"
+  },
+  {
+    "id": 187,
+    "slug": "seabreak-path",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Seabreak Path"
+  },
+  {
+    "id": 188,
+    "slug": "sinnoh-hall-of-origin-1",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Hall of Origin"
+  },
+  {
+    "id": 189,
+    "slug": "sinnoh-hall-of-origin-2",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Hall of Origin"
+  },
+  {
+    "id": 190,
+    "slug": "verity-cavern",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Verity Cavern"
+  },
+  {
+    "id": 191,
+    "slug": "valor-cavern",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Valor Cavern"
+  },
+  {
+    "id": 192,
+    "slug": "acuity-cavern",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Acuity Cavern"
+  },
+  {
+    "id": 193,
+    "slug": "jubilife-tv",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Jubilife TV"
+  },
+  {
+    "id": 194,
+    "slug": "poketch-co",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Pokétch Co."
+  },
+  {
+    "id": 195,
+    "slug": "gts",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "GTS"
+  },
+  {
+    "id": 196,
+    "slug": "trainers-school",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Trainers’ School"
+  },
+  {
+    "id": 197,
+    "slug": "mining-museum",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Mining Museum"
+  },
+  {
+    "id": 198,
+    "slug": "sinnoh-flower-shop",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Flower Shop"
+  },
+  {
+    "id": 199,
+    "slug": "sinnoh-cycle-shop",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Cycle Shop"
+  },
+  {
+    "id": 200,
+    "slug": "contest-hall",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Contest Hall"
+  },
+  {
+    "id": 201,
+    "slug": "poffin-house",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Poffin House"
+  },
+  {
+    "id": 202,
+    "slug": "sinnoh-foreign-building",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Foreign Building"
+  },
+  {
+    "id": 203,
+    "slug": "pokemon-day-care",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Pokémon Day Care"
+  },
+  {
+    "id": 204,
+    "slug": "veilstone-store",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Veilstone Store"
+  },
+  {
+    "id": 205,
+    "slug": "sinnoh-game-corner",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Game Corner"
+  },
+  {
+    "id": 206,
+    "slug": "canalave-library",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Canalave Library"
+  },
+  {
+    "id": 207,
+    "slug": "vista-lighthouse",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Vista Lighthouse"
+  },
+  {
+    "id": 208,
+    "slug": "sunyshore-market",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Sunyshore Market"
+  },
+  {
+    "id": 209,
+    "slug": "footstep-house",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Footstep House"
+  },
+  {
+    "id": 210,
+    "slug": "sinnoh-cafe",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Café"
+  },
+  {
+    "id": 211,
+    "slug": "grand-lake",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Grand Lake"
+  },
+  {
+    "id": 212,
+    "slug": "sinnoh-restaurant",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Restaurant"
+  },
+  {
+    "id": 213,
+    "slug": "battle-park",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Park"
+  },
+  {
+    "id": 214,
+    "slug": "battle-frontier",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Frontier"
+  },
+  {
+    "id": 215,
+    "slug": "battle-factory",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Factory"
+  },
+  {
+    "id": 216,
+    "slug": "battle-castle",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Castle"
+  },
+  {
+    "id": 217,
+    "slug": "battle-arcade",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Arcade"
+  },
+  {
+    "id": 218,
+    "slug": "battle-hall",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battle Hall"
+  },
+  {
+    "id": 219,
+    "slug": "distortion-world",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Distortion World"
+  },
+  {
+    "id": 220,
+    "slug": "sinnoh-global-terminal",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Global Terminal"
+  },
+  {
+    "id": 221,
+    "slug": "sinnoh-villa",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Villa"
+  },
+  {
+    "id": 222,
+    "slug": "battleground",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Battleground"
+  },
+  {
+    "id": 223,
+    "slug": "rotoms-room",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "ROTOM's Room"
+  },
+  {
+    "id": 224,
+    "slug": "tg-eterna-bldg",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "T.G. Eterna Bldg"
+  },
+  {
+    "id": 225,
+    "slug": "iron-ruins",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Iron Ruins"
+  },
+  {
+    "id": 226,
+    "slug": "iceberg-ruins",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Iceberg Ruins"
+  },
+  {
+    "id": 227,
+    "slug": "rock-peak-ruins",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Rock Peak Ruins"
+  },
+  {
+    "id": 228,
+    "slug": "azalea-town",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Azalea Town"
+  },
+  {
+    "id": 229,
+    "slug": "goldenrod-city",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Goldenrod City"
+  },
+  {
+    "id": 230,
+    "slug": "mahogany-town",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Mahogany Town"
+  },
+  {
+    "id": 231,
+    "slug": "pewter-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Pewter City"
+  },
+  {
+    "id": 232,
+    "slug": "lavender-town",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Lavender Town"
+  },
+  {
+    "id": 233,
+    "slug": "indigo-plateau",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Indigo Plateau"
+  },
+  {
+    "id": 234,
+    "slug": "saffron-city",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Saffron City"
+  },
+  {
+    "id": 236,
+    "slug": "johto-lighthouse",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Lighthouse"
+  },
+  {
+    "id": 237,
+    "slug": "team-rocket-hq",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Team Rocket HQ"
+  },
+  {
+    "id": 238,
+    "slug": "goldenrod-tunnel",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Goldenrod Tunnel"
+  },
+  {
+    "id": 239,
+    "slug": "mt-silver-cave",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Mt. Silver Cave"
+  },
+  {
+    "id": 241,
+    "slug": "pokeathlon-dome",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Pokéathlon Dome"
+  },
+  {
+    "id": 242,
+    "slug": "ss-aqua",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "S.S. Aqua"
+  },
+  {
+    "id": 243,
+    "slug": "safari-zone-gate",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Safari Zone Gate"
+  },
+  {
+    "id": 244,
+    "slug": "cliff-cave",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Cliff Cave"
+  },
+  {
+    "id": 245,
+    "slug": "frontier-access",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Frontier Access"
+  },
+  {
+    "id": 246,
+    "slug": "bellchime-trail",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Bellchime Trail"
+  },
+  {
+    "id": 247,
+    "slug": "sinjoh-ruins",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Sinjoh Ruins"
+  },
+  {
+    "id": 248,
+    "slug": "embedded-tower",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Embedded Tower"
+  },
+  {
+    "id": 249,
+    "slug": "pokewalker",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Pokéwalker"
+  },
+  {
+    "id": 250,
+    "slug": "cliff-edge-gate",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Cliff Edge Gate"
+  },
+  {
+    "id": 252,
+    "slug": "radio-tower",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Radio Tower"
+  },
+  {
+    "id": 253,
+    "slug": "day-care-couple",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Day-Care Couple"
+  },
+  {
+    "id": 254,
+    "slug": "link-trade-arrive",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Link trade (arrive)"
+  },
+  {
+    "id": 255,
+    "slug": "link-trade-met",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Link trade (met)"
+  },
+  {
+    "id": 256,
+    "slug": "kanto",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Kanto"
+  },
+  {
+    "id": 257,
+    "slug": "johto",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Johto"
+  },
+  {
+    "id": 258,
+    "slug": "hoenn",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Hoenn"
+  },
+  {
+    "id": 259,
+    "slug": "sinnoh",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Sinnoh"
+  },
+  {
+    "id": 260,
+    "slug": "distant-land",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Distant land"
+  },
+  {
+    "id": 261,
+    "slug": "traveling-man",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Traveling Man"
+  },
+  {
+    "id": 262,
+    "slug": "riley",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Riley"
+  },
+  {
+    "id": 263,
+    "slug": "cynthia",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Cynthia"
+  },
+  {
+    "id": 264,
+    "slug": "mystery-zone",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Mystery Zone"
+  },
+  {
+    "id": 265,
+    "slug": "lovely-place",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Lovely place"
+  },
+  {
+    "id": 266,
+    "slug": "pokemon-ranger",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Ranger"
+  },
+  {
+    "id": 267,
+    "slug": "faraway-place",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Faraway place"
+  },
+  {
+    "id": 268,
+    "slug": "pokemon-movie",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie"
+  },
+  {
+    "id": 269,
+    "slug": "pokemon-movie-06",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 06"
+  },
+  {
+    "id": 270,
+    "slug": "pokemon-movie-07",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 07"
+  },
+  {
+    "id": 271,
+    "slug": "pokemon-movie-08",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 08"
+  },
+  {
+    "id": 272,
+    "slug": "pokemon-movie-09",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 09"
+  },
+  {
+    "id": 273,
+    "slug": "pokemon-movie-10",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 10"
+  },
+  {
+    "id": 274,
+    "slug": "pokemon-movie-11",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 11"
+  },
+  {
+    "id": 275,
+    "slug": "pokemon-movie-12",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 12"
+  },
+  {
+    "id": 276,
+    "slug": "pokemon-movie-13",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 13"
+  },
+  {
+    "id": 277,
+    "slug": "pokemon-movie-14",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 14"
+  },
+  {
+    "id": 278,
+    "slug": "pokemon-movie-15",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 15"
+  },
+  {
+    "id": 279,
+    "slug": "pokemon-movie-16",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Movie 16"
+  },
+  {
+    "id": 280,
+    "slug": "pokemon-cartoon",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Cartoon"
+  },
+  {
+    "id": 281,
+    "slug": "space-world",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World"
+  },
+  {
+    "id": 282,
+    "slug": "space-world-06",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 06"
+  },
+  {
+    "id": 283,
+    "slug": "space-world-07",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 07"
+  },
+  {
+    "id": 284,
+    "slug": "space-world-08",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 08"
+  },
+  {
+    "id": 285,
+    "slug": "space-world-09",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 09"
+  },
+  {
+    "id": 286,
+    "slug": "space-world-10",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 10"
+  },
+  {
+    "id": 287,
+    "slug": "space-world-11",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 11"
+  },
+  {
+    "id": 288,
+    "slug": "space-world-12",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 12"
+  },
+  {
+    "id": 289,
+    "slug": "space-world-13",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 13"
+  },
+  {
+    "id": 290,
+    "slug": "space-world-14",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 14"
+  },
+  {
+    "id": 291,
+    "slug": "space-world-15",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 15"
+  },
+  {
+    "id": 292,
+    "slug": "space-world-16",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Space World 16"
+  },
+  {
+    "id": 293,
+    "slug": "pokemon-festa",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa"
+  },
+  {
+    "id": 294,
+    "slug": "pokemon-festa-06",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 06"
+  },
+  {
+    "id": 295,
+    "slug": "pokemon-festa-07",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 07"
+  },
+  {
+    "id": 296,
+    "slug": "pokemon-festa-08",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 08"
+  },
+  {
+    "id": 297,
+    "slug": "pokemon-festa-09",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 09"
+  },
+  {
+    "id": 298,
+    "slug": "pokemon-festa-10",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 10"
+  },
+  {
+    "id": 299,
+    "slug": "pokemon-festa-11",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 11"
+  },
+  {
+    "id": 300,
+    "slug": "pokemon-festa-12",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 12"
+  },
+  {
+    "id": 301,
+    "slug": "pokemon-festa-13",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 13"
+  },
+  {
+    "id": 302,
+    "slug": "pokemon-festa-14",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 14"
+  },
+  {
+    "id": 303,
+    "slug": "pokemon-festa-15",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 15"
+  },
+  {
+    "id": 304,
+    "slug": "pokemon-festa-16",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Festa 16"
+  },
+  {
+    "id": 305,
+    "slug": "pokepark",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK"
+  },
+  {
+    "id": 306,
+    "slug": "pokepark-06",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 06"
+  },
+  {
+    "id": 307,
+    "slug": "pokepark-07",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 07"
+  },
+  {
+    "id": 308,
+    "slug": "pokepark-08",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 08"
+  },
+  {
+    "id": 309,
+    "slug": "pokepark-09",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 09"
+  },
+  {
+    "id": 310,
+    "slug": "pokepark-10",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 10"
+  },
+  {
+    "id": 311,
+    "slug": "pokepark-11",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 11"
+  },
+  {
+    "id": 312,
+    "slug": "pokepark-12",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 12"
+  },
+  {
+    "id": 313,
+    "slug": "pokepark-13",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 13"
+  },
+  {
+    "id": 314,
+    "slug": "pokepark-14",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 14"
+  },
+  {
+    "id": 315,
+    "slug": "pokepark-15",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 15"
+  },
+  {
+    "id": 316,
+    "slug": "pokepark-16",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "POKéPARK 16"
+  },
+  {
+    "id": 317,
+    "slug": "pokemon-center",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Center"
+  },
+  {
+    "id": 318,
+    "slug": "pc-tokyo",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "PC Tokyo"
+  },
+  {
+    "id": 319,
+    "slug": "pc-osaka",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "PC Osaka"
+  },
+  {
+    "id": 320,
+    "slug": "pc-fukuoka",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "PC Fukuoka"
+  },
+  {
+    "id": 321,
+    "slug": "pc-nagoya",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "PC Nagoya"
+  },
+  {
+    "id": 322,
+    "slug": "pc-sapporo",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "PC Sapporo"
+  },
+  {
+    "id": 323,
+    "slug": "pc-yokohama",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "PC Yokohama"
+  },
+  {
+    "id": 324,
+    "slug": "nintendo-world",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Nintendo World"
+  },
+  {
+    "id": 325,
+    "slug": "pokemon-event",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event"
+  },
+  {
+    "id": 326,
+    "slug": "pokemon-event-06",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 06"
+  },
+  {
+    "id": 327,
+    "slug": "pokemon-event-07",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 07"
+  },
+  {
+    "id": 328,
+    "slug": "pokemon-event-08",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 08"
+  },
+  {
+    "id": 329,
+    "slug": "pokemon-event-09",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 09"
+  },
+  {
+    "id": 330,
+    "slug": "pokemon-event-10",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 10"
+  },
+  {
+    "id": 331,
+    "slug": "pokemon-event-11",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 11"
+  },
+  {
+    "id": 332,
+    "slug": "pokemon-event-12",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 12"
+  },
+  {
+    "id": 333,
+    "slug": "pokemon-event-13",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 13"
+  },
+  {
+    "id": 334,
+    "slug": "pokemon-event-14",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 14"
+  },
+  {
+    "id": 335,
+    "slug": "pokemon-event-15",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 15"
+  },
+  {
+    "id": 336,
+    "slug": "pokemon-event-16",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Event 16"
+  },
+  {
+    "id": 337,
+    "slug": "wi-fi-event",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Wi-Fi Event"
+  },
+  {
+    "id": 338,
+    "slug": "wi-fi-gift",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Wi-Fi Gift"
+  },
+  {
+    "id": 339,
+    "slug": "pokemon-fan-club",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Pokémon Fan Club"
+  },
+  {
+    "id": 340,
+    "slug": "event-site",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Event Site"
+  },
+  {
+    "id": 341,
+    "slug": "concert-event",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Concert Event"
+  },
+  {
+    "id": 342,
+    "slug": "mr-pokemon",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Mr. Pokémon"
+  },
+  {
+    "id": 343,
+    "slug": "primo",
+    "region_id": null,
+    "name_ko": null,
+    "name_en": "Primo"
+  },
+  {
+    "id": 344,
+    "slug": "unova-mystery-zone",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Mystery Zone"
+  },
+  {
+    "id": 345,
+    "slug": "unova-faraway-place",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Faraway place"
+  },
+  {
+    "id": 346,
+    "slug": "nuvema-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Nuvema Town"
+  },
+  {
+    "id": 347,
+    "slug": "accumula-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Accumula Town"
+  },
+  {
+    "id": 348,
+    "slug": "striaton-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Striaton City"
+  },
+  {
+    "id": 349,
+    "slug": "nacrene-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Nacrene City"
+  },
+  {
+    "id": 350,
+    "slug": "castelia-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Castelia City"
+  },
+  {
+    "id": 351,
+    "slug": "nimbasa-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Nimbasa City"
+  },
+  {
+    "id": 352,
+    "slug": "driftveil-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Driftveil City"
+  },
+  {
+    "id": 353,
+    "slug": "mistralton-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Mistralton City"
+  },
+  {
+    "id": 354,
+    "slug": "icirrus-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Icirrus City"
+  },
+  {
+    "id": 355,
+    "slug": "opelucid-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Opelucid City"
+  },
+  {
+    "id": 356,
+    "slug": "unova-route-1",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 1"
+  },
+  {
+    "id": 357,
+    "slug": "unova-route-2",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 2"
+  },
+  {
+    "id": 358,
+    "slug": "unova-route-3",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 3"
+  },
+  {
+    "id": 359,
+    "slug": "unova-route-4",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 4"
+  },
+  {
+    "id": 360,
+    "slug": "unova-route-5",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 5"
+  },
+  {
+    "id": 361,
+    "slug": "unova-route-6",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 6"
+  },
+  {
+    "id": 362,
+    "slug": "unova-route-7",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 7"
+  },
+  {
+    "id": 363,
+    "slug": "unova-route-8",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 8"
+  },
+  {
+    "id": 364,
+    "slug": "unova-route-9",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 9"
+  },
+  {
+    "id": 365,
+    "slug": "unova-route-10",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 10"
+  },
+  {
+    "id": 366,
+    "slug": "unova-route-11",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 11"
+  },
+  {
+    "id": 367,
+    "slug": "unova-route-12",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 12"
+  },
+  {
+    "id": 368,
+    "slug": "unova-route-13",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 13"
+  },
+  {
+    "id": 369,
+    "slug": "unova-route-14",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 14"
+  },
+  {
+    "id": 370,
+    "slug": "unova-route-15",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 15"
+  },
+  {
+    "id": 371,
+    "slug": "unova-route-16",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 16"
+  },
+  {
+    "id": 372,
+    "slug": "unova-route-17",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 17"
+  },
+  {
+    "id": 373,
+    "slug": "unova-route-18",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 18"
+  },
+  {
+    "id": 374,
+    "slug": "dreamyard",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Dreamyard"
+  },
+  {
+    "id": 375,
+    "slug": "pinwheel-forest",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Pinwheel Forest"
+  },
+  {
+    "id": 376,
+    "slug": "desert-resort",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Desert Resort"
+  },
+  {
+    "id": 377,
+    "slug": "relic-castle",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Relic Castle"
+  },
+  {
+    "id": 378,
+    "slug": "cold-storage",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Cold Storage"
+  },
+  {
+    "id": 379,
+    "slug": "chargestone-cave",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Chargestone Cave"
+  },
+  {
+    "id": 380,
+    "slug": "twist-mountain",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Twist Mountain"
+  },
+  {
+    "id": 381,
+    "slug": "dragonspiral-tower",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Dragonspiral Tower"
+  },
+  {
+    "id": 382,
+    "slug": "unova-victory-road",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 383,
+    "slug": "lacunosa-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Lacunosa Town"
+  },
+  {
+    "id": 384,
+    "slug": "undella-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Undella Town"
+  },
+  {
+    "id": 385,
+    "slug": "anville-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Anville Town"
+  },
+  {
+    "id": 386,
+    "slug": "unova-pokemon-league",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Pokémon League"
+  },
+  {
+    "id": 387,
+    "slug": "ns-castle",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "N's Castle"
+  },
+  {
+    "id": 388,
+    "slug": "royal-unova",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Royal Unova"
+  },
+  {
+    "id": 389,
+    "slug": "gear-station",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Gear Station"
+  },
+  {
+    "id": 390,
+    "slug": "battle-subway",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Battle Subway"
+  },
+  {
+    "id": 391,
+    "slug": "musical-theater",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Musical Theater"
+  },
+  {
+    "id": 392,
+    "slug": "black-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Black City"
+  },
+  {
+    "id": 393,
+    "slug": "white-forest",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "White Forest"
+  },
+  {
+    "id": 394,
+    "slug": "unity-tower",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Unity Tower"
+  },
+  {
+    "id": 395,
+    "slug": "wellspring-cave",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Wellspring Cave"
+  },
+  {
+    "id": 396,
+    "slug": "mistralton-cave",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Mistralton Cave"
+  },
+  {
+    "id": 397,
+    "slug": "rumination-field",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Rumination Field"
+  },
+  {
+    "id": 398,
+    "slug": "celestial-tower",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Celestial Tower"
+  },
+  {
+    "id": 399,
+    "slug": "moor-of-icirrus",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Moor of Icirrus"
+  },
+  {
+    "id": 400,
+    "slug": "unova-shopping-mall",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Shopping Mall"
+  },
+  {
+    "id": 401,
+    "slug": "challengers-cave",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Challenger's Cave"
+  },
+  {
+    "id": 402,
+    "slug": "poke-transfer-lab",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Poké Transfer Lab"
+  },
+  {
+    "id": 403,
+    "slug": "giant-chasm",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Giant Chasm"
+  },
+  {
+    "id": 404,
+    "slug": "liberty-garden",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Liberty Garden"
+  },
+  {
+    "id": 405,
+    "slug": "p2-laboratory",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "P2 Laboratory"
+  },
+  {
+    "id": 406,
+    "slug": "skyarrow-bridge",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Skyarrow Bridge"
+  },
+  {
+    "id": 407,
+    "slug": "driftveil-drawbridge",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Driftveil Drawbridge"
+  },
+  {
+    "id": 408,
+    "slug": "tubeline-bridge",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Tubeline Bridge"
+  },
+  {
+    "id": 409,
+    "slug": "village-bridge",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Village Bridge"
+  },
+  {
+    "id": 410,
+    "slug": "marvelous-bridge",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Marvelous Bridge"
+  },
+  {
+    "id": 411,
+    "slug": "entralink",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Entralink"
+  },
+  {
+    "id": 412,
+    "slug": "abundant-shrine",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Abundant Shrine"
+  },
+  {
+    "id": 413,
+    "slug": "undella-bay",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Undella Bay"
+  },
+  {
+    "id": 414,
+    "slug": "lostlorn-forest",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Lostlorn Forest"
+  },
+  {
+    "id": 415,
+    "slug": "trial-chamber",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Trial Chamber"
+  },
+  {
+    "id": 416,
+    "slug": "guidance-chamber",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Guidance Chamber"
+  },
+  {
+    "id": 417,
+    "slug": "entree-forest",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Entree Forest"
+  },
+  {
+    "id": 418,
+    "slug": "accumula-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Accumula Gate"
+  },
+  {
+    "id": 419,
+    "slug": "undella-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Undella Gate"
+  },
+  {
+    "id": 420,
+    "slug": "nacrene-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Nacrene Gate"
+  },
+  {
+    "id": 421,
+    "slug": "castelia-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Castelia Gate"
+  },
+  {
+    "id": 422,
+    "slug": "nimbasa-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Nimbasa Gate"
+  },
+  {
+    "id": 423,
+    "slug": "opelucid-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Opelucid Gate"
+  },
+  {
+    "id": 424,
+    "slug": "black-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Black Gate"
+  },
+  {
+    "id": 425,
+    "slug": "white-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "White Gate"
+  },
+  {
+    "id": 426,
+    "slug": "bridge-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Bridge Gate"
+  },
+  {
+    "id": 427,
+    "slug": "route-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route Gate"
+  },
+  {
+    "id": 428,
+    "slug": "abyssal-ruins",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Abyssal Ruins"
+  },
+  {
+    "id": 429,
+    "slug": "petalburg-city",
+    "region_id": 3,
+    "name_ko": "등화도시",
+    "name_en": "Petalburg City"
+  },
+  {
+    "id": 430,
+    "slug": "slateport-city",
+    "region_id": 3,
+    "name_ko": "잿빛도시",
+    "name_en": "Slateport City"
+  },
+  {
+    "id": 431,
+    "slug": "lilycove-city",
+    "region_id": 3,
+    "name_ko": "해안시티",
+    "name_en": "Lilycove City"
+  },
+  {
+    "id": 432,
+    "slug": "mossdeep-city",
+    "region_id": 3,
+    "name_ko": "이끼시티",
+    "name_en": "Mossdeep City"
+  },
+  {
+    "id": 433,
+    "slug": "sootopolis-city",
+    "region_id": 3,
+    "name_ko": "루네시티",
+    "name_en": "Sootopolis City"
+  },
+  {
+    "id": 434,
+    "slug": "ever-grande-city",
+    "region_id": 3,
+    "name_ko": "그랜드시티",
+    "name_en": "Ever Grande City"
+  },
+  {
+    "id": 435,
+    "slug": "meteor-falls",
+    "region_id": 3,
+    "name_ko": "유성의 폭포",
+    "name_en": "Meteor Falls"
+  },
+  {
+    "id": 436,
+    "slug": "rusturf-tunnel",
+    "region_id": 3,
+    "name_ko": "금잔터널",
+    "name_en": "Rusturf Tunnel"
+  },
+  {
+    "id": 437,
+    "slug": "granite-cave",
+    "region_id": 3,
+    "name_ko": "바위 동굴",
+    "name_en": "Granite Cave"
+  },
+  {
+    "id": 438,
+    "slug": "petalburg-woods",
+    "region_id": 3,
+    "name_ko": "등화숲",
+    "name_en": "Petalburg Woods"
+  },
+  {
+    "id": 439,
+    "slug": "jagged-pass",
+    "region_id": 3,
+    "name_ko": "울퉁불퉁 산길",
+    "name_en": "Jagged Pass"
+  },
+  {
+    "id": 440,
+    "slug": "fiery-path",
+    "region_id": 3,
+    "name_ko": "불꽃샛길",
+    "name_en": "Fiery Path"
+  },
+  {
+    "id": 441,
+    "slug": "mt-pyre",
+    "region_id": 3,
+    "name_ko": "송화산",
+    "name_en": "Mt. Pyre"
+  },
+  {
+    "id": 442,
+    "slug": "seafloor-cavern",
+    "region_id": 3,
+    "name_ko": "해저동굴",
+    "name_en": "Seafloor Cavern"
+  },
+  {
+    "id": 443,
+    "slug": "cave-of-origin",
+    "region_id": 3,
+    "name_ko": "각성의 사당",
+    "name_en": "Cave of Origin"
+  },
+  {
+    "id": 444,
+    "slug": "hoenn-victory-road",
+    "region_id": 3,
+    "name_ko": "챔피언로드",
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 445,
+    "slug": "shoal-cave",
+    "region_id": 3,
+    "name_ko": "여울의 동굴",
+    "name_en": "Shoal Cave"
+  },
+  {
+    "id": 446,
+    "slug": "new-mauville",
+    "region_id": 3,
+    "name_ko": "뉴보라",
+    "name_en": "New Mauville"
+  },
+  {
+    "id": 447,
+    "slug": "abandoned-ship",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Abandoned Ship"
+  },
+  {
+    "id": 448,
+    "slug": "sky-pillar",
+    "region_id": 3,
+    "name_ko": "하늘기둥",
+    "name_en": "Sky Pillar"
+  },
+  {
+    "id": 449,
+    "slug": "hoenn-route-101",
+    "region_id": 3,
+    "name_ko": "101번도로",
+    "name_en": "Route 101"
+  },
+  {
+    "id": 450,
+    "slug": "hoenn-route-102",
+    "region_id": 3,
+    "name_ko": "102번도로",
+    "name_en": "Route 102"
+  },
+  {
+    "id": 451,
+    "slug": "hoenn-route-103",
+    "region_id": 3,
+    "name_ko": "103번도로",
+    "name_en": "Route 103"
+  },
+  {
+    "id": 452,
+    "slug": "hoenn-route-104",
+    "region_id": 3,
+    "name_ko": "104번도로",
+    "name_en": "Route 104"
+  },
+  {
+    "id": 453,
+    "slug": "hoenn-route-105",
+    "region_id": 3,
+    "name_ko": "105번수로",
+    "name_en": "Route 105"
+  },
+  {
+    "id": 454,
+    "slug": "hoenn-route-106",
+    "region_id": 3,
+    "name_ko": "106번수로",
+    "name_en": "Route 106"
+  },
+  {
+    "id": 455,
+    "slug": "hoenn-route-107",
+    "region_id": 3,
+    "name_ko": "107번수로",
+    "name_en": "Route 107"
+  },
+  {
+    "id": 456,
+    "slug": "hoenn-route-108",
+    "region_id": 3,
+    "name_ko": "108번수로",
+    "name_en": "Route 108"
+  },
+  {
+    "id": 457,
+    "slug": "hoenn-route-109",
+    "region_id": 3,
+    "name_ko": "109번수로",
+    "name_en": "Route 109"
+  },
+  {
+    "id": 458,
+    "slug": "hoenn-route-110",
+    "region_id": 3,
+    "name_ko": "110번도로",
+    "name_en": "Route 110"
+  },
+  {
+    "id": 459,
+    "slug": "hoenn-route-111",
+    "region_id": 3,
+    "name_ko": "111번도로",
+    "name_en": "Route 111"
+  },
+  {
+    "id": 460,
+    "slug": "hoenn-route-112",
+    "region_id": 3,
+    "name_ko": "112번도로",
+    "name_en": "Route 112"
+  },
+  {
+    "id": 461,
+    "slug": "hoenn-route-113",
+    "region_id": 3,
+    "name_ko": "113번도로",
+    "name_en": "Route 113"
+  },
+  {
+    "id": 462,
+    "slug": "hoenn-route-114",
+    "region_id": 3,
+    "name_ko": "114번도로",
+    "name_en": "Route 114"
+  },
+  {
+    "id": 463,
+    "slug": "hoenn-route-115",
+    "region_id": 3,
+    "name_ko": "115번도로",
+    "name_en": "Route 115"
+  },
+  {
+    "id": 464,
+    "slug": "hoenn-route-116",
+    "region_id": 3,
+    "name_ko": "116번도로",
+    "name_en": "Route 116"
+  },
+  {
+    "id": 465,
+    "slug": "hoenn-route-117",
+    "region_id": 3,
+    "name_ko": "117번도로",
+    "name_en": "Route 117"
+  },
+  {
+    "id": 466,
+    "slug": "hoenn-route-118",
+    "region_id": 3,
+    "name_ko": "118번도로",
+    "name_en": "Route 118"
+  },
+  {
+    "id": 467,
+    "slug": "hoenn-route-119",
+    "region_id": 3,
+    "name_ko": "119번도로",
+    "name_en": "Route 119"
+  },
+  {
+    "id": 468,
+    "slug": "hoenn-route-120",
+    "region_id": 3,
+    "name_ko": "120번도로",
+    "name_en": "Route 120"
+  },
+  {
+    "id": 469,
+    "slug": "hoenn-route-121",
+    "region_id": 3,
+    "name_ko": "121번도로",
+    "name_en": "Route 121"
+  },
+  {
+    "id": 470,
+    "slug": "hoenn-route-122",
+    "region_id": 3,
+    "name_ko": "122번수로",
+    "name_en": "Route 122"
+  },
+  {
+    "id": 471,
+    "slug": "hoenn-route-123",
+    "region_id": 3,
+    "name_ko": "123번도로",
+    "name_en": "Route 123"
+  },
+  {
+    "id": 472,
+    "slug": "hoenn-route-124",
+    "region_id": 3,
+    "name_ko": "124번수로",
+    "name_en": "Route 124"
+  },
+  {
+    "id": 473,
+    "slug": "hoenn-route-125",
+    "region_id": 3,
+    "name_ko": "125번수로",
+    "name_en": "Route 125"
+  },
+  {
+    "id": 474,
+    "slug": "hoenn-route-126",
+    "region_id": 3,
+    "name_ko": "126번수로",
+    "name_en": "Route 126"
+  },
+  {
+    "id": 475,
+    "slug": "hoenn-route-127",
+    "region_id": 3,
+    "name_ko": "127번수로",
+    "name_en": "Route 127"
+  },
+  {
+    "id": 476,
+    "slug": "hoenn-route-128",
+    "region_id": 3,
+    "name_ko": "128번수로",
+    "name_en": "Route 128"
+  },
+  {
+    "id": 477,
+    "slug": "hoenn-route-129",
+    "region_id": 3,
+    "name_ko": "129번수로",
+    "name_en": "Route 129"
+  },
+  {
+    "id": 478,
+    "slug": "hoenn-route-130",
+    "region_id": 3,
+    "name_ko": "130번수로",
+    "name_en": "Route 130"
+  },
+  {
+    "id": 479,
+    "slug": "hoenn-route-131",
+    "region_id": 3,
+    "name_ko": "131번수로",
+    "name_en": "Route 131"
+  },
+  {
+    "id": 480,
+    "slug": "hoenn-route-132",
+    "region_id": 3,
+    "name_ko": "132번수로",
+    "name_en": "Route 132"
+  },
+  {
+    "id": 481,
+    "slug": "hoenn-route-133",
+    "region_id": 3,
+    "name_ko": "133번수로",
+    "name_en": "Route 133"
+  },
+  {
+    "id": 482,
+    "slug": "hoenn-route-134",
+    "region_id": 3,
+    "name_ko": "134번수로",
+    "name_en": "Route 134"
+  },
+  {
+    "id": 483,
+    "slug": "hoenn-safari-zone",
+    "region_id": 3,
+    "name_ko": "사파리존",
+    "name_en": "Safari Zone"
+  },
+  {
+    "id": 484,
+    "slug": "dewford-town",
+    "region_id": 3,
+    "name_ko": "무로마을",
+    "name_en": "Dewford Town"
+  },
+  {
+    "id": 485,
+    "slug": "pacifidlog-town",
+    "region_id": 3,
+    "name_ko": "황금마을",
+    "name_en": "Pacifidlog Town"
+  },
+  {
+    "id": 486,
+    "slug": "magma-hideout",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Magma Hideout"
+  },
+  {
+    "id": 487,
+    "slug": "mirage-tower",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Mirage Tower"
+  },
+  {
+    "id": 488,
+    "slug": "desert-underpass",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Desert Underpass"
+  },
+  {
+    "id": 489,
+    "slug": "artisan-cave",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Artisan Cave"
+  },
+  {
+    "id": 490,
+    "slug": "hoenn-altering-cave",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Altering Cave"
+  },
+  {
+    "id": 491,
+    "slug": "monean-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Monean Chamber"
+  },
+  {
+    "id": 492,
+    "slug": "liptoo-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Liptoo Chamber"
+  },
+  {
+    "id": 493,
+    "slug": "weepth-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Weepth Chamber"
+  },
+  {
+    "id": 494,
+    "slug": "dilford-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Dilford Chamber"
+  },
+  {
+    "id": 495,
+    "slug": "scufib-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Scufib Chamber"
+  },
+  {
+    "id": 496,
+    "slug": "rixy-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Rixy Chamber"
+  },
+  {
+    "id": 497,
+    "slug": "viapos-chamber",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Viapos Chamber"
+  },
+  {
+    "id": 498,
+    "slug": "ss-anne",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "S.S. Anne"
+  },
+  {
+    "id": 500,
+    "slug": "mt-ember",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Mt. Ember"
+  },
+  {
+    "id": 501,
+    "slug": "berry-forest",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Berry Forest"
+  },
+  {
+    "id": 502,
+    "slug": "icefall-cave",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Icefall Cave"
+  },
+  {
+    "id": 503,
+    "slug": "pattern-bush",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Pattern Bush"
+  },
+  {
+    "id": 504,
+    "slug": "lost-cave",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Lost Cave"
+  },
+  {
+    "id": 505,
+    "slug": "kindle-road",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Kindle Road"
+  },
+  {
+    "id": 506,
+    "slug": "treasure-beach",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Treasure Beach"
+  },
+  {
+    "id": 507,
+    "slug": "cape-brink",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Cape Brink"
+  },
+  {
+    "id": 508,
+    "slug": "bond-bridge",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Bond Bridge"
+  },
+  {
+    "id": 509,
+    "slug": "three-isle-port",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Three Isle Port"
+  },
+  {
+    "id": 510,
+    "slug": "resort-gorgeous",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Resort Gorgeous"
+  },
+  {
+    "id": 511,
+    "slug": "water-labyrinth",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Water Labyrinth"
+  },
+  {
+    "id": 512,
+    "slug": "five-isle-meadow",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Five Isle Meadow"
+  },
+  {
+    "id": 513,
+    "slug": "memorial-pillar",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Memorial Pillar"
+  },
+  {
+    "id": 514,
+    "slug": "outcast-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Outcast Island"
+  },
+  {
+    "id": 515,
+    "slug": "green-path",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Green Path"
+  },
+  {
+    "id": 516,
+    "slug": "water-path",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Water Path"
+  },
+  {
+    "id": 517,
+    "slug": "ruin-valley",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Ruin Valley"
+  },
+  {
+    "id": 518,
+    "slug": "trainer-tower",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Trainer Tower"
+  },
+  {
+    "id": 519,
+    "slug": "canyon-entrance",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Canyon Entrance"
+  },
+  {
+    "id": 520,
+    "slug": "sevault-canyon",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Sevault Canyon"
+  },
+  {
+    "id": 521,
+    "slug": "tanoby-ruins",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Tanoby Ruins"
+  },
+  {
+    "id": 526,
+    "slug": "one-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "One Island"
+  },
+  {
+    "id": 527,
+    "slug": "four-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Four Island"
+  },
+  {
+    "id": 528,
+    "slug": "five-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Five Island"
+  },
+  {
+    "id": 529,
+    "slug": "kanto-altering-cave",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Altering Cave"
+  },
+  {
+    "id": 531,
+    "slug": "aspertia-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Aspertia City"
+  },
+  {
+    "id": 532,
+    "slug": "virbank-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Virbank City"
+  },
+  {
+    "id": 533,
+    "slug": "humilau-city",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Humilau City"
+  },
+  {
+    "id": 534,
+    "slug": "pokestar-studios",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "PokéStar Studios"
+  },
+  {
+    "id": 535,
+    "slug": "join-avenue",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Join Avenue"
+  },
+  {
+    "id": 536,
+    "slug": "floccesy-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Floccesy Town"
+  },
+  {
+    "id": 537,
+    "slug": "lentimas-town",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Lentimas Town"
+  },
+  {
+    "id": 538,
+    "slug": "unova-route-19",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 19"
+  },
+  {
+    "id": 539,
+    "slug": "unova-route-20",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 20"
+  },
+  {
+    "id": 540,
+    "slug": "unova-route-21",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 21"
+  },
+  {
+    "id": 541,
+    "slug": "unova-route-22",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 22"
+  },
+  {
+    "id": 542,
+    "slug": "unova-route-23",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Route 23"
+  },
+  {
+    "id": 543,
+    "slug": "castelia-sewers",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Castelia Sewers"
+  },
+  {
+    "id": 544,
+    "slug": "floccesy-ranch",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Floccesy Ranch"
+  },
+  {
+    "id": 545,
+    "slug": "virbank-complex",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Virbank Complex"
+  },
+  {
+    "id": 546,
+    "slug": "reversal-mountain",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Reversal Mountain"
+  },
+  {
+    "id": 547,
+    "slug": "strange-house",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Strange House"
+  },
+  {
+    "id": 548,
+    "slug": "unova-victory-road-2",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 549,
+    "slug": "plasma-frigate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Plasma Frigate"
+  },
+  {
+    "id": 550,
+    "slug": "relic-passage",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Relic Passage"
+  },
+  {
+    "id": 551,
+    "slug": "clay-tunnel",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Clay Tunnel"
+  },
+  {
+    "id": 552,
+    "slug": "white-treehollow",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "White Treehollow"
+  },
+  {
+    "id": 553,
+    "slug": "black-tower",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Black Tower"
+  },
+  {
+    "id": 554,
+    "slug": "seaside-cave",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Seaside Cave"
+  },
+  {
+    "id": 555,
+    "slug": "cave-of-being",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Cave of Being"
+  },
+  {
+    "id": 556,
+    "slug": "hidden-grotto",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Hidden Grotto"
+  },
+  {
+    "id": 557,
+    "slug": "marine-tube",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Marine Tube"
+  },
+  {
+    "id": 558,
+    "slug": "virbank-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Virbank Gate"
+  },
+  {
+    "id": 559,
+    "slug": "aspertia-gate",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Aspertia Gate"
+  },
+  {
+    "id": 560,
+    "slug": "nature-sanctuary",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Nature Sanctuary"
+  },
+  {
+    "id": 561,
+    "slug": "medal-secretariat",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Medal Secretariat"
+  },
+  {
+    "id": 562,
+    "slug": "underground-ruins",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Underground Ruins"
+  },
+  {
+    "id": 563,
+    "slug": "rocky-mountain-room",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Rocky Mountain Room"
+  },
+  {
+    "id": 564,
+    "slug": "glacier-room",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Glacier Room"
+  },
+  {
+    "id": 565,
+    "slug": "iron-room",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Iron Room"
+  },
+  {
+    "id": 566,
+    "slug": "pledge-grove",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Pledge Grove"
+  },
+  {
+    "id": 567,
+    "slug": "littleroot-town",
+    "region_id": 3,
+    "name_ko": "미로마을",
+    "name_en": "Littleroot Town"
+  },
+  {
+    "id": 568,
+    "slug": "oldale-town",
+    "region_id": 3,
+    "name_ko": "고도마을",
+    "name_en": "Oldale Town"
+  },
+  {
+    "id": 569,
+    "slug": "lavaridge-town",
+    "region_id": 3,
+    "name_ko": "용암마을",
+    "name_en": "Lavaridge Town"
+  },
+  {
+    "id": 570,
+    "slug": "fallarbor-town",
+    "region_id": 3,
+    "name_ko": "단풍마을",
+    "name_en": "Fallarbor Town"
+  },
+  {
+    "id": 571,
+    "slug": "verdanturf-town",
+    "region_id": 3,
+    "name_ko": "잔디마을",
+    "name_en": "Verdanturf Town"
+  },
+  {
+    "id": 572,
+    "slug": "mauville-city",
+    "region_id": 3,
+    "name_ko": "보라시티",
+    "name_en": "Mauville City"
+  },
+  {
+    "id": 573,
+    "slug": "rustboro-city",
+    "region_id": 3,
+    "name_ko": "금탄도시",
+    "name_en": "Rustboro City"
+  },
+  {
+    "id": 574,
+    "slug": "fortree-city",
+    "region_id": 3,
+    "name_ko": "검방울시티",
+    "name_en": "Fortree City"
+  },
+  {
+    "id": 575,
+    "slug": "underwater",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Underwater"
+  },
+  {
+    "id": 576,
+    "slug": "mt-chimney",
+    "region_id": 3,
+    "name_ko": "굴뚝산",
+    "name_en": "Mt. Chimney"
+  },
+  {
+    "id": 577,
+    "slug": "mirage-spot-island",
+    "region_id": 3,
+    "name_ko": "환상섬",
+    "name_en": "Mirage Island"
+  },
+  {
+    "id": 578,
+    "slug": "southern-island",
+    "region_id": 3,
+    "name_ko": "남쪽의 외딴섬",
+    "name_en": "Southern Island"
+  },
+  {
+    "id": 579,
+    "slug": "sealed-chamber",
+    "region_id": 3,
+    "name_ko": "고시의 석실",
+    "name_en": "Sealed Chamber"
+  },
+  {
+    "id": 580,
+    "slug": "scorched-slab",
+    "region_id": 3,
+    "name_ko": "가뭄의 암굴",
+    "name_en": "Scorched Slab"
+  },
+  {
+    "id": 581,
+    "slug": "island-cave",
+    "region_id": 3,
+    "name_ko": "작은 섬 옆굴",
+    "name_en": "Island Cave"
+  },
+  {
+    "id": 582,
+    "slug": "desert-ruins",
+    "region_id": 3,
+    "name_ko": "사막유적",
+    "name_en": "Desert Ruins"
+  },
+  {
+    "id": 583,
+    "slug": "ancient-tomb",
+    "region_id": 3,
+    "name_ko": "고대의 무덤",
+    "name_en": "Ancient Tomb"
+  },
+  {
+    "id": 584,
+    "slug": "inside-of-truck",
+    "region_id": 3,
+    "name_ko": "???",
+    "name_en": "???"
+  },
+  {
+    "id": 585,
+    "slug": "secret-base",
+    "region_id": 3,
+    "name_ko": "비밀기지",
+    "name_en": "Secret Base"
+  },
+  {
+    "id": 586,
+    "slug": "hoenn-battle-tower",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Battle Tower"
+  },
+  {
+    "id": 587,
+    "slug": "vaniville-town",
+    "region_id": 6,
+    "name_ko": "조아마을",
+    "name_en": "Vaniville Town"
+  },
+  {
+    "id": 588,
+    "slug": "kalos-route-1",
+    "region_id": 6,
+    "name_ko": "1번도로",
+    "name_en": "Route 1"
+  },
+  {
+    "id": 589,
+    "slug": "vaniville-pathway",
+    "region_id": 6,
+    "name_ko": "조아의 작은 길",
+    "name_en": "Vaniville Pathway"
+  },
+  {
+    "id": 590,
+    "slug": "aquacorde-town",
+    "region_id": 6,
+    "name_ko": "수미마을",
+    "name_en": "Aquacorde Town"
+  },
+  {
+    "id": 591,
+    "slug": "kalos-route-2",
+    "region_id": 6,
+    "name_ko": "2번도로",
+    "name_en": "Route 2"
+  },
+  {
+    "id": 592,
+    "slug": "avance-trail",
+    "region_id": 6,
+    "name_ko": "아방쎄 도로",
+    "name_en": "Avance Trail"
+  },
+  {
+    "id": 593,
+    "slug": "santalune-forest",
+    "region_id": 6,
+    "name_ko": "백단숲",
+    "name_en": "Santalune Forest"
+  },
+  {
+    "id": 594,
+    "slug": "kalos-route-3",
+    "region_id": 6,
+    "name_ko": "3번도로",
+    "name_en": "Route 3"
+  },
+  {
+    "id": 595,
+    "slug": "ouvert-way",
+    "region_id": 6,
+    "name_ko": "우베르 도로",
+    "name_en": "Ouvert Way"
+  },
+  {
+    "id": 596,
+    "slug": "santalune-city",
+    "region_id": 6,
+    "name_ko": "백단시티",
+    "name_en": "Santalune City"
+  },
+  {
+    "id": 597,
+    "slug": "kalos-route-4",
+    "region_id": 6,
+    "name_ko": "4번도로",
+    "name_en": "Route 4"
+  },
+  {
+    "id": 598,
+    "slug": "parterre-way",
+    "region_id": 6,
+    "name_ko": "파르테르 가도",
+    "name_en": "Parterre Way"
+  },
+  {
+    "id": 599,
+    "slug": "lumiose-city",
+    "region_id": 6,
+    "name_ko": "미르시티",
+    "name_en": "Lumiose City"
+  },
+  {
+    "id": 600,
+    "slug": "prism-tower",
+    "region_id": 6,
+    "name_ko": "프리즘타워",
+    "name_en": "Prism Tower"
+  },
+  {
+    "id": 601,
+    "slug": "lysandre-labs",
+    "region_id": 6,
+    "name_ko": "플라드리 래버러토리",
+    "name_en": "Lysandre Labs"
+  },
+  {
+    "id": 602,
+    "slug": "kalos-route-5",
+    "region_id": 6,
+    "name_ko": "5번도로",
+    "name_en": "Route 5"
+  },
+  {
+    "id": 603,
+    "slug": "versant-road",
+    "region_id": 6,
+    "name_ko": "베르성 도로",
+    "name_en": "Versant Road"
+  },
+  {
+    "id": 604,
+    "slug": "camphrier-town",
+    "region_id": 6,
+    "name_ko": "고목내마을",
+    "name_en": "Camphrier Town"
+  },
+  {
+    "id": 605,
+    "slug": "shabboneau-castle",
+    "region_id": 6,
+    "name_ko": "침울한 성",
+    "name_en": "Shabboneau Castle"
+  },
+  {
+    "id": 606,
+    "slug": "kalos-route-6",
+    "region_id": 6,
+    "name_ko": "6번도로",
+    "name_en": "Route 6"
+  },
+  {
+    "id": 607,
+    "slug": "palais-lane",
+    "region_id": 6,
+    "name_ko": "팔레 가로수 길",
+    "name_en": "Palais Lane"
+  },
+  {
+    "id": 608,
+    "slug": "parfum-palace",
+    "region_id": 6,
+    "name_ko": "파르팽 궁전",
+    "name_en": "Parfum Palace"
+  },
+  {
+    "id": 609,
+    "slug": "kalos-route-7",
+    "region_id": 6,
+    "name_ko": "7번도로",
+    "name_en": "Route 7"
+  },
+  {
+    "id": 610,
+    "slug": "riviere-walk",
+    "region_id": 6,
+    "name_ko": "리비에르 라인",
+    "name_en": "Rivière Walk"
+  },
+  {
+    "id": 611,
+    "slug": "cyllage-city",
+    "region_id": 6,
+    "name_ko": "삼채시티",
+    "name_en": "Cyllage City"
+  },
+  {
+    "id": 612,
+    "slug": "kalos-route-8",
+    "region_id": 6,
+    "name_ko": "8번도로",
+    "name_en": "Route 8"
+  },
+  {
+    "id": 613,
+    "slug": "muraille-coast",
+    "region_id": 6,
+    "name_ko": "미라유 해안",
+    "name_en": "Muraille Coast"
+  },
+  {
+    "id": 614,
+    "slug": "ambrette-town",
+    "region_id": 6,
+    "name_ko": "가라마을",
+    "name_en": "Ambrette Town"
+  },
+  {
+    "id": 615,
+    "slug": "kalos-route-9",
+    "region_id": 6,
+    "name_ko": "9번도로",
+    "name_en": "Route 9"
+  },
+  {
+    "id": 616,
+    "slug": "spikes-passage",
+    "region_id": 6,
+    "name_ko": "뿔 산길",
+    "name_en": "Spikes Passage"
+  },
+  {
+    "id": 617,
+    "slug": "battle-chateau",
+    "region_id": 6,
+    "name_ko": "배틀샤토",
+    "name_en": "Battle Chateau"
+  },
+  {
+    "id": 618,
+    "slug": "kalos-route-10",
+    "region_id": 6,
+    "name_ko": "10번도로",
+    "name_en": "Route 10"
+  },
+  {
+    "id": 619,
+    "slug": "menhir-trail",
+    "region_id": 6,
+    "name_ko": "멘히르로드",
+    "name_en": "Menhir Trail"
+  },
+  {
+    "id": 620,
+    "slug": "geosenge-town",
+    "region_id": 6,
+    "name_ko": "옥유마을",
+    "name_en": "Geosenge Town"
+  },
+  {
+    "id": 621,
+    "slug": "kalos-route-11",
+    "region_id": 6,
+    "name_ko": "11번도로",
+    "name_en": "Route 11"
+  },
+  {
+    "id": 622,
+    "slug": "miroir-way",
+    "region_id": 6,
+    "name_ko": "미르와르 도로",
+    "name_en": "Miroir Way"
+  },
+  {
+    "id": 623,
+    "slug": "reflection-cave",
+    "region_id": 6,
+    "name_ko": "비춤의 동굴",
+    "name_en": "Reflection Cave"
+  },
+  {
+    "id": 624,
+    "slug": "shalour-city",
+    "region_id": 6,
+    "name_ko": "사라시티",
+    "name_en": "Shalour City"
+  },
+  {
+    "id": 625,
+    "slug": "tower-of-mastery",
+    "region_id": 6,
+    "name_ko": "마스터타워",
+    "name_en": "Tower of Mastery"
+  },
+  {
+    "id": 626,
+    "slug": "kalos-route-12",
+    "region_id": 6,
+    "name_ko": "12번도로",
+    "name_en": "Route 12"
+  },
+  {
+    "id": 627,
+    "slug": "fourrage-road",
+    "region_id": 6,
+    "name_ko": "프라주 도로",
+    "name_en": "Fourrage Road"
+  },
+  {
+    "id": 628,
+    "slug": "coumarine-city",
+    "region_id": 6,
+    "name_ko": "비익시티",
+    "name_en": "Coumarine City"
+  },
+  {
+    "id": 629,
+    "slug": "kalos-route-13",
+    "region_id": 6,
+    "name_ko": "13번도로",
+    "name_en": "Route 13"
+  },
+  {
+    "id": 630,
+    "slug": "lumiose-badlands",
+    "region_id": 6,
+    "name_ko": "미르 황야",
+    "name_en": "Lumiose Badlands"
+  },
+  {
+    "id": 631,
+    "slug": "kalos-route-14",
+    "region_id": 6,
+    "name_ko": "14번도로",
+    "name_en": "Route 14"
+  },
+  {
+    "id": 632,
+    "slug": "laverre-nature-trail",
+    "region_id": 6,
+    "name_ko": "후늬 임도",
+    "name_en": "Laverre Nature Trail"
+  },
+  {
+    "id": 633,
+    "slug": "laverre-city",
+    "region_id": 6,
+    "name_ko": "후늬시티",
+    "name_en": "Laverre City"
+  },
+  {
+    "id": 634,
+    "slug": "poke-ball-factory",
+    "region_id": 6,
+    "name_ko": "볼 공장",
+    "name_en": "Poké Ball Factory"
+  },
+  {
+    "id": 635,
+    "slug": "kalos-route-15",
+    "region_id": 6,
+    "name_ko": "15번도로",
+    "name_en": "Route 15"
+  },
+  {
+    "id": 636,
+    "slug": "brun-way",
+    "region_id": 6,
+    "name_ko": "브렁 도로",
+    "name_en": "Brun Way"
+  },
+  {
+    "id": 637,
+    "slug": "dendemille-town",
+    "region_id": 6,
+    "name_ko": "버들비마을",
+    "name_en": "Dendemille Town"
+  },
+  {
+    "id": 638,
+    "slug": "kalos-route-16",
+    "region_id": 6,
+    "name_ko": "16번도로",
+    "name_en": "Route 16"
+  },
+  {
+    "id": 639,
+    "slug": "melancolie-path",
+    "region_id": 6,
+    "name_ko": "트리스트 도로",
+    "name_en": "Mélancolie Path"
+  },
+  {
+    "id": 640,
+    "slug": "frost-cavern",
+    "region_id": 6,
+    "name_ko": "프로스트케이브",
+    "name_en": "Frost Cavern"
+  },
+  {
+    "id": 641,
+    "slug": "kalos-route-17",
+    "region_id": 6,
+    "name_ko": "17번도로",
+    "name_en": "Route 17"
+  },
+  {
+    "id": 642,
+    "slug": "mamoswine-road",
+    "region_id": 6,
+    "name_ko": "맘모꾸리로드",
+    "name_en": "Mamoswine Road"
+  },
+  {
+    "id": 643,
+    "slug": "anistar-city",
+    "region_id": 6,
+    "name_ko": "향전시티",
+    "name_en": "Anistar City"
+  },
+  {
+    "id": 644,
+    "slug": "kalos-route-18",
+    "region_id": 6,
+    "name_ko": "18번도로",
+    "name_en": "Route 18"
+  },
+  {
+    "id": 645,
+    "slug": "vallee-etroite-way",
+    "region_id": 6,
+    "name_ko": "에뜨르와 발레 도로",
+    "name_en": "Vallée Étroite Way"
+  },
+  {
+    "id": 646,
+    "slug": "couriway-town",
+    "region_id": 6,
+    "name_ko": "배롱마을",
+    "name_en": "Couriway Town"
+  },
+  {
+    "id": 647,
+    "slug": "kalos-route-19",
+    "region_id": 6,
+    "name_ko": "19번도로",
+    "name_en": "Route 19"
+  },
+  {
+    "id": 648,
+    "slug": "grande-vallee-way",
+    "region_id": 6,
+    "name_ko": "라주 발레 도로",
+    "name_en": "Grande Vallée Way"
+  },
+  {
+    "id": 649,
+    "slug": "snowbelle-city",
+    "region_id": 6,
+    "name_ko": "이설시티",
+    "name_en": "Snowbelle City"
+  },
+  {
+    "id": 650,
+    "slug": "kalos-route-20",
+    "region_id": 6,
+    "name_ko": "20번도로",
+    "name_en": "Route 20"
+  },
+  {
+    "id": 651,
+    "slug": "winding-woods",
+    "region_id": 6,
+    "name_ko": "미혹의 숲",
+    "name_en": "Winding Woods"
+  },
+  {
+    "id": 652,
+    "slug": "pokemon-village",
+    "region_id": 6,
+    "name_ko": "포켓몬마을",
+    "name_en": "Pokémon Village"
+  },
+  {
+    "id": 653,
+    "slug": "kalos-route-21",
+    "region_id": 6,
+    "name_ko": "21번도로",
+    "name_en": "Route 21"
+  },
+  {
+    "id": 654,
+    "slug": "derniere-way",
+    "region_id": 6,
+    "name_ko": "데르니에 도로",
+    "name_en": "Dernière Way"
+  },
+  {
+    "id": 655,
+    "slug": "kalos-route-22",
+    "region_id": 6,
+    "name_ko": "22번도로",
+    "name_en": "Route 22"
+  },
+  {
+    "id": 656,
+    "slug": "detourner-way",
+    "region_id": 6,
+    "name_ko": "데뚜르네 도로",
+    "name_en": "Détourner Way"
+  },
+  {
+    "id": 657,
+    "slug": "kalos-victory-road",
+    "region_id": 6,
+    "name_ko": "챔피언로드",
+    "name_en": "Victory Road"
+  },
+  {
+    "id": 658,
+    "slug": "kalos-pokemon-league",
+    "region_id": 6,
+    "name_ko": "포켓몬리그",
+    "name_en": "Pokémon League"
+  },
+  {
+    "id": 659,
+    "slug": "kiloude-city",
+    "region_id": 6,
+    "name_ko": "기남시티",
+    "name_en": "Kiloude City"
+  },
+  {
+    "id": 660,
+    "slug": "battle-maison",
+    "region_id": 6,
+    "name_ko": "배틀하우스",
+    "name_en": "Battle Maison"
+  },
+  {
+    "id": 661,
+    "slug": "azure-bay",
+    "region_id": 6,
+    "name_ko": "아쥐르만",
+    "name_en": "Azure Bay"
+  },
+  {
+    "id": 662,
+    "slug": "dendemille-gate",
+    "region_id": 6,
+    "name_ko": "버들비게이트",
+    "name_en": "Dendemille Gate"
+  },
+  {
+    "id": 663,
+    "slug": "couriway-gate",
+    "region_id": 6,
+    "name_ko": "배롱게이트",
+    "name_en": "Couriway Gate"
+  },
+  {
+    "id": 664,
+    "slug": "ambrette-gate",
+    "region_id": 6,
+    "name_ko": "가라게이트",
+    "name_en": "Ambrette Gate"
+  },
+  {
+    "id": 665,
+    "slug": "lumiose-gate",
+    "region_id": 6,
+    "name_ko": "미르게이트",
+    "name_en": "Lumiose Gate"
+  },
+  {
+    "id": 666,
+    "slug": "shalour-gate",
+    "region_id": 6,
+    "name_ko": "사라게이트",
+    "name_en": "Shalour Gate"
+  },
+  {
+    "id": 667,
+    "slug": "coumarine-gate",
+    "region_id": 6,
+    "name_ko": "비익게이트",
+    "name_en": "Coumarine Gate"
+  },
+  {
+    "id": 668,
+    "slug": "laverre-gate",
+    "region_id": 6,
+    "name_ko": "후늬게이트",
+    "name_en": "Laverre Gate"
+  },
+  {
+    "id": 669,
+    "slug": "anistar-gate",
+    "region_id": 6,
+    "name_ko": "향전게이트",
+    "name_en": "Anistar Gate"
+  },
+  {
+    "id": 670,
+    "slug": "snowbelle-gate",
+    "region_id": 6,
+    "name_ko": "이설게이트",
+    "name_en": "Snowbelle Gate"
+  },
+  {
+    "id": 671,
+    "slug": "glittering-cave",
+    "region_id": 6,
+    "name_ko": "반짝임의 동굴",
+    "name_en": "Glittering Cave"
+  },
+  {
+    "id": 672,
+    "slug": "connecting-cave",
+    "region_id": 6,
+    "name_ko": "땅이음의 동굴",
+    "name_en": "Connecting Cave"
+  },
+  {
+    "id": 673,
+    "slug": "zubat-roost",
+    "region_id": 6,
+    "name_ko": "주뱃들의 소굴",
+    "name_en": "Zubat Roost"
+  },
+  {
+    "id": 674,
+    "slug": "kalos-power-plant",
+    "region_id": 6,
+    "name_ko": "칼로스발전소",
+    "name_en": "Kalos Power Plant"
+  },
+  {
+    "id": 675,
+    "slug": "team-flare-secret-hq",
+    "region_id": 6,
+    "name_ko": "플레어단 비밀기지",
+    "name_en": "Team Flare Secret HQ"
+  },
+  {
+    "id": 676,
+    "slug": "terminus-cave",
+    "region_id": 6,
+    "name_ko": "끝의 동굴",
+    "name_en": "Terminus Cave"
+  },
+  {
+    "id": 677,
+    "slug": "lost-hotel",
+    "region_id": 6,
+    "name_ko": "황폐해진 호텔",
+    "name_en": "Lost Hotel"
+  },
+  {
+    "id": 678,
+    "slug": "chamber-of-emptiness",
+    "region_id": 6,
+    "name_ko": "공허의 방",
+    "name_en": "Chamber of Emptiness"
+  },
+  {
+    "id": 679,
+    "slug": "sea-spirits-den",
+    "region_id": 6,
+    "name_ko": "해신의 굴",
+    "name_en": "Sea Spirit’s Den"
+  },
+  {
+    "id": 680,
+    "slug": "friend-safari",
+    "region_id": 6,
+    "name_ko": "프렌드사파리",
+    "name_en": "Friend Safari"
+  },
+  {
+    "id": 681,
+    "slug": "blazing-chamber",
+    "region_id": 6,
+    "name_ko": "화염의 방",
+    "name_en": "Blazing Chamber"
+  },
+  {
+    "id": 682,
+    "slug": "flood-chamber",
+    "region_id": 6,
+    "name_ko": "수문의 방",
+    "name_en": "Flood Chamber"
+  },
+  {
+    "id": 683,
+    "slug": "ironworks-chamber",
+    "region_id": 6,
+    "name_ko": "무쇠의 방",
+    "name_en": "Ironworks Chamber"
+  },
+  {
+    "id": 684,
+    "slug": "dragonmark-chamber",
+    "region_id": 6,
+    "name_ko": "용문양의 방",
+    "name_en": "Dragonmark Chamber"
+  },
+  {
+    "id": 685,
+    "slug": "radiant-chamber",
+    "region_id": 6,
+    "name_ko": "빛의 방",
+    "name_en": "Radiant Chamber"
+  },
+  {
+    "id": 686,
+    "slug": "pokemon-league-gate",
+    "region_id": 6,
+    "name_ko": "포켓몬리그 게이트",
+    "name_en": "Pokémon League Gate"
+  },
+  {
+    "id": 687,
+    "slug": "lumiose-station",
+    "region_id": 6,
+    "name_ko": "미르 스테이션",
+    "name_en": "Lumiose Station"
+  },
+  {
+    "id": 688,
+    "slug": "kiloude-station",
+    "region_id": 6,
+    "name_ko": "기남 스테이션",
+    "name_en": "Kiloude Station"
+  },
+  {
+    "id": 689,
+    "slug": "ambrette-aquarium",
+    "region_id": 6,
+    "name_ko": "가라 수족관",
+    "name_en": "Ambrette Aquarium"
+  },
+  {
+    "id": 690,
+    "slug": "unknown-dungeon",
+    "region_id": 6,
+    "name_ko": "이름없는 동굴",
+    "name_en": "Unknown Dungeon"
+  },
+  {
+    "id": 691,
+    "slug": "hoenn-pokemon-league",
+    "region_id": 3,
+    "name_ko": "포켓몬리그",
+    "name_en": "Pokémon League"
+  },
+  {
+    "id": 692,
+    "slug": "team-aqua-hideout",
+    "region_id": 3,
+    "name_ko": "아쿠아단아지트",
+    "name_en": "Team Aqua Hideout"
+  },
+  {
+    "id": 693,
+    "slug": "sea-mauville",
+    "region_id": 3,
+    "name_ko": "씨보라",
+    "name_en": "Sea Mauville"
+  },
+  {
+    "id": 694,
+    "slug": "team-magma-hideout",
+    "region_id": 3,
+    "name_ko": "마그마단아지트",
+    "name_en": "Team Magma Hideout"
+  },
+  {
+    "id": 695,
+    "slug": "battle-resort",
+    "region_id": 3,
+    "name_ko": "배틀리조트",
+    "name_en": "Battle Resort"
+  },
+  {
+    "id": 696,
+    "slug": "ss-tidal",
+    "region_id": 3,
+    "name_ko": "타이드립호",
+    "name_en": "S.S. Tidal"
+  },
+  {
+    "id": 697,
+    "slug": "mirage-spot-forest",
+    "region_id": 3,
+    "name_ko": "환상숲",
+    "name_en": "Mirage Forest"
+  },
+  {
+    "id": 698,
+    "slug": "mirage-spot-cave",
+    "region_id": 3,
+    "name_ko": "환상동굴",
+    "name_en": "Mirage Cave"
+  },
+  {
+    "id": 699,
+    "slug": "mirage-spot-mountain",
+    "region_id": 3,
+    "name_ko": "환상산",
+    "name_en": "Mirage Mountain"
+  },
+  {
+    "id": 700,
+    "slug": "trackless-forest",
+    "region_id": 3,
+    "name_ko": "미개척의 숲",
+    "name_en": "Trackless Forest"
+  },
+  {
+    "id": 701,
+    "slug": "pathless-plain",
+    "region_id": 3,
+    "name_ko": "이름없는 평원",
+    "name_en": "Pathless Plain"
+  },
+  {
+    "id": 702,
+    "slug": "nameless-cavern",
+    "region_id": 3,
+    "name_ko": "미지의 동굴",
+    "name_en": "Nameless Cavern"
+  },
+  {
+    "id": 703,
+    "slug": "fabled-cave",
+    "region_id": 3,
+    "name_ko": "희미한 동굴",
+    "name_en": "Fabled Cave"
+  },
+  {
+    "id": 704,
+    "slug": "gnarled-den",
+    "region_id": 3,
+    "name_ko": "비틀린 굴",
+    "name_en": "Gnarled Den"
+  },
+  {
+    "id": 705,
+    "slug": "crescent-isle",
+    "region_id": 3,
+    "name_ko": "궁형의 섬",
+    "name_en": "Crescent Isle"
+  },
+  {
+    "id": 706,
+    "slug": "secret-islet",
+    "region_id": 3,
+    "name_ko": "비밀의 작은 섬",
+    "name_en": "Secret Islet"
+  },
+  {
+    "id": 707,
+    "slug": "soaring-in-the-sky",
+    "region_id": 3,
+    "name_ko": "창공",
+    "name_en": "Soaring in the sky"
+  },
+  {
+    "id": 708,
+    "slug": "secret-shore",
+    "region_id": 3,
+    "name_ko": "비밀의 바위해변",
+    "name_en": "Secret Shore"
+  },
+  {
+    "id": 709,
+    "slug": "secret-meadow",
+    "region_id": 3,
+    "name_ko": "비밀의 꽃밭",
+    "name_en": "Secret Meadow"
+  },
+  {
+    "id": 710,
+    "slug": "alola-route-1--hauoli-outskirts",
+    "region_id": 7,
+    "name_ko": "1번도로",
+    "name_en": "Route 1"
+  },
+  {
+    "id": 711,
+    "slug": "alola-route-1",
+    "region_id": 7,
+    "name_ko": "1번도로",
+    "name_en": "Route 1"
+  },
+  {
+    "id": 712,
+    "slug": "alola-route-3",
+    "region_id": 7,
+    "name_ko": "3번도로",
+    "name_en": "Route 3"
+  },
+  {
+    "id": 713,
+    "slug": "alola-route-2",
+    "region_id": 7,
+    "name_ko": "2번도로",
+    "name_en": "Route 2"
+  },
+  {
+    "id": 714,
+    "slug": "kalae-bay",
+    "region_id": 7,
+    "name_ko": "칼라에만",
+    "name_en": "Kala’e Bay"
+  },
+  {
+    "id": 715,
+    "slug": "melemele-sea",
+    "region_id": 7,
+    "name_ko": "멜레멜레해",
+    "name_en": "Melemele Sea"
+  },
+  {
+    "id": 716,
+    "slug": "hauoli-city--beachfront",
+    "region_id": 7,
+    "name_ko": "하우올리시티",
+    "name_en": "Hau’oli City"
+  },
+  {
+    "id": 717,
+    "slug": "hauoli-city--shopping-district",
+    "region_id": 7,
+    "name_ko": "하우올리시티",
+    "name_en": "Hau’oli City"
+  },
+  {
+    "id": 718,
+    "slug": "hauoli-city--marina",
+    "region_id": 7,
+    "name_ko": "하우올리시티",
+    "name_en": "Hau’oli City"
+  },
+  {
+    "id": 719,
+    "slug": "iki-town",
+    "region_id": 7,
+    "name_ko": "릴리마을",
+    "name_en": "Iki Town"
+  },
+  {
+    "id": 720,
+    "slug": "mahalo-trail",
+    "region_id": 7,
+    "name_ko": "마할로 산길",
+    "name_en": "Mahalo Trail"
+  },
+  {
+    "id": 721,
+    "slug": "mahalo-trail--plank-bridge",
+    "region_id": 7,
+    "name_ko": "마할로 산길",
+    "name_en": "Mahalo Trail"
+  },
+  {
+    "id": 722,
+    "slug": "ruins-of-conflict",
+    "region_id": 7,
+    "name_ko": "전쟁의 유적",
+    "name_en": "Ruins of Conflict"
+  },
+  {
+    "id": 723,
+    "slug": "ten-carat-hill",
+    "region_id": 7,
+    "name_ko": "텐캐럿힐",
+    "name_en": "Ten Carat Hill"
+  },
+  {
+    "id": 724,
+    "slug": "ten-carat-hill--farthest-hollow",
+    "region_id": 7,
+    "name_ko": "텐캐럿힐",
+    "name_en": "Ten Carat Hill"
+  },
+  {
+    "id": 725,
+    "slug": "hauoli-cemetery",
+    "region_id": 7,
+    "name_ko": "하우올리 묘원",
+    "name_en": "Hau’oli Cemetery"
+  },
+  {
+    "id": 726,
+    "slug": "melemele-meadow",
+    "region_id": 7,
+    "name_ko": "멜레멜레 화원",
+    "name_en": "Melemele Meadow"
+  },
+  {
+    "id": 727,
+    "slug": "seaward-cave",
+    "region_id": 7,
+    "name_ko": "바다연결동굴",
+    "name_en": "Seaward Cave"
+  },
+  {
+    "id": 728,
+    "slug": "alola-berry-fields",
+    "region_id": 7,
+    "name_ko": "나무열매 밭",
+    "name_en": "Alola Berry Fields"
+  },
+  {
+    "id": 729,
+    "slug": "verdant-cavern--trial-site",
+    "region_id": 7,
+    "name_ko": "우거진 동굴",
+    "name_en": "Verdant Cavern"
+  },
+  {
+    "id": 730,
+    "slug": "verdant-cavern--totems-den",
+    "region_id": 7,
+    "name_ko": "우거진 동굴",
+    "name_en": "Verdant Cavern"
+  },
+  {
+    "id": 731,
+    "slug": "alola-route-4",
+    "region_id": 7,
+    "name_ko": "4번도로",
+    "name_en": "Route 4"
+  },
+  {
+    "id": 732,
+    "slug": "alola-route-5",
+    "region_id": 7,
+    "name_ko": "5번도로",
+    "name_en": "Route 5"
+  },
+  {
+    "id": 733,
+    "slug": "alola-route-6",
+    "region_id": 7,
+    "name_ko": "6번도로",
+    "name_en": "Route 6"
+  },
+  {
+    "id": 734,
+    "slug": "alola-route-7",
+    "region_id": 7,
+    "name_ko": "7번도로",
+    "name_en": "Route 7"
+  },
+  {
+    "id": 735,
+    "slug": "alola-route-8",
+    "region_id": 7,
+    "name_ko": "8번도로",
+    "name_en": "Route 8"
+  },
+  {
+    "id": 736,
+    "slug": "alola-route-9",
+    "region_id": 7,
+    "name_ko": "9번도로",
+    "name_en": "Route 9"
+  },
+  {
+    "id": 737,
+    "slug": "hano-grand-resort",
+    "region_id": 7,
+    "name_ko": "하노하노리조트",
+    "name_en": "Hano Grand Resort"
+  },
+  {
+    "id": 738,
+    "slug": "hano-beach",
+    "region_id": 7,
+    "name_ko": "하노하노비치",
+    "name_en": "Hano Beach"
+  },
+  {
+    "id": 739,
+    "slug": "akala-meadow",
+    "region_id": 7,
+    "name_ko": "아칼라 화원",
+    "name_en": "Akala Meadow"
+  },
+  {
+    "id": 740,
+    "slug": "paniola-town",
+    "region_id": 7,
+    "name_ko": "오하나마을",
+    "name_en": "Paniola Town"
+  },
+  {
+    "id": 741,
+    "slug": "heahea-city",
+    "region_id": 7,
+    "name_ko": "환대시티",
+    "name_en": "Heahea City"
+  },
+  {
+    "id": 742,
+    "slug": "konikoni-city",
+    "region_id": 7,
+    "name_ko": "코니코니시티",
+    "name_en": "Konikoni City"
+  },
+  {
+    "id": 743,
+    "slug": "royal-avenue",
+    "region_id": 7,
+    "name_ko": "로열 애버뉴",
+    "name_en": "Royal Avenue"
+  },
+  {
+    "id": 744,
+    "slug": "memorial-hill",
+    "region_id": 7,
+    "name_ko": "메모리얼힐",
+    "name_en": "Memorial Hill"
+  },
+  {
+    "id": 745,
+    "slug": "paniola-ranch",
+    "region_id": 7,
+    "name_ko": "오하나목장",
+    "name_en": "Paniola Ranch"
+  },
+  {
+    "id": 746,
+    "slug": "wela-volcano-park",
+    "region_id": 7,
+    "name_ko": "벨라화산공원",
+    "name_en": "Wela Volcano Park"
+  },
+  {
+    "id": 747,
+    "slug": "wela-volcano-park--totems-den",
+    "region_id": 7,
+    "name_ko": "벨라화산공원",
+    "name_en": "Wela Volcano Park"
+  },
+  {
+    "id": 748,
+    "slug": "brooklet-hill",
+    "region_id": 7,
+    "name_ko": "잔잔한물가언덕",
+    "name_en": "Brooklet Hill"
+  },
+  {
+    "id": 749,
+    "slug": "brooklet-hill--totems-den",
+    "region_id": 7,
+    "name_ko": "잔잔한물가언덕",
+    "name_en": "Brooklet Hill"
+  },
+  {
+    "id": 750,
+    "slug": "lush-jungle",
+    "region_id": 7,
+    "name_ko": "셰이드정글",
+    "name_en": "Lush Jungle"
+  },
+  {
+    "id": 751,
+    "slug": "ruins-of-life",
+    "region_id": 7,
+    "name_ko": "생명의 유적",
+    "name_en": "Ruins of Life"
+  },
+  {
+    "id": 752,
+    "slug": "akala-outskirts",
+    "region_id": 7,
+    "name_ko": "아칼라외곽",
+    "name_en": "Akala Outskirts"
+  },
+  {
+    "id": 753,
+    "slug": "digletts-tunnel",
+    "region_id": 7,
+    "name_ko": "디그다터널",
+    "name_en": "Diglett’s Tunnel"
+  },
+  {
+    "id": 754,
+    "slug": "battle-royal-dome",
+    "region_id": 7,
+    "name_ko": "로열돔",
+    "name_en": "Battle Royal Dome"
+  },
+  {
+    "id": 755,
+    "slug": "alola-route-10",
+    "region_id": 7,
+    "name_ko": "10번도로",
+    "name_en": "Route 10"
+  },
+  {
+    "id": 756,
+    "slug": "alola-route-11",
+    "region_id": 7,
+    "name_ko": "11번도로",
+    "name_en": "Route 11"
+  },
+  {
+    "id": 757,
+    "slug": "secluded-shore",
+    "region_id": 7,
+    "name_ko": "울라울라 뒤쪽 해안",
+    "name_en": "Secluded Shore"
+  },
+  {
+    "id": 758,
+    "slug": "alola-route-13",
+    "region_id": 7,
+    "name_ko": "13번도로",
+    "name_en": "Route 13"
+  },
+  {
+    "id": 759,
+    "slug": "tapu-village",
+    "region_id": 7,
+    "name_ko": "카푸마을",
+    "name_en": "Tapu Village"
+  },
+  {
+    "id": 760,
+    "slug": "alola-route-15",
+    "region_id": 7,
+    "name_ko": "15번수로",
+    "name_en": "Route 15"
+  },
+  {
+    "id": 761,
+    "slug": "alola-route-16",
+    "region_id": 7,
+    "name_ko": "16번도로",
+    "name_en": "Route 16"
+  },
+  {
+    "id": 762,
+    "slug": "alola-route-17",
+    "region_id": 7,
+    "name_ko": "17번도로",
+    "name_en": "Route 17"
+  },
+  {
+    "id": 763,
+    "slug": "alola-route-12",
+    "region_id": 7,
+    "name_ko": "12번도로",
+    "name_en": "Route 12"
+  },
+  {
+    "id": 764,
+    "slug": "haina-desert",
+    "region_id": 7,
+    "name_ko": "하이나사막",
+    "name_en": "Haina Desert"
+  },
+  {
+    "id": 765,
+    "slug": "alola-route-14",
+    "region_id": 7,
+    "name_ko": "14번도로",
+    "name_en": "Route 14"
+  },
+  {
+    "id": 766,
+    "slug": "ulaula-meadow",
+    "region_id": 7,
+    "name_ko": "울라울라 화원",
+    "name_en": "Ula’ula Meadow"
+  },
+  {
+    "id": 767,
+    "slug": "po-town",
+    "region_id": 7,
+    "name_ko": "포마을",
+    "name_en": "Po Town"
+  },
+  {
+    "id": 768,
+    "slug": "malie-city-proper",
+    "region_id": 7,
+    "name_ko": "말리에시티",
+    "name_en": "Malie City"
+  },
+  {
+    "id": 769,
+    "slug": "malie-garden",
+    "region_id": 7,
+    "name_ko": "말리에 정원",
+    "name_en": "Malie Garden"
+  },
+  {
+    "id": 770,
+    "slug": "mount-hokulani",
+    "region_id": 7,
+    "name_ko": "호쿠라니큰산",
+    "name_en": "Mount Hokulani"
+  },
+  {
+    "id": 771,
+    "slug": "blush-mountain",
+    "region_id": 7,
+    "name_ko": "화끈산",
+    "name_en": "Blush Mountain"
+  },
+  {
+    "id": 772,
+    "slug": "ruins-of-abundance",
+    "region_id": 7,
+    "name_ko": "결실의 유적",
+    "name_en": "Ruins of Abundance"
+  },
+  {
+    "id": 773,
+    "slug": "lake-of-the-sunne",
+    "region_id": 7,
+    "name_ko": "일륜의 호수",
+    "name_en": "Lake of the Sunne"
+  },
+  {
+    "id": 774,
+    "slug": "lake-of-the-moone",
+    "region_id": 7,
+    "name_ko": "월륜의 호수",
+    "name_en": "Lake of the Moone"
+  },
+  {
+    "id": 775,
+    "slug": "mount-lanakila",
+    "region_id": 7,
+    "name_ko": "라나키라마운틴",
+    "name_en": "Mount Lanakila"
+  },
+  {
+    "id": 776,
+    "slug": "shady-house",
+    "region_id": 7,
+    "name_ko": "수상한 저택",
+    "name_en": "Shady House"
+  },
+  {
+    "id": 777,
+    "slug": "thrifty-megamart--abandoned-site",
+    "region_id": 7,
+    "name_ko": "슈퍼・메가싸네",
+    "name_en": "Thrifty Megamart"
+  },
+  {
+    "id": 778,
+    "slug": "hokulani-observatory",
+    "region_id": 7,
+    "name_ko": "호쿠라니천문대",
+    "name_en": "Hokulani Observatory"
+  },
+  {
+    "id": 779,
+    "slug": "alola-pokemon-league",
+    "region_id": 7,
+    "name_ko": "포켓몬리그",
+    "name_en": "Pokémon League"
+  },
+  {
+    "id": 780,
+    "slug": "poni-meadow",
+    "region_id": 7,
+    "name_ko": "포니 화원",
+    "name_en": "Poni Meadow"
+  },
+  {
+    "id": 781,
+    "slug": "poni-wilds",
+    "region_id": 7,
+    "name_ko": "포니들판",
+    "name_en": "Poni Wilds"
+  },
+  {
+    "id": 782,
+    "slug": "ancient-poni-path",
+    "region_id": 7,
+    "name_ko": "포니옛길",
+    "name_en": "Ancient Poni Path"
+  },
+  {
+    "id": 783,
+    "slug": "poni-breaker-coast",
+    "region_id": 7,
+    "name_ko": "포니의 거친 해안",
+    "name_en": "Poni Breaker Coast"
+  },
+  {
+    "id": 784,
+    "slug": "poni-grove",
+    "region_id": 7,
+    "name_ko": "포니수림",
+    "name_en": "Poni Grove"
+  },
+  {
+    "id": 785,
+    "slug": "poni-plains",
+    "region_id": 7,
+    "name_ko": "포니광야",
+    "name_en": "Poni Plains"
+  },
+  {
+    "id": 786,
+    "slug": "poni-coast",
+    "region_id": 7,
+    "name_ko": "포니해안",
+    "name_en": "Poni Coast"
+  },
+  {
+    "id": 787,
+    "slug": "poni-gauntlet",
+    "region_id": 7,
+    "name_ko": "포니험로",
+    "name_en": "Poni Gauntlet"
+  },
+  {
+    "id": 788,
+    "slug": "seafolk-village",
+    "region_id": 7,
+    "name_ko": "바다민족의 마을",
+    "name_en": "Seafolk Village"
+  },
+  {
+    "id": 789,
+    "slug": "vast-poni-canyon",
+    "region_id": 7,
+    "name_ko": "포니대협곡",
+    "name_en": "Vast Poni Canyon"
+  },
+  {
+    "id": 790,
+    "slug": "altar-of-the-sunne",
+    "region_id": 7,
+    "name_ko": "일륜의 제단",
+    "name_en": "Altar of the Sunne"
+  },
+  {
+    "id": 791,
+    "slug": "altar-of-the-moone",
+    "region_id": 7,
+    "name_ko": "월륜의 제단",
+    "name_en": "Altar of the Moone"
+  },
+  {
+    "id": 792,
+    "slug": "ruins-of-hope",
+    "region_id": 7,
+    "name_ko": "피안의 유적",
+    "name_en": "Ruins of Hope"
+  },
+  {
+    "id": 793,
+    "slug": "resolution-cave",
+    "region_id": 7,
+    "name_ko": "엔드케이브",
+    "name_en": "Resolution Cave"
+  },
+  {
+    "id": 794,
+    "slug": "exeggutor-island",
+    "region_id": 7,
+    "name_ko": "나시・아일랜드",
+    "name_en": "Exeggutor Island"
+  },
+  {
+    "id": 795,
+    "slug": "battle-tree",
+    "region_id": 7,
+    "name_ko": "배틀트리",
+    "name_en": "Battle Tree"
+  },
+  {
+    "id": 796,
+    "slug": "aether-paradise",
+    "region_id": 7,
+    "name_ko": "에테르파라다이스",
+    "name_en": "Aether Paradise"
+  },
+  {
+    "id": 797,
+    "slug": "ultra-space",
+    "region_id": 7,
+    "name_ko": "울트라스페이스",
+    "name_en": "Ultra Space"
+  },
+  {
+    "id": 798,
+    "slug": "malie-city--outer-cape",
+    "region_id": 7,
+    "name_ko": "말리에시티",
+    "name_en": "Malie City"
+  },
+  {
+    "id": 799,
+    "slug": "roaming-kanto",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Roaming Kanto"
+  },
+  {
+    "id": 800,
+    "slug": "roaming-johto",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Roaming Johto"
+  },
+  {
+    "id": 801,
+    "slug": "roaming-hoenn",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Roaming Hoenn"
+  },
+  {
+    "id": 802,
+    "slug": "roaming-sinnoh",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": "Roaming Sinnoh"
+  },
+  {
+    "id": 803,
+    "slug": "terra-cave",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Terra Cave"
+  },
+  {
+    "id": 804,
+    "slug": "marine-cave",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Marine Cave"
+  },
+  {
+    "id": 805,
+    "slug": "two-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Two Island"
+  },
+  {
+    "id": 806,
+    "slug": "three-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Three Island"
+  },
+  {
+    "id": 807,
+    "slug": "three-isle-path",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Three Isle Path"
+  },
+  {
+    "id": 808,
+    "slug": "six-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Six Island"
+  },
+  {
+    "id": 809,
+    "slug": "seven-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Seven Island"
+  },
+  {
+    "id": 810,
+    "slug": "birth-island",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Birth Island"
+  },
+  {
+    "id": 811,
+    "slug": "navel-rock",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Navel Rock"
+  },
+  {
+    "id": 812,
+    "slug": "faraway-island",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Faraway Island"
+  },
+  {
+    "id": 813,
+    "slug": "hoenn-battle-frontier",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Hoenn Battle Frontier"
+  },
+  {
+    "id": 814,
+    "slug": "johto-safari-zone",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": "Johto Safari Zone"
+  },
+  {
+    "id": 815,
+    "slug": "cabo-poco",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Cabo Poco"
+  },
+  {
+    "id": 816,
+    "slug": "los-platos",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Los Platos"
+  },
+  {
+    "id": 817,
+    "slug": "mesagoza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Mesagoza"
+  },
+  {
+    "id": 818,
+    "slug": "cortondo",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Cortondo"
+  },
+  {
+    "id": 819,
+    "slug": "alfornada",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Alfornada"
+  },
+  {
+    "id": 820,
+    "slug": "pokemon-league",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Pokémon League"
+  },
+  {
+    "id": 821,
+    "slug": "artazon",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Artazon"
+  },
+  {
+    "id": 822,
+    "slug": "levincia",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Levincia"
+  },
+  {
+    "id": 823,
+    "slug": "zapapico",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Zapapico"
+  },
+  {
+    "id": 824,
+    "slug": "cascarrafa",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Cascarrafa"
+  },
+  {
+    "id": 825,
+    "slug": "porto-marinada",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Porto Marinada"
+  },
+  {
+    "id": 826,
+    "slug": "medali",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Medali"
+  },
+  {
+    "id": 827,
+    "slug": "montenevera",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Montenevera"
+  },
+  {
+    "id": 828,
+    "slug": "paldea-south-province-area-one",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Province (Area One)"
+  },
+  {
+    "id": 829,
+    "slug": "paldea-south-province-area-two",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Province (Area Two)"
+  },
+  {
+    "id": 830,
+    "slug": "paldea-south-province-area-three",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Province (Area Three)"
+  },
+  {
+    "id": 831,
+    "slug": "paldea-south-province-area-four",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Province (Area Four)"
+  },
+  {
+    "id": 832,
+    "slug": "paldea-south-province-area-five",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Province (Area Five)"
+  },
+  {
+    "id": 833,
+    "slug": "paldea-south-province-area-six",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Province (Area Six)"
+  },
+  {
+    "id": 834,
+    "slug": "south-paldean-sea",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "South Paldean Sea"
+  },
+  {
+    "id": 835,
+    "slug": "poco-path",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Poco Path"
+  },
+  {
+    "id": 836,
+    "slug": "inlet-grotto",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Inlet Grotto"
+  },
+  {
+    "id": 837,
+    "slug": "naranja-academy",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Naranja Academy"
+  },
+  {
+    "id": 838,
+    "slug": "alfornada-cavern",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Alfornada Cavern"
+  },
+  {
+    "id": 839,
+    "slug": "grasswither-shrine",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Grasswither Shrine"
+  },
+  {
+    "id": 840,
+    "slug": "paldea-east-province-area-one",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "East Province (Area One)"
+  },
+  {
+    "id": 841,
+    "slug": "paldea-east-province-area-two",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "East Province (Area Two)"
+  },
+  {
+    "id": 842,
+    "slug": "paldea-east-province-area-three",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "East Province (Area Three)"
+  },
+  {
+    "id": 843,
+    "slug": "east-paldean-sea",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "East Paldean Sea"
+  },
+  {
+    "id": 844,
+    "slug": "tagtree-thicket",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Tagtree Thicket"
+  },
+  {
+    "id": 845,
+    "slug": "schedar-squads-base",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Schedar Squad's Base"
+  },
+  {
+    "id": 846,
+    "slug": "navi-squads-base",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Navi Squad's Base"
+  },
+  {
+    "id": 847,
+    "slug": "paldea-west-province-area-one",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "West Province (Area One)"
+  },
+  {
+    "id": 848,
+    "slug": "paldea-west-province-area-two",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "West Province (Area Two)"
+  },
+  {
+    "id": 849,
+    "slug": "paldea-west-province-area-three",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "West Province (Area Three)"
+  },
+  {
+    "id": 850,
+    "slug": "asado-desert",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Asado Desert"
+  },
+  {
+    "id": 851,
+    "slug": "west-paldean-sea",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "West Paldean Sea"
+  },
+  {
+    "id": 852,
+    "slug": "segin-squads-base",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Segin Squad's Base"
+  },
+  {
+    "id": 853,
+    "slug": "icerend-shrine",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Icerend Shrine"
+  },
+  {
+    "id": 854,
+    "slug": "paldea-north-province-area-one",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "North Province (Area One)"
+  },
+  {
+    "id": 855,
+    "slug": "paldea-north-province-area-two",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "North Province (Area Two)"
+  },
+  {
+    "id": 856,
+    "slug": "paldea-north-province-area-three",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "North Province (Area Three)"
+  },
+  {
+    "id": 857,
+    "slug": "casseroya-lake",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Casseroya Lake"
+  },
+  {
+    "id": 858,
+    "slug": "dalizapa-passage",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Dalizapa Passage"
+  },
+  {
+    "id": 859,
+    "slug": "glaseado-mountain",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Glaseado Mountain"
+  },
+  {
+    "id": 860,
+    "slug": "socarrat-trail",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Socarrat Trail"
+  },
+  {
+    "id": 861,
+    "slug": "groundblight-shrine",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Groundblight Shrine"
+  },
+  {
+    "id": 862,
+    "slug": "firescourge-shrine",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Firescourge Shrine"
+  },
+  {
+    "id": 863,
+    "slug": "north-paldean-sea",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "North Paldean Sea"
+  },
+  {
+    "id": 864,
+    "slug": "ruchbah-squads-base",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Ruchbah Squad's Base"
+  },
+  {
+    "id": 865,
+    "slug": "caph-squads-base",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Caph Squad's Base"
+  },
+  {
+    "id": 866,
+    "slug": "area-zero",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Area Zero"
+  },
+  {
+    "id": 867,
+    "slug": "zero-lab",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Zero Lab"
+  },
+  {
+    "id": 868,
+    "slug": "galar-route-1",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 1"
+  },
+  {
+    "id": 869,
+    "slug": "galar-route-2",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 2"
+  },
+  {
+    "id": 870,
+    "slug": "galar-route-3",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 3"
+  },
+  {
+    "id": 871,
+    "slug": "galar-route-4",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 4"
+  },
+  {
+    "id": 872,
+    "slug": "galar-route-5",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 5"
+  },
+  {
+    "id": 873,
+    "slug": "galar-route-6",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 6"
+  },
+  {
+    "id": 874,
+    "slug": "galar-route-7",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 7"
+  },
+  {
+    "id": 875,
+    "slug": "galar-route-8",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 8"
+  },
+  {
+    "id": 876,
+    "slug": "galar-route-9",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 9"
+  },
+  {
+    "id": 877,
+    "slug": "galar-route-10",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 10"
+  },
+  {
+    "id": 878,
+    "slug": "axews-eye",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Axew's Eye"
+  },
+  {
+    "id": 879,
+    "slug": "ballimere-lake",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Ballimere Lake"
+  },
+  {
+    "id": 880,
+    "slug": "ballonlea",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Ballonlea"
+  },
+  {
+    "id": 881,
+    "slug": "galar-battle-tower",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Battle Tower"
+  },
+  {
+    "id": 882,
+    "slug": "brawlers-cave",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Brawlers' Cave"
+  },
+  {
+    "id": 883,
+    "slug": "bridge-field",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Bridge Field"
+  },
+  {
+    "id": 884,
+    "slug": "challenge-beach",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Challenge Beach"
+  },
+  {
+    "id": 885,
+    "slug": "challenge-road",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Challenge Road"
+  },
+  {
+    "id": 886,
+    "slug": "circhester",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Circhester"
+  },
+  {
+    "id": 887,
+    "slug": "courageous-cavern",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Courageous Cavern"
+  },
+  {
+    "id": 888,
+    "slug": "crown-shrine",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Crown Shrine"
+  },
+  {
+    "id": 889,
+    "slug": "dappled-grove",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Dappled Grove"
+  },
+  {
+    "id": 890,
+    "slug": "dusty-bowl",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Dusty Bowl"
+  },
+  {
+    "id": 891,
+    "slug": "dyna-tree-hill",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Dyna Tree Hill"
+  },
+  {
+    "id": 892,
+    "slug": "east-lake-axewell",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "East Lake Axewell"
+  },
+  {
+    "id": 893,
+    "slug": "fields-of-honor",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Fields of Honor"
+  },
+  {
+    "id": 894,
+    "slug": "forest-of-focus",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Forest of Focus"
+  },
+  {
+    "id": 895,
+    "slug": "freezington",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Freezington"
+  },
+  {
+    "id": 896,
+    "slug": "frigid-sea",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Frigid Sea"
+  },
+  {
+    "id": 897,
+    "slug": "frostpoint-field",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Frostpoint Field"
+  },
+  {
+    "id": 898,
+    "slug": "galar-mine",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Galar Mine"
+  },
+  {
+    "id": 899,
+    "slug": "galar-mine-no-2",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Galar Mine No. 2"
+  },
+  {
+    "id": 900,
+    "slug": "giants-bed",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Giant's Bed"
+  },
+  {
+    "id": 901,
+    "slug": "giants-foot",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Giant's Foot"
+  },
+  {
+    "id": 902,
+    "slug": "giants-mirror",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Giant's Mirror"
+  },
+  {
+    "id": 903,
+    "slug": "giants-seat",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Giant's Seat"
+  },
+  {
+    "id": 904,
+    "slug": "glimwood-tangle",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Glimwood Tangle"
+  },
+  {
+    "id": 905,
+    "slug": "hammerlocke",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Hammerlocke"
+  },
+  {
+    "id": 906,
+    "slug": "hammerlocke-hills",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Hammerlocke Hills"
+  },
+  {
+    "id": 907,
+    "slug": "honeycalm-island",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Honeycalm Island"
+  },
+  {
+    "id": 908,
+    "slug": "honeycalm-sea",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Honeycalm Sea"
+  },
+  {
+    "id": 909,
+    "slug": "hulbury",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Hulbury"
+  },
+  {
+    "id": 910,
+    "slug": "galar-iceberg-ruins",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Iceberg Ruins"
+  },
+  {
+    "id": 911,
+    "slug": "insular-sea",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Insular Sea"
+  },
+  {
+    "id": 912,
+    "slug": "galar-iron-ruins",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Iron Ruins"
+  },
+  {
+    "id": 913,
+    "slug": "lake-of-outrage",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Lake of Outrage"
+  },
+  {
+    "id": 914,
+    "slug": "lakeside-cave",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Lakeside Cave"
+  },
+  {
+    "id": 915,
+    "slug": "loop-lagoon",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Loop Lagoon"
+  },
+  {
+    "id": 916,
+    "slug": "master-dojo",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Master Dojo"
+  },
+  {
+    "id": 917,
+    "slug": "max-lair",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Max Lair"
+  },
+  {
+    "id": 918,
+    "slug": "motostoke",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Motostoke"
+  },
+  {
+    "id": 919,
+    "slug": "motostoke-outskirts",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Motostoke Outskirts"
+  },
+  {
+    "id": 920,
+    "slug": "motostoke-riverbank",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Motostoke Riverbank"
+  },
+  {
+    "id": 921,
+    "slug": "north-lake-miloch",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "North Lake Miloch"
+  },
+  {
+    "id": 922,
+    "slug": "old-cemetery",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Old Cemetery"
+  },
+  {
+    "id": 923,
+    "slug": "path-to-the-peak",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Path to the Peak"
+  },
+  {
+    "id": 924,
+    "slug": "postwick",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Postwick"
+  },
+  {
+    "id": 925,
+    "slug": "potbottom-desert",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Potbottom Desert"
+  },
+  {
+    "id": 926,
+    "slug": "roaring-sea-caves",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Roaring-Sea Caves"
+  },
+  {
+    "id": 927,
+    "slug": "galar-rock-peak-ruins",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Rock Peak Ruins"
+  },
+  {
+    "id": 928,
+    "slug": "rolling-fields",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Rolling Fields"
+  },
+  {
+    "id": 929,
+    "slug": "slippery-slope",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Slippery Slope"
+  },
+  {
+    "id": 930,
+    "slug": "slumbering-weald",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Slumbering Weald"
+  },
+  {
+    "id": 931,
+    "slug": "snowslide-slope",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Snowslide Slope"
+  },
+  {
+    "id": 932,
+    "slug": "soothing-wetlands",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Soothing Wetlands"
+  },
+  {
+    "id": 933,
+    "slug": "south-lake-miloch",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "South Lake Miloch"
+  },
+  {
+    "id": 934,
+    "slug": "spikemuth",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Spikemuth"
+  },
+  {
+    "id": 935,
+    "slug": "split-decision-ruins",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Split-Decision Ruins"
+  },
+  {
+    "id": 936,
+    "slug": "steamdrift-way",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Route 8"
+  },
+  {
+    "id": 937,
+    "slug": "stepping-stone-sea",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Stepping-Stone Sea"
+  },
+  {
+    "id": 938,
+    "slug": "stony-wilderness",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Stony Wilderness"
+  },
+  {
+    "id": 939,
+    "slug": "stow-on-side",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Stow-on-Side"
+  },
+  {
+    "id": 940,
+    "slug": "three-point-pass",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Three-Point Pass"
+  },
+  {
+    "id": 941,
+    "slug": "tower-of-darkness",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Tower of Darkness"
+  },
+  {
+    "id": 942,
+    "slug": "tower-of-waters",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Tower of Waters"
+  },
+  {
+    "id": 943,
+    "slug": "training-lowlands",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Training Lowlands"
+  },
+  {
+    "id": 944,
+    "slug": "tunnel-to-the-top",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Tunnel to the Top"
+  },
+  {
+    "id": 945,
+    "slug": "turffield",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Turffield"
+  },
+  {
+    "id": 946,
+    "slug": "warm-up-tunnel",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Warm-Up Tunnel"
+  },
+  {
+    "id": 947,
+    "slug": "watchtower-ruins",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Watchtower Ruins"
+  },
+  {
+    "id": 948,
+    "slug": "wedgehurst",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Wedgehurst"
+  },
+  {
+    "id": 949,
+    "slug": "west-lake-axewell",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "West Lake Axewell"
+  },
+  {
+    "id": 950,
+    "slug": "workout-sea",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Workout Sea"
+  },
+  {
+    "id": 951,
+    "slug": "wyndon",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Wyndon"
+  },
+  {
+    "id": 952,
+    "slug": "aipom-hill",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Aipom Hill"
+  },
+  {
+    "id": 953,
+    "slug": "ancient-quarry",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Ancient Quarry"
+  },
+  {
+    "id": 954,
+    "slug": "arenas-approach",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Arena's Approach"
+  },
+  {
+    "id": 955,
+    "slug": "aspiration-hill",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Aspiration Hill"
+  },
+  {
+    "id": 956,
+    "slug": "avalanche-slopes",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Avalanche Slopes"
+  },
+  {
+    "id": 957,
+    "slug": "avaluggs-legacy",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Avalugg's Legacy"
+  },
+  {
+    "id": 958,
+    "slug": "bathers-lagoon",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Bathers' Lagoon"
+  },
+  {
+    "id": 959,
+    "slug": "bolderoll-ravine",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Bolderoll Ravine"
+  },
+  {
+    "id": 960,
+    "slug": "bolderoll-slope",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Bolderoll Slope"
+  },
+  {
+    "id": 961,
+    "slug": "bonechill-wastes",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Bonechill Wastes"
+  },
+  {
+    "id": 962,
+    "slug": "brava-arena",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Brava Arena"
+  },
+  {
+    "id": 963,
+    "slug": "castaway-shore",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Castaway Shore"
+  },
+  {
+    "id": 964,
+    "slug": "celestica-ruins",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Celestica Ruins"
+  },
+  {
+    "id": 965,
+    "slug": "celestica-trail",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Celestica Trail"
+  },
+  {
+    "id": 966,
+    "slug": "clamberclaw-cliffs",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Clamberclaw Cliffs"
+  },
+  {
+    "id": 967,
+    "slug": "cloudcap-pass",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Cloudcap Pass"
+  },
+  {
+    "id": 968,
+    "slug": "cloudpool-ridge",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Cloudpool Ridge"
+  },
+  {
+    "id": 969,
+    "slug": "coastlands-camp",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Coastlands Base Camp"
+  },
+  {
+    "id": 970,
+    "slug": "cottonsedge-prairie",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Cottonsedge Prairie"
+  },
+  {
+    "id": 971,
+    "slug": "crossing-slope",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Crossing Slope"
+  },
+  {
+    "id": 972,
+    "slug": "deadwood-haunt",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Deadwood Haunt"
+  },
+  {
+    "id": 973,
+    "slug": "deertrack-heights",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Deertrack Heights"
+  },
+  {
+    "id": 974,
+    "slug": "deertrack-path",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Deertrack Path"
+  },
+  {
+    "id": 975,
+    "slug": "diamond-heath",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Diamond Heath"
+  },
+  {
+    "id": 976,
+    "slug": "diamond-settlement",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Diamond Settlement"
+  },
+  {
+    "id": 977,
+    "slug": "droning-meadow",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Droning Meadow"
+  },
+  {
+    "id": 978,
+    "slug": "fabled-spring",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Fabled Spring"
+  },
+  {
+    "id": 979,
+    "slug": "firespit-island",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Firespit Island"
+  },
+  {
+    "id": 980,
+    "slug": "floaro-gardens",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Floaro Gardens"
+  },
+  {
+    "id": 981,
+    "slug": "gapejaw-bog",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Gapejaw Bog"
+  },
+  {
+    "id": 982,
+    "slug": "ginkgo-landing",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Ginkgo Landing"
+  },
+  {
+    "id": 983,
+    "slug": "glacier-terrace",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Glacier Terrace"
+  },
+  {
+    "id": 984,
+    "slug": "golden-lowlands",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Golden Lowlands"
+  },
+  {
+    "id": 985,
+    "slug": "grandtree-arena",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Grandtree Arena"
+  },
+  {
+    "id": 986,
+    "slug": "grueling-grove",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Grueling Grove"
+  },
+  {
+    "id": 987,
+    "slug": "hearts-crag",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Heart's Crag"
+  },
+  {
+    "id": 988,
+    "slug": "heavenward-lookout",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Heavenward Lookout"
+  },
+  {
+    "id": 989,
+    "slug": "heights-camp",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Heights Base Camp"
+  },
+  {
+    "id": 990,
+    "slug": "hideaway-bay",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Hideaway Bay"
+  },
+  {
+    "id": 991,
+    "slug": "holm-of-trials",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Holm of Trials"
+  },
+  {
+    "id": 992,
+    "slug": "horseshoe-plains",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Horseshoe Plains"
+  },
+  {
+    "id": 993,
+    "slug": "ice-column-chamber",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Ice Column Chamber"
+  },
+  {
+    "id": 994,
+    "slug": "icebound-falls",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Icebound Falls"
+  },
+  {
+    "id": 995,
+    "slug": "icepeak-arena",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Icepeak Arena"
+  },
+  {
+    "id": 996,
+    "slug": "icepeak-cavern",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Icepeak Cavern"
+  },
+  {
+    "id": 997,
+    "slug": "islespy-shore",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Islespy Shore"
+  },
+  {
+    "id": 998,
+    "slug": "jubilife-village",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Jubilife Village"
+  },
+  {
+    "id": 999,
+    "slug": "hisui-lake-acuity",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Lake Acuity"
+  },
+  {
+    "id": 1000,
+    "slug": "hisui-lake-valor",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Lake Valor"
+  },
+  {
+    "id": 1001,
+    "slug": "hisui-lake-verity",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Lake Verity"
+  },
+  {
+    "id": 1002,
+    "slug": "lonely-spring",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Lonely Spring"
+  },
+  {
+    "id": 1003,
+    "slug": "lunkers-lair",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Lunker's Lair"
+  },
+  {
+    "id": 1004,
+    "slug": "molten-arena",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Molten Arena"
+  },
+  {
+    "id": 1005,
+    "slug": "moonview-arena",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Moonview Arena"
+  },
+  {
+    "id": 1006,
+    "slug": "natures-pantry",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Nature's Pantry"
+  },
+  {
+    "id": 1007,
+    "slug": "obsidian-falls",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Obsidian Falls"
+  },
+  {
+    "id": 1008,
+    "slug": "oreburrow-tunnel",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Oreburrow Tunnel"
+  },
+  {
+    "id": 1009,
+    "slug": "pearl-settlement",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Pearl Settlement"
+  },
+  {
+    "id": 1010,
+    "slug": "primeval-grotto",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Primeval Grotto"
+  },
+  {
+    "id": 1011,
+    "slug": "ramanas-island",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Ramanas Island"
+  },
+  {
+    "id": 1012,
+    "slug": "sacred-plaza",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Sacred Plaza"
+  },
+  {
+    "id": 1013,
+    "slug": "sands-reach",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Sand's Reach"
+  },
+  {
+    "id": 1014,
+    "slug": "sandgem-flats",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Sandgem Flats"
+  },
+  {
+    "id": 1015,
+    "slug": "scarlet-bog",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Scarlet Bog"
+  },
+  {
+    "id": 1016,
+    "slug": "seagrass-haven",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Seagrass Haven"
+  },
+  {
+    "id": 1017,
+    "slug": "seaside-hollow",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Seaside Hollow"
+  },
+  {
+    "id": 1018,
+    "slug": "shrouded-ruins",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Shrouded Ruins"
+  },
+  {
+    "id": 1019,
+    "slug": "sludge-mound",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Sludge Mound"
+  },
+  {
+    "id": 1020,
+    "slug": "snowfall-hot-spring",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Snowfall Hot Spring"
+  },
+  {
+    "id": 1021,
+    "slug": "hisui-snowpoint-temple",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Snowpoint Temple"
+  },
+  {
+    "id": 1022,
+    "slug": "hisui-solaceon-ruins",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Solaceon Ruins"
+  },
+  {
+    "id": 1023,
+    "slug": "sonorous-path",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Sonorous Path"
+  },
+  {
+    "id": 1024,
+    "slug": "space-time-distortion",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Space-time distortion"
+  },
+  {
+    "id": 1025,
+    "slug": "hisui-spring-path",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Spring Path"
+  },
+  {
+    "id": 1026,
+    "slug": "stonetooth-rows",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Stonetooth Rows"
+  },
+  {
+    "id": 1027,
+    "slug": "temple-of-sinnoh",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Temple of Sinnoh"
+  },
+  {
+    "id": 1028,
+    "slug": "the-heartwood",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "The Heartwood"
+  },
+  {
+    "id": 1029,
+    "slug": "tidewater-dam",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Tidewater Dam"
+  },
+  {
+    "id": 1030,
+    "slug": "tombolo-walk",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Tombolo Walk"
+  },
+  {
+    "id": 1031,
+    "slug": "tranquility-cove",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Tranquility Cove"
+  },
+  {
+    "id": 1032,
+    "slug": "hisui-turnback-cave",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Turnback Cave"
+  },
+  {
+    "id": 1033,
+    "slug": "ursas-ring",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Ursa's Ring"
+  },
+  {
+    "id": 1034,
+    "slug": "veilstone-cape",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Veilstone Cape"
+  },
+  {
+    "id": 1035,
+    "slug": "hisui-wayward-cave",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Wayward Cave"
+  },
+  {
+    "id": 1036,
+    "slug": "wayward-wood",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Wayward Wood"
+  },
+  {
+    "id": 1037,
+    "slug": "whiteout-valley",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Whiteout Valley"
+  },
+  {
+    "id": 1038,
+    "slug": "windbreak-stand",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Windbreak Stand"
+  },
+  {
+    "id": 1039,
+    "slug": "windswept-run",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Windswept Run"
+  },
+  {
+    "id": 1040,
+    "slug": "worn-bridge",
+    "region_id": 9,
+    "name_ko": null,
+    "name_en": "Worn Bridge"
+  },
+  {
+    "id": 1041,
+    "slug": "giants-cap",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Giant's Cap"
+  },
+  {
+    "id": 1042,
+    "slug": "hauoli-city",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Hau'oli City"
+  },
+  {
+    "id": 1043,
+    "slug": "verdant-cavern",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Verdant Cavern"
+  },
+  {
+    "id": 1044,
+    "slug": "thrifty-megamart",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Royal Avenue"
+  },
+  {
+    "id": 1045,
+    "slug": "malie-city",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Malie City"
+  },
+  {
+    "id": 1046,
+    "slug": "dividing-peak-tunnel",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Dividing Peak Tunnel"
+  },
+  {
+    "id": 1047,
+    "slug": "heahea-beach",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Heahea Beach"
+  },
+  {
+    "id": 1048,
+    "slug": "sandy-cave",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Sandy Cave"
+  },
+  {
+    "id": 1049,
+    "slug": "ulaula-beach",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Ula'ula Beach"
+  },
+  {
+    "id": 1050,
+    "slug": "ultra-megalopolis",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Ultra Megalopolis"
+  },
+  {
+    "id": 1051,
+    "slug": "ultra-space-wilds",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Ultra Space Wilds"
+  },
+  {
+    "id": 1052,
+    "slug": "poke-pelago",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Poké Pelago"
+  },
+  {
+    "id": 1053,
+    "slug": "team-rockets-castle",
+    "region_id": 7,
+    "name_ko": null,
+    "name_en": "Team Rocket's Castle"
+  },
+  {
+    "id": 1054,
+    "slug": "roaming-unova",
+    "region_id": 5,
+    "name_ko": null,
+    "name_en": "Unova (Roaming)"
+  },
+  {
+    "id": 1055,
+    "slug": "mossdeep-space-center",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": "Mossdeep Space Center"
+  },
+  {
+    "id": 1056,
+    "slug": "roaming-kalos",
+    "region_id": 6,
+    "name_ko": null,
+    "name_en": "Kalos (Roaming)"
+  },
+  {
+    "id": 1057,
+    "slug": "uva-academy",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Uva Academy"
+  },
+  {
+    "id": 1058,
+    "slug": "apple-hills",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Apple Hills"
+  },
+  {
+    "id": 1059,
+    "slug": "chilling-waterhead",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Chilling Waterhead"
+  },
+  {
+    "id": 1060,
+    "slug": "crystal-pool",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Crystal Pool"
+  },
+  {
+    "id": 1061,
+    "slug": "dreaded-den",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Dreaded Den"
+  },
+  {
+    "id": 1062,
+    "slug": "fellhorn-gorge",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Fellhorn Gorge"
+  },
+  {
+    "id": 1063,
+    "slug": "infernal-pass",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Infernal Pass"
+  },
+  {
+    "id": 1064,
+    "slug": "kitakami-hall",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Kitakami Hall"
+  },
+  {
+    "id": 1065,
+    "slug": "kitakami-road",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Kitakami Road"
+  },
+  {
+    "id": 1066,
+    "slug": "kitakami-wilds",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Kitakami Wilds"
+  },
+  {
+    "id": 1067,
+    "slug": "loyalty-plaza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Loyalty Plaza"
+  },
+  {
+    "id": 1068,
+    "slug": "mossfell-confluence",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Mossfell Confluence"
+  },
+  {
+    "id": 1069,
+    "slug": "mossui-town",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Mossui Town"
+  },
+  {
+    "id": 1070,
+    "slug": "oni-mountain",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Oni Mountain"
+  },
+  {
+    "id": 1071,
+    "slug": "onis-maw",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Oni's Maw"
+  },
+  {
+    "id": 1072,
+    "slug": "paradise-barrens",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Paradise Barrens"
+  },
+  {
+    "id": 1073,
+    "slug": "revelers-road",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Reveler's Road"
+  },
+  {
+    "id": 1074,
+    "slug": "timeless-woods",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Timeless Woods"
+  },
+  {
+    "id": 1075,
+    "slug": "wistful-fields",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Wistful Fields"
+  },
+  {
+    "id": 1076,
+    "slug": "canyon-biome",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Canyon Biome"
+  },
+  {
+    "id": 1077,
+    "slug": "canyon-plaza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Canyon Plaza"
+  },
+  {
+    "id": 1078,
+    "slug": "central-plaza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Central Plaza"
+  },
+  {
+    "id": 1079,
+    "slug": "chargestone-cavern",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Chargestone Cavern"
+  },
+  {
+    "id": 1080,
+    "slug": "coastal-biome",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Coastal Biome"
+  },
+  {
+    "id": 1081,
+    "slug": "coastal-plaza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Coastal Plaza"
+  },
+  {
+    "id": 1082,
+    "slug": "league-club-room",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "League Club Room"
+  },
+  {
+    "id": 1083,
+    "slug": "polar-biome",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Polar Biome"
+  },
+  {
+    "id": 1084,
+    "slug": "polar-plaza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Polar Plaza"
+  },
+  {
+    "id": 1085,
+    "slug": "savanna-biome",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Savanna Biome"
+  },
+  {
+    "id": 1086,
+    "slug": "savanna-plaza",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Savanna Plaza"
+  },
+  {
+    "id": 1087,
+    "slug": "torchlit-labyrinth",
+    "region_id": 10,
+    "name_ko": null,
+    "name_en": "Torchlit Labyrinth"
+  },
+  {
+    "id": 1088,
+    "slug": "hoenn-pokemart",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1089,
+    "slug": "hoenn-pokecenter",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1090,
+    "slug": "kanto-pokemart",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1091,
+    "slug": "kanto-pokecenter",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1092,
+    "slug": "sinnoh-pokemart",
+    "region_id": 4,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1093,
+    "slug": "johto-pokemart",
+    "region_id": 2,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1094,
+    "slug": "mirage-island",
+    "region_id": 3,
+    "name_ko": null,
+    "name_en": null
+  },
+  {
+    "id": 1095,
+    "slug": "outskirt-stand",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Outskirt Stand"
+  },
+  {
+    "id": 1096,
+    "slug": "phenac-city",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Phenac City"
+  },
+  {
+    "id": 1097,
+    "slug": "snagem-hideout",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Snagem Hideout"
+  },
+  {
+    "id": 1098,
+    "slug": "shadow-pokemon-lab",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Shadow Pokémon Lab"
+  },
+  {
+    "id": 1099,
+    "slug": "pyrite-town",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Pyrite Town"
+  },
+  {
+    "id": 1100,
+    "slug": "pyrite-bldg",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Pyrite Bldg"
+  },
+  {
+    "id": 1101,
+    "slug": "pyrite-cave",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Pyrite Cave"
+  },
+  {
+    "id": 1102,
+    "slug": "realgam-tower",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Realgam Tower"
+  },
+  {
+    "id": 1103,
+    "slug": "agate-village",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Agate Village"
+  },
+  {
+    "id": 1104,
+    "slug": "the-under",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "The Under"
+  },
+  {
+    "id": 1105,
+    "slug": "mt-battle",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Mt. Battle"
+  },
+  {
+    "id": 1106,
+    "slug": "pokemon-hq-lab",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Pokemon Hq Lab"
+  },
+  {
+    "id": 1107,
+    "slug": "gateon-port",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Gateon Port"
+  },
+  {
+    "id": 1108,
+    "slug": "cipher-lab",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Cipher Lab"
+  },
+  {
+    "id": 1109,
+    "slug": "pokespot",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Pokespot"
+  },
+  {
+    "id": 1110,
+    "slug": "onbs",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "ONBS"
+  },
+  {
+    "id": 1111,
+    "slug": "cipher-key-lair",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Cipher Key Lair"
+  },
+  {
+    "id": 1112,
+    "slug": "citadark-isle",
+    "region_id": 11,
+    "name_ko": null,
+    "name_en": "Citadark Isle"
+  },
+  {
+    "id": 1113,
+    "slug": "kanto-underground-path",
+    "region_id": 1,
+    "name_ko": null,
+    "name_en": "Kanto Underground Path"
+  },
+  {
+    "id": 1114,
+    "slug": "energy-plant",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Energy Plant"
+  },
+  {
+    "id": 1115,
+    "slug": "meetup-spot",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Meetup Spot"
+  },
+  {
+    "id": 1116,
+    "slug": "isle-of-armor-caves",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Random caves across the Isle of Armor"
+  },
+  {
+    "id": 1117,
+    "slug": "roaming-galar-wild-area",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Roaming Galar Wild Areas"
+  },
+  {
+    "id": 1118,
+    "slug": "roaming-isle-of-armor",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Roaming the Isle of Armor"
+  },
+  {
+    "id": 1119,
+    "slug": "roaming-crown-tundra",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Roaming the Crown Tundra"
+  },
+  {
+    "id": 1120,
+    "slug": "galar-wild-area-max-dens",
+    "region_id": 8,
+    "name_ko": null,
+    "name_en": "Max Dens in the Galar Wild Area"
+  },
+  {
+    "id": 1121,
+    "slug": "kalos-berry-fields",
+    "region_id": 6,
+    "name_ko": null,
+    "name_en": null
+  }
+]

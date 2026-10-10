@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "source_files_sha256_verified": 5231,
+  "source_pngs_decoded": 4045,
+  "derived_maps_verified": 5,
+  "pokemon_records_validated": 1025,
+  "map_records_validated": 943,
+  "missing_item_images": 49,
+  "absent_alternate_license_filenames": 2
+}
