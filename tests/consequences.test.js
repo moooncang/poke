@@ -47,6 +47,7 @@ test('investments pay off according to the economy when they come due, not when 
 
 test('a due decision seed becomes the next main event and is marked as an echo', () => {
   const s = settledAt(33, 'debt');
+  s.seeds = [];
   s.seeds.push({ id: 'debt-due', at: s.age + 1, origin: { age: s.age - 2, title: '줄어든 살림', label: '돈을 빌린다' }, data: { amount: 800 } });
   const next = play(s, { until: x => Boolean(x.pending) });
   const entry = next.log.find(e => e.id === next.pending);

@@ -112,6 +112,26 @@ export const CONSEQUENCES = {
         opt('원래 서식지로 돌려보낸다', '생태 +3 · 유대 +3', '숲 가장자리에서 놓아주자 뒤도 돌아보지 않고 달려갔다.', { tone: 'easygoing', world: { ecology: 3 }, effects: { bond: 3, joy: 3 } }),
       ]); } },
 
+  'childhood-ally': { type: 'echo', build: s => echo('어릴 적 그 아이', `어릴 때 몬스터볼을 되찾아 준 아이가 ${town(s).name}의 레인저가 되어 찾아왔다. 그때 고마웠다며 일감을 소개해 주었다.`, { money: 300, joy: 5, reputation: 2 }) },
+  'savings-grow': { type: 'echo', build: (s, { data }) => echo('깨뜨린 돼지저금통', `어릴 때부터 모은 저금통을 열었다. 동전이 ${data.amount}P나 됐다.`, { money: data.amount, joy: 3 }) },
+  'dream-recall': { type: 'choice',
+    build: (s, { data }) => choice('어릴 적 꿈', `서랍에서 ‘${data.dream}’이 되겠다던 발표문이 나왔다. 지금의 나는 그 꿈에서 얼마나 멀리 왔을까.`, [
+      opt('늦었지만 다시 도전한다', '용기 판정 · 성공 시 명성 상승', '오래 묵혀 둔 꿈을 향해 한 걸음 내디뎠다.', { tone: 'bold', effects: { courage: 5, reputation: 4, joy: 5 },
+        challenge: { stat: 'courage', difficulty: 15, failure: { effects: { joy: 2, wisdom: 3 }, outcome: '쉽지 않았다. 그래도 도전했다는 사실이 마음을 가볍게 했다.' } } }),
+      opt('지금의 삶을 받아들인다', '지혜 +4 · 행복 +3', '꿈과 다른 길이었지만 이 길도 나쁘지 않았다.', { tone: 'easygoing', effects: { wisdom: 4, joy: 3 } }),
+    ]) },
+  'guilty-conscience': { type: 'echo', build: () => echo('양심의 가책', '주운 지갑의 주인이 곤란을 겪었다는 소문을 들었다. 챙긴 돈을 익명으로 돌려보냈다.', { money: -300, wisdom: 4, joy: 2 }) },
+  'blog-result': { type: 'echo', build: s => s.reputation >= 25 || s.stats.wisdom >= 60
+    ? echo('입소문 난 블로그', '꾸준히 쓴 돌봄 블로그가 입소문을 타 광고 수익이 생겼다.', { money: 500, reputation: 3 })
+    : echo('조용한 블로그', '블로그는 조용했지만 쌓인 글이 나만의 돌봄 기록이 되었다.', { wisdom: 3 }) },
+  'fitness-payoff': { type: 'echo', build: () => echo('운동의 결실', '몇 년째 이어 온 아침 달리기 덕분에 몸이 가벼워졌다.', { vitality: 8, joy: 3 }) },
+  'leak-damage': { type: 'echo', build: () => echo('새는 지붕', '미뤄 둔 지붕이 결국 장마에 무너졌다. 수리비가 훨씬 많이 들었다.', { money: -700, joy: -4 }) },
+  'lab-scandal': { type: 'echo', build: () => echo('연구실 스캔들', '조작된 논문이 결국 드러났다. 공동 저자였던 이름도 기사에 실렸다.', { reputation: -8, joy: -6 }) },
+  'branch-result': { type: 'echo', build: (s, { data }) => {
+    const ratio = clamp(0.3 + economy(s) / 45, 0.3, 2.4), money = Math.round(data.amount * ratio);
+    return echo('2호점 결산', `2호점은 ${ratio >= 1.3 ? '본점보다 잘됐다' : ratio >= 1 ? '자리를 잡았다' : '경기를 이기지 못하고 문을 닫았다'}. ${data.amount}P를 들인 가게가 ${money}P를 남겼다.`, { money, joy: ratio >= 1 ? 4 : -4 });
+  } },
+
   // ── World ──
   'villain-revenge': { type: 'choice', when: s => s.party.length,
     build: s => choice('조직의 보복', `예전에 막아섰던 ${josa(regionByTown(s).villain, '이', '가')} 집 근처를 맴돌고 있다.`, [

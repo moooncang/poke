@@ -72,6 +72,6 @@ test('a successful lure capture overflows into the box and a failure grants no P
 
 test('early life offers capture opportunities while respecting milestone ages', () => {
   const s = play(createLife({ seed: 'capture-schedule' }), { until: x => x.age >= 26 });
-  assert.ok(s.log.filter(e => e.title === '야생 포켓몬과의 조우').length >= 4);
+  assert.ok(s.log.filter(e => e.sourceId?.startsWith('wild-encounter')).length >= 4);
   assert.ok(s.log.some(e => e.title === '진로 선택' && e.age === 16));
 });

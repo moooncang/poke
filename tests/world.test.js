@@ -7,6 +7,7 @@ import { directEvent, ALL_STORYLETS } from '../src/sim/director.js';
 import { CONSEQUENCES } from '../src/data/consequences.js';
 import { REGIONS } from '../src/data/regions.js';
 import { lifeAt, present, play } from './helpers.js';
+import { hashSeed } from '../src/sim/random.js';
 
 test('regions drift, gain and lose conditions and stay within bounds', () => {
   const s = createLife({ seed: 'world' });
@@ -39,9 +40,9 @@ test('conditions in the current region unlock their own events', () => {
     let hits = 0;
     for (let rng = 1; rng <= 150; rng++) {
       const t = structuredClone(settled);
-      t.rng = rng;
+      t.rng = hashSeed(`syndicate-${rng}`);
       t.world.conditions = withCondition ? [{ id: 'syndicate', region: currentRegion(t), since: t.age, until: t.age + 3 }] : [];
-      if (directEvent(t)?.id?.startsWith('syndicate-raid')) hits++;
+      if (/^(syndicate-raid|cond-syndicate-)/.test(directEvent(t)?.id || '')) hits++;
     }
     return hits;
   };

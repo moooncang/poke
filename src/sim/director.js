@@ -1,6 +1,9 @@
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
+import { MORE_LIFE } from '../data/more-life.js';
+import { MORE_WORK } from '../data/more-work.js';
+import { MORE_PLACES } from '../data/more-places.js';
 import { careerReview, CAREER_REVIEWS } from '../data/progression.js';
 import { LIFE_STORYLETS } from '../data/life-events.js';
 import { CHALLENGE_EVENTS, academyExam } from '../data/challenges.js';
@@ -116,13 +119,17 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...STORYLETS, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
 const CATEGORY_WEIGHT = {
   childhood: () => 3,
   career: () => 3,
+  stage: () => 1.8,
+  family: () => 1.4,
+  pokemon: () => 1.2,
+  work: () => 1.6,
   cast: () => 2.4,
   world: () => 3,
   opportunity: () => 1.6,
@@ -132,7 +139,7 @@ const CATEGORY_WEIGHT = {
   regional: s => 1 + (hasCondition(s, 'syndicate') ? 1.5 : 0) + (regionState(s).safety < 40 ? 0.7 : 0),
   local: () => 1,
   field: () => 1.4,
-  legend: s => (0.3 + (hasCondition(s, 'legend') ? 2 : 0) + (s.flags['legend-quest'] ? 1.2 : 0) + (regionState(s).ecology > 70 ? 0.3 : 0)) * 0.4 ** ownedLegends(s),
+  legend: s => (0.45 + (hasCondition(s, 'legend') ? 2 : 0) + (s.flags['legend-quest'] ? 1.2 : 0) + (regionState(s).ecology > 70 ? 0.3 : 0)) * 0.4 ** ownedLegends(s),
   special: () => 0.5,
   plan: () => 0.25,
 };

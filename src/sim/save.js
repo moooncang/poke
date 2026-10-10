@@ -29,7 +29,7 @@ function validActions(a) {
     && (a.cost === undefined || num(a.cost, 0, 1e7)) && (!a.career || Boolean(CAREERS[a.career])) && (!a.join || speciesId(a.join))
     && (!a.joinOrigin || ORIGINS.includes(a.joinOrigin)) && (!a.observe || speciesId(a.observe)) && (!a.destination || townId(a.destination))
     && (a.move === undefined || [true, false, 'region', 'random'].includes(a.move)) && (!a.equipment || a.equipment in MECHANICS)
-    && (a.training === undefined || num(a.training, 0, 10000)) && (!a.captureJoin || speciesId(a.captureJoin)) && (!a.tone || a.tone in DISPOSITIONS)
+    && (a.training === undefined || num(a.training, 0, 10000)) && (!a.captureJoin || speciesId(a.captureJoin)) && (a.affection === undefined || num(a.affection, -100, 100)) && (!a.tone || a.tone in DISPOSITIONS)
     && (a.cast === undefined || isObject(a.cast) && Object.values(a.cast).every(isObject))
     && (a.follow === undefined || list(a.follow, 5, f => isObject(f) && Boolean(CONSEQUENCES[f.id])))
     && (a.battle === undefined || isObject(a.battle) && BATTLE_KINDS.includes(a.battle.kind) && (a.battle.opponent === undefined || speciesId(a.battle.opponent)))

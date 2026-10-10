@@ -84,7 +84,7 @@ const field = [
     build: s => { s.lastWildOffer = s.age;
       const owned = [...s.party, ...s.box].map(m => m.id), fresh = town(s).pool.filter(id => !owned.includes(id));
       const id = pick(s, fresh.length ? fresh : town(s).pool);
-      return { kind: 'choice', title: '야생 포켓몬과의 조우', body: `${town(s).name}의 서식지에서 ${poke(id, '을', '를')} 만났다. 파티가 가득 차 있으면 데려갈 포켓몬을 스스로 다시 고른다.`, choices: [
+      return { kind: 'choice', title: `${poke(id, '과', '와')}의 조우`, body: `${town(s).name}의 서식지에서 ${poke(id, '을', '를')} 만났다. 파티가 가득 차 있으면 데려갈 포켓몬을 스스로 다시 고른다.`, choices: [
         opt('파트너와 배틀하며 포획', '몬스터볼 사용 · 배틀 상황에 따라 판정', '야생 포켓몬의 움직임에 맞춰 포획을 시도했다.', { tone: 'bold', battle: { kind: 'wild', opponent: id, capture: true }, effects: { courage: 1 } }),
         opt('먹이로 경계심을 낮춰 데려오기', '먹이 60P · 유대에 따른 성공률', '경계심을 푼 포켓몬이 동행에 응했다.', { tone: 'caring', cost: 60, captureJoin: id, effects: { bond: 2 },
           challenge: { stat: 'bond', difficulty: -10, failure: { effects: { bond: 1 }, outcome: '먹이는 받아먹었지만 동행하지 않고 서식지로 돌아갔다.' } } }),

@@ -30,6 +30,9 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/sim/save.js` | 저장 검증과 이전 형식 변환(`SAVE_VERSION`) |
 | `src/sim/text.js` | 한국어 조사 `josa`, 포켓몬 이름 토큰 `poke` |
 | `src/data/storylets.js` | 상태 조건으로 열리는 사건(인물·지방 상황·기회) |
+| `src/data/more-life.js` · `more-work.js` · `more-places.js` | 표 형식으로 쓴 사건 184개(인생 단계·성향·가족·포켓몬·직업·마을 환경·지방 문화·지방 상황) |
+| `src/data/event-kit.js` | 표 형식 사건 작성 도구(`table`, `check`, `later`, `fill`) |
+| `src/data/vignettes.js` | 결정 사이에 나오는 일상 기록(계절·환경·나이·가족·파티 조건) |
 | `src/data/consequences.js` | 선택의 여파 정의 |
 | `src/data/milestones.js` | 나이 고정 사건(7·12·18·22세 학습, 16세 진로) |
 | `src/data/progression.js` | 경력 평가(`careerReview`)와 연간 파티 경험치(`annualTraining`) |
@@ -52,6 +55,24 @@ CSS는 `src/main.jsx`에서 `styles.css` → `game.css` → `life.css` 순서로
 8. **한국어 문장.** 이름 뒤 조사는 `josa(이름, '이', '가')`를 쓰고, 포켓몬 이름은 `poke(id, '을', '를')` 토큰으로 넣습니다(UI가 실제 이름으로 바꿉니다). 본문에는 `{town}`, `{partner}` 토큰도 쓸 수 있습니다.
 
 ## 사건(storylet) 추가하기
+
+간단한 사건은 `event-kit.js`의 `table`로 한 줄씩 쓰는 편이 쉽습니다. `more-*.js` 파일의 기존 행을 참고하세요.
+
+```js
+table('stage', [
+  ['my-event', 20, 60, '제목', '{friend|이|가} 찾아왔다.', [
+    ['선택지', 'caring', { bond: 3, money: -100 }, '결과 문장', { follow: [later('friend-repay', [2, 5])] }],
+    ['판정 선택지', 'bold', { courage: 4 }, '성공 문장', check('courage', 10, '실패 문장', { joy: -2 })],
+    ['무료 선택지', 'easygoing', { joy: 1 }, '결과 문장'],
+  ], { when: s => s.money > 500 }],
+]);
+```
+
+- 선택지 설명은 효과에서 자동으로 만들어집니다. 판정 없이 돈이 드는 선택지에는 `cost`가 자동으로 붙습니다.
+- **사건마다 돈이 들지 않는 선택지를 하나 이상 두세요.** `tests/events.test.js`가 확인합니다. 엔진도 고를 수 있는 선택지가 없으면 "지금은 형편이 안 된다"를 덧붙이지만, 이건 안전장치일 뿐입니다.
+- 문장에는 `{friend}`, `{rival}`, `{sibling}`, `{spouse}`, `{region}`, `{villain}`, `{partner}`, `{town}`을 쓸 수 있습니다. 조사가 붙으면 `{friend|이|가}`처럼 씁니다.
+
+직접 객체로 쓰는 방식:
 
 `src/data/storylets.js`의 `STORYLETS` 배열에 추가합니다.
 
@@ -86,6 +107,7 @@ CSS는 `src/main.jsx`에서 `styles.css` → `game.css` → `life.css` 순서로
 | `destination`, `move`, `home` | 이주(`move: 'region'`은 같은 지방 안) |
 | `flag`, `unflag` | 이후 사건 조건용 플래그 |
 | `observe`, `training`, `equipment`, `relationship` | 도감 등록, 파티 경험치, 장비 해금, 관계 사건 |
+| `affection` | 파티 전체의 친밀도 증감 |
 | `tone` | 이 선택이 쌓는 성향. 생략하면 효과가 가장 큰 능력치로 추정 |
 
 ## 여파(consequence) 추가하기

@@ -80,6 +80,10 @@ function log(state, event) {
     return log(state, nextFiller(state));
   }
   if (event.encounter) encounterEffects(state, event.encounter);
+  // Never strand the player: if nothing is affordable right now, offer a free way out.
+  if (event.choices && event.choices.every(c => (c.cost || 0) > state.money)) {
+    event = { ...event, choices: [...event.choices, { label: '지금은 형편이 안 된다', description: '소지금 부족 · 이번에는 넘긴다', tone: 'pragmatic', effects: { joy: -1 }, outcome: '형편이 되지 않아 이번에는 넘겼다.' }] };
+  }
   const entry = { age: state.age, season: state.season ?? 0, town: state.town, partnerId: partnerOf(state)?.id || null, kind: 'life', effects: {},
     ...event, sourceId: event.sourceId ?? event.id ?? null, id: `${state.seed}-${state.age}-${state.log.length}` };
   state.log.push(entry);
@@ -270,6 +274,7 @@ function applyActions(s, a, origin) {
     s.game.catches += 1;
   }
   if (a.observe && !s.seen.includes(a.observe)) s.seen.push(a.observe);
+  if (a.affection) for (const member of s.party) member.affection = clamp(member.affection + a.affection, 0, 100);
   if (a.training) { trainParty(s, a.training); queue(s, evolveMembers(s)); }
   if (a.equipment && !s.game.gear.includes(a.equipment)) {
     s.game.gear.push(a.equipment);

@@ -1,4 +1,6 @@
 import { EVENTS, WORK_EVENTS } from './world.js';
+import { VIGNETTES } from './vignettes.js';
+import { fill } from './event-kit.js';
 const RECORDS = {
   wisdom: [
     ['관찰 노트 정리','포켓몬의 출현 장소와 시간대를 도감 기록과 비교했다.'],
@@ -60,9 +62,10 @@ export function vignetteRecord(state, town, roll) {
   const work = state.career && !state.work?.retired
     ? WORK_EVENTS[state.career].map(([title, body, effects], i) => ({ id: `work-${state.career}-${i}`, title, body, effects }))
     : [];
-  const pool = [...EVENTS.filter(e => state.age >= e.min && state.age <= e.max), ...work].filter(e => !state.used.includes(e.id));
+  const fits = e => state.age >= e.min && state.age <= e.max && (!e.when || e.when(state));
+  const pool = [...EVENTS.filter(fits), ...VIGNETTES.filter(fits), ...work].filter(e => !state.used.includes(e.id));
   if (!pool.length) return null;
   const event = pool[Math.floor(roll() * pool.length)];
   state.used.push(event.id);
-  return { kind: work.includes(event) ? 'work' : 'life', automatic: true, title: event.title, body: event.body.replaceAll('{town}', town.name), effects: event.effects, sourceId: event.id };
+  return { kind: work.includes(event) ? 'work' : 'life', automatic: true, title: event.title, body: fill(state, event.body).replaceAll('{town}', town.name), effects: event.effects, sourceId: event.id };
 }
