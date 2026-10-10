@@ -1,6 +1,7 @@
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
+import { careerReview, CAREER_REVIEWS } from '../data/progression.js';
 import { LIFE_STORYLETS } from '../data/life-events.js';
 import { CHALLENGE_EVENTS, academyExam } from '../data/challenges.js';
 import { BRANCH_EVENTS } from '../data/quests.js';
@@ -10,7 +11,7 @@ import { TOWNS, NPCS } from '../data/world.js';
 import { regionOf } from '../data/regions.js';
 import { STAT_LABELS } from './labels.js';
 import { josa, poke } from './text.js';
-import { weighted, pick } from './random.js';
+import { weighted, pick, hashSeed } from './random.js';
 import { hasCondition, regionState, currentRegion } from './world.js';
 import { badgeCount } from './battle.js';
 
@@ -57,6 +58,13 @@ const regionalStorylets = REGIONAL_EVENTS.map(event => ({
     copy.choices.forEach((c, i) => { c.world = event.requires ? (i === 0 ? { safety: 5 } : { safety: 3, ecology: 3 }) : { safety: 2 }; if (event.requires) c.effects.reputation = 3; });
     return copy;
   },
+}));
+
+// Career reviews are guaranteed once per career stage, at a life-specific age within the first years of the stage.
+const careerReviews = Object.keys(CAREER_REVIEWS).map(Number).filter(phase => phase > 16).map(phase => ({
+  id: `career-review-${phase}`, category: 'career', min: phase, max: phase + 3,
+  urgent: s => s.age >= phase + hashSeed(`${s.seed}-career-${phase}`) % 3,
+  build: s => careerReview(s, phase),
 }));
 
 const romance = { id: 'romance', category: 'romance', once: false, min: 19, when: romanceAvailable, build: relationshipEvent,
@@ -108,12 +116,13 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...STORYLETS, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...STORYLETS, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
 const CATEGORY_WEIGHT = {
   childhood: () => 3,
+  career: () => 3,
   cast: () => 2.4,
   world: () => 3,
   opportunity: () => 1.6,
@@ -137,7 +146,7 @@ export function directEvent(s) {
   const groups = {};
   const open = ALL_STORYLETS.filter(st => available(s, st));
   // Urgent storylets (a death in the family, a crisis) take the year when they become possible.
-  const urgent = open.filter(st => st.urgent);
+  const urgent = open.filter(st => typeof st.urgent === 'function' ? st.urgent(s) : st.urgent);
   for (const st of urgent.length ? urgent : open) (groups[st.category] ||= []).push(st);
   const category = weighted(s, Object.keys(groups), c => CATEGORY_WEIGHT[c](s));
   if (!category) return null;

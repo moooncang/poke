@@ -1,5 +1,5 @@
 // Age-anchored turning points (learning style and first career). Everything else in a life is condition-driven.
-import { CAREERS } from './world.js';
+import { careerReview } from './progression.js';
 import { academyExam } from './challenges.js';
 import { STAT_LABELS } from '../sim/labels.js';
 import { josa } from '../sim/text.js';
@@ -48,17 +48,9 @@ function schoolEvent(s, plan) {
   return { kind: 'choice', title, body: plan.body(s), choices: [18, 22].includes(s.age) ? [...choices, academyExam] : choices };
 }
 
-function careerEvent() {
-  return { kind: 'choice', title: '진로 선택', body: '진로에 따라 연간 수입과 직업 사건이 달라진다. 수입은 지방의 경기와 명성에 따라 해마다 변한다.', choices: [
-    ...Object.entries(CAREERS).map(([career, data]) => ({ label: data.short, description: `${data.description} · 기본 연 수입 ${data.income}P`, career, effects: { courage: 5, wisdom: 3 }, outcome: `${data.name} 진로를 선택했다. 다음 해부터 직업 수입을 받는다.` })),
-    { label: '아직 진로를 정하지 않는다', description: '탐색과 자율 학습 · 이후 일자리 제안이 찾아온다', effects: { wisdom: 4, joy: 3 }, flag: 'career-exploring', outcome: '진로 결정을 미루고 여러 활동을 경험한다.' },
-    { label: '가족과 지역 활동에 집중', description: '유대 +7 · 고정 직업 수입 없음', effects: { bond: 7 }, flag: 'career-community', outcome: '고정 직업 없이 가족과 지역 공동체 활동에 참여한다.' },
-  ] };
-}
-
 /** The fixed event for this age, if any. */
 export function milestoneEvent(s) {
   if (SCHOOL[s.age]) return schoolEvent(s, SCHOOL[s.age]);
-  if (s.age === 16) return careerEvent();
+  if (s.age === 16) return careerReview(s, 16);
   return null;
 }

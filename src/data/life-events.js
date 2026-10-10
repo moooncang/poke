@@ -54,12 +54,14 @@ const COMMUNITY=[
 const town = s => TOWNS.find(t => t.id === s.town);
 const opt = (label, description, outcome, extra = {}) => ({ label, description, outcome, effects: {}, ...extra });
 
+const missed = stat => ({ stat, difficulty: 10, failure: { effects: { [stat]: 1 }, outcome: '활동 목표를 달성하지 못했다. 부족한 부분을 확인하고 다음 기회를 준비한다.' } });
+
 // Each neighbourhood situation offers a hands-on, an analytical and a caring approach with different lasting marks.
 const communityStorylets = COMMUNITY.map(([title, body, ...labels], i) => ({
   id: `season-${i}`, category: 'local', min: 8, weight: () => 1,
   build: s => ({ kind: 'choice', title, body: `${town(s).name}: ${body}`, choices: [
-    opt(labels[0], '용기 +4 · 파티 경험치 +25', `${labels[0]} 활동을 완료했다. 현장 경험을 파트너와 함께 쌓았다.`, { tone: 'bold', effects: { courage: 4 }, training: 25, follow: [{ id: 'training-payoff', delay: [2, 5], p: 0.2 }] }),
-    opt(labels[1], '지혜 +5 · 조사비 80P · 생태 +1', `${labels[1]} 활동을 완료했다. 확인한 자료를 지역 연구소에 전달했다.`, { tone: 'curious', effects: { wisdom: 5, money: 80 }, world: { ecology: 1 }, follow: [{ id: 'research-note', delay: [3, 7], p: 0.25 }] }),
+    opt(labels[0], '용기 판정 · 파티 경험치 +25', `${labels[0]} 활동을 완료했다. 현장 경험을 파트너와 함께 쌓았다.`, { tone: 'bold', effects: { courage: 4 }, training: 25, follow: [{ id: 'training-payoff', delay: [2, 5], p: 0.2 }], challenge: missed('courage') }),
+    opt(labels[1], '지혜 판정 · 조사비 80P · 생태 +1', `${labels[1]} 활동을 완료했다. 확인한 자료를 지역 연구소에 전달했다.`, { tone: 'curious', effects: { wisdom: 5, money: 80 }, world: { ecology: 1 }, follow: [{ id: 'research-note', delay: [3, 7], p: 0.25 }], challenge: missed('wisdom') }),
     opt(labels[2], '유대 +5 · 건강 +3 · 치안 +1 · 명성 +1', `${labels[2]} 활동을 완료했다. 지역 주민과 포켓몬의 안전을 확보했다.`, { tone: 'caring', effects: { bond: 5, vitality: 3, reputation: 1 }, world: { safety: 1 }, follow: [{ id: 'community-thanks', delay: [2, 6], p: 0.3 }] }),
   ] }),
 }));
@@ -75,12 +77,20 @@ const childhood = {
 };
 
 const field = [
-  { id: 'wild-encounter', category: 'field', once: false, cooldown: 1, min: 6, weight: s => 0.8 + regionState(s).ecology / 50 + (s.disposition.bold || 0) * 0.05, when: s => s.party.length,
-    build: s => { const id = pick(s, town(s).pool);
-      return { kind: 'choice', title: '야생 포켓몬과의 조우', body: `${town(s).name} 근처에서 ${poke(id, '이', '가')} 나타났다. 파티가 가득 차 있으면 데려갈 포켓몬을 스스로 다시 고른다.`, choices: [
-        opt('배틀하고 포획을 시도한다', '자동 배틀 · 성공 시 합류', '파트너와 함께 포획 작전을 실행했다.', { tone: 'bold', battle: { kind: 'wild', opponent: id, capture: true }, effects: { courage: 3 } }),
-        opt('서식 행동을 조사한다', '도감 등록 · 지혜 +5', '관찰 자료를 도감에 등록했다.', { tone: 'curious', observe: id, effects: { wisdom: 5 } }),
-        opt('거리를 두고 먹이를 놓는다', '유대 +5', '접촉을 피하고 안전하게 관찰했다.', { tone: 'caring', effects: { bond: 5 } }),
+  // A wild encounter is guaranteed if three years pass without one; travellers and researchers meet more.
+  { id: 'wild-encounter', category: 'field', once: false, cooldown: 1, min: 8, when: s => s.party.length,
+    urgent: s => s.age - (s.lastWildOffer ?? 5) >= 3,
+    weight: s => 0.8 + regionState(s).ecology / 50 + (s.disposition.bold || 0) * 0.05 + ({ traveler: 1, researcher: 0.6 }[s.career] || 0),
+    build: s => { s.lastWildOffer = s.age;
+      const owned = [...s.party, ...s.box].map(m => m.id), fresh = town(s).pool.filter(id => !owned.includes(id));
+      const id = pick(s, fresh.length ? fresh : town(s).pool);
+      return { kind: 'choice', title: '야생 포켓몬과의 조우', body: `${town(s).name}의 서식지에서 ${poke(id, '을', '를')} 만났다. 파티가 가득 차 있으면 데려갈 포켓몬을 스스로 다시 고른다.`, choices: [
+        opt('파트너와 배틀하며 포획', '몬스터볼 사용 · 배틀 상황에 따라 판정', '야생 포켓몬의 움직임에 맞춰 포획을 시도했다.', { tone: 'bold', battle: { kind: 'wild', opponent: id, capture: true }, effects: { courage: 1 } }),
+        opt('먹이로 경계심을 낮춰 데려오기', '먹이 60P · 유대에 따른 성공률', '경계심을 푼 포켓몬이 동행에 응했다.', { tone: 'caring', cost: 60, captureJoin: id, effects: { bond: 2 },
+          challenge: { stat: 'bond', difficulty: -10, failure: { effects: { bond: 1 }, outcome: '먹이는 받아먹었지만 동행하지 않고 서식지로 돌아갔다.' } } }),
+        opt('서식 습성을 분석해 포획', '준비비 60P · 지혜에 따른 성공률', '이동 경로를 파악해 포획에 성공했다.', { tone: 'curious', cost: 60, captureJoin: id, effects: { wisdom: 2 },
+          challenge: { stat: 'wisdom', difficulty: -5, failure: { effects: { wisdom: 1 }, outcome: '예상 경로가 빗나가 포획하지 못했다.' } } }),
+        opt('관찰만 하고 보내준다', '도감 등록 · 지혜 +1', '서식 행동을 기록하고 포켓몬을 보내줬다.', { tone: 'easygoing', observe: id, effects: { wisdom: 1 } }),
       ] }; } },
   { id: 'gym-challenge', category: 'field', once: false, cooldown: 2, min: 12, when: s => s.party.length && (s.game.badges[town(s).map] || 0) < 8,
     weight: s => 1 + (s.disposition.bold || 0) * 0.06 + (s.career === 'traveler' ? 1 : 0) + (hasCondition(s, 'league') ? 0.5 : 0),

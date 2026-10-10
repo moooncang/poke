@@ -36,11 +36,10 @@ test('automatic records separate decisions by 4–7 entries; only learning and f
   }
 });
 
-test('two lives from the same birth diverge in which events they meet', () => {
-  const titles = seed => new Set(play(createLife({ seed, town: 'pallet' })).log.filter(e => e.choices).map(e => e.title));
-  const a = titles('diverge-1'), b = titles('diverge-2');
-  const shared = [...a].filter(t => b.has(t)).length;
-  assert.ok(shared / Math.min(a.size, b.size) < 0.6, 'most decisions differ between lives');
+test('two lives from the same birth town face mostly different decisions at each age', () => {
+  const decisions = seed => play(createLife({ seed, town: 'pallet' })).log.filter(e => e.choices).map(e => `${e.age}:${e.title}`);
+  const a = decisions('diverge-1'), b = new Set(decisions('diverge-2'));
+  assert.ok(a.filter(key => b.has(key)).length / a.length < 0.35, 'only the fixed learning and career stages line up');
 });
 
 test('the first record after a choice follows the chosen activity and survives a save', () => {

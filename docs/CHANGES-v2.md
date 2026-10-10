@@ -121,9 +121,28 @@ PR: https://github.com/moooncang/poke/pull/1 · 브랜치 `claude/pensive-woznia
 
 ## 11. 테스트
 
-- 단위 테스트 51개(약 15초), 브라우저 테스트 8개(데스크톱·모바일)
+- 단위 테스트 57개(약 20초), 브라우저 테스트 8개(데스크톱·모바일)
 - 새로 추가한 파일: `party.test.js`, `world.test.js`, `consequences.test.js`, `battle.test.js`, `save.test.js`, `helpers.js`, `fixtures/v1-save.json`
 - `game.test.js`는 수동 배틀 API와 함께 삭제했습니다. 상성·장비 규칙 검증은 `battle.test.js`로 옮겼습니다.
+
+## 12. main의 경력·밸런스 업데이트(`a151f4f`) 통합
+
+이 PR 작업 중에 `main`에 GPT의 커밋 `a151f4f`(경력 성장·포획 기회·판정 밸런스)가 올라와 충돌이 났습니다. 그 내용을 버리지 않고 새 구조로 옮겼습니다.
+
+| `a151f4f`의 변경 | 새 구조에서의 위치 |
+|---|---|
+| 경력 평가 `careerMilestone`(16·26·35·40·50·60세), 승급, `careerRank`, 직업 내려놓기 | `src/data/progression.js`의 `careerReview`. 16세는 고정 사건으로, 나머지 단계는 `director.js`의 `career-review-*` storylet으로 옮김. 단계마다 반드시 한 번 오지만, 나이는 단계 시작 후 0~2년 사이에서 시드에 따라 정해짐(정확한 생일 고정 대신) |
+| 경력 등급당 연 수입 +15% | `engine.js` `yearlyEconomy`에 지방 경기·명성 보정과 함께 곱함 |
+| `annualTraining` 연간 파티 경험치 | 그대로 가져와 `growParty`에 사용(이전 무작위 경험치 대체) |
+| 야생 조우 4지선다(배틀 포획·먹이 유인·습성 분석·관찰), 이미 가진 종 제외, 3년 무조우 시 우선, 직업별 추가 확률 | `life-events.js`의 `wild-encounter` storylet. `urgent` 함수로 3년 규칙, 비중으로 직업 보정 |
+| `captureJoin`(판정 포획) | `applyActions`에서 처리. 파티가 가득 차면 성향에 따라 자동 재편성 |
+| 볼 매년 +3(최대 30) | 그대로 적용(이전 자동 구매 로직 대체) |
+| 동네 사건 도전 2개·장기 경로 평가에 판정 추가, 보상 하향 | `challenges.js`·`quests.js`는 자동 병합. 동네 사건 판정은 `life-events.js`에 이식 |
+| 숨긴 선택창 하단 배속 선택 | `App.jsx` 결정 독(dock) |
+| 사이드바 직업·경력 등급·연간 육성 | `src/ui/LifeView.jsx` 트레이너 패스 |
+| `tests/balance.test.js` | 새 API로 다시 작성(같은 항목 검증 + 승급 수입·단계별 평가 도착 검사 추가) |
+
+`a151f4f` 버전으로 저장한 데이터(보관함 `box`, `careerRank`, `lastWildOffer`)도 형식 2로 변환됩니다.
 
 ## 알려진 한계와 다음 작업 후보
 

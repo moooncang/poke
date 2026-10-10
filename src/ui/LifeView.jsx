@@ -8,6 +8,7 @@ import { PATHS } from '../sim/people.js';
 import { DISPOSITIONS, dominantDisposition } from '../sim/party.js';
 import { sprite, asset } from './assets.js';
 import { pokemonName } from './format.js';
+import { annualTraining } from '../data/progression.js';
 
 const STATS = { vitality: '건강', joy: '행복', wisdom: '지식', courage: '용기', bond: '유대' };
 const RELATIONSHIP = { single: '교제 중인 상대 없음', friends: '친구', dating: '교제 중', engaged: '약혼', married: '배우자' };
@@ -56,7 +57,8 @@ export function LifeSidebar({ life, onPokemon }) {
         <dt>출생 환경</dt><dd>{life.background.home}<br/>{life.background.environment}</dd>
         <dt>성향</dt><dd>{DISPOSITIONS[disposition]} <small>({Object.entries(life.disposition).filter(([, v]) => v).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${DISPOSITIONS[k]} ${v}`).join(' · ')})</small></dd>
         <dt>명성</dt><dd>{reputationTier(life.reputation)} <small>({life.reputation})</small></dd>
-        <dt>일</dt><dd>{life.career ? `${CAREERS[life.career].name}${life.work.retired ? ' · 은퇴' : ` · ${life.work.years}년차 · 만족 ${life.work.satisfaction}`}` : '정해진 직업 없음'}</dd>
+        <dt>일</dt><dd>{life.career ? `${CAREERS[life.career].name}${life.work.retired ? ' · 은퇴' : ` · 경력 ${life.careerRank || 0}단계 · ${life.work.years}년차 · 만족 ${life.work.satisfaction}`}` : '자율 활동'}</dd>
+        <dt>연간 육성</dt><dd>파티 경험치 +{annualTraining(life)}</dd>
       </dl>
       <div className="money-display">소지금 <b>{life.money.toLocaleString()} P</b></div>
       {life.ledger && <small className="ledger">작년 수입 {life.ledger.income.toLocaleString()}P · 지출 {life.ledger.expense.toLocaleString()}P</small>}

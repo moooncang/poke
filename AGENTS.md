@@ -8,7 +8,7 @@
 ```sh
 npm ci
 npm run dev          # http://localhost:5173
-npm test             # node:test 단위 테스트 (약 15초)
+npm test             # node:test 단위 테스트 (약 20초)
 npm run test:browser # Playwright. Chromium 경로는 CHROMIUM_PATH로 지정
 PAGES_BASE_PATH=/poke/ npm run build
 ```
@@ -32,6 +32,7 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/data/storylets.js` | 상태 조건으로 열리는 사건(인물·지방 상황·기회) |
 | `src/data/consequences.js` | 선택의 여파 정의 |
 | `src/data/milestones.js` | 나이 고정 사건(7·12·18·22세 학습, 16세 진로) |
+| `src/data/progression.js` | 경력 평가(`careerReview`)와 연간 파티 경험치(`annualTraining`) |
 | `src/data/life-events.js` | 출생 배경, 동네 사건 32종, 야생·체육관·레이드·장비 사건 |
 | `src/data/challenges.js` · `quests.js` · `regional-stories.js` · `relationships.js` | 판정 사건 60종, 장기 경로 32종, 지방 사건 27종, 관계 18단계 |
 | `src/data/species-rules.js` | **생성 파일.** `node scripts/build_species_rules.mjs`로 다시 만듭니다. 직접 수정하지 마세요 |
@@ -80,6 +81,8 @@ CSS는 `styles.css` → `game.css` → `life.css` 순서로 겹칩니다. 새 �
 | `after` | `{ win: {...}, lose: {...} }` 배틀 결과별 추가 효과 |
 | `join`, `joinOrigin` | 포켓몬 합류(`egg·gift·rescued·adopted·starter·legend`) |
 | `career`, `education`, `work` | 진로·학습 방식·직업 상태(`satisfaction`, `cut`, `retired`) |
+| `promotion`, `leaveCareer` | 경력 등급 +1(최대 5, 등급당 수입 +15%), 직업 내려놓기 |
+| `captureJoin` | 판정 포획 성공 시 해당 종 합류(경험치는 파트너의 65%) |
 | `destination`, `move`, `home` | 이주(`move: 'region'`은 같은 지방 안) |
 | `flag`, `unflag` | 이후 사건 조건용 플래그 |
 | `observe`, `training`, `equipment`, `relationship` | 도감 등록, 파티 경험치, 장비 해금, 관계 사건 |

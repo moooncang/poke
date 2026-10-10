@@ -6,6 +6,7 @@ import { activityRecord, vignetteRecord } from './data/activity-records.js';
 import { BACKGROUNDS, ENVIRONMENTS } from './data/life-events.js';
 import { resolveRelationship } from './data/relationships.js';
 import { milestoneEvent, EDUCATION_GROWTH } from './data/milestones.js';
+import { annualTraining } from './data/progression.js';
 import { successChance } from './data/challenges.js';
 import { TOWNS, CAREERS, NPCS, TRAITS } from './data/world.js';
 import { REGIONS } from './data/regions.js';
@@ -92,7 +93,7 @@ function log(state, event) {
 // ── Life creation ──
 export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random' } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0, season: 0,
-    town: '', hometown: '', family: '', trait: '', career: null, education: null, money: 1800, reputation: 5,
+    town: '', hometown: '', family: '', trait: '', career: null, careerRank: 0, education: null, money: 1800, reputation: 5,
     stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 },
     disposition: { bold: 0, curious: 0, caring: 0, pragmatic: 0, easygoing: 0 },
     work: { years: 0, satisfaction: 60, cut: 0, retired: false },
@@ -124,13 +125,13 @@ function yearlyEconomy(s) {
   if (s.career && !s.work.retired) {
     s.work.years += 1;
     s.work.satisfaction = clamp(s.work.satisfaction - between(s, 0, 3) + (s.reputation > 50 ? 1 : 0), 0, 100);
-    income = CAREERS[s.career].income * factor * (s.career === 'merchant' ? factor : 1) * (1 + s.reputation / 200) * (s.work.cut > 0 ? 0.5 : 1);
+    income = CAREERS[s.career].income * (1 + (s.careerRank || 0) * 0.15) * factor * (s.career === 'merchant' ? factor : 1) * (1 + s.reputation / 200) * (s.work.cut > 0 ? 0.5 : 1);
     if (s.work.cut > 0 && s.work.cut < 99) s.work.cut -= 1;
   } else if (s.work.retired) income = 100 + s.reputation * 2;
   else if (s.age >= 18) income = 80 * factor;
   const married = s.relationship.status === 'married';
   const expense = s.age >= 18 ? (130 + (married ? 70 : 0) + s.relationship.children * 110 - (s.flags.homeowner ? 70 : 0)) * (0.75 + economy / 200) : 0;
-  if (s.party.length && s.game.balls < 5 && s.money >= 300) { s.game.balls += 5; s.money -= 100; }
+  s.game.balls = Math.min(30, s.game.balls + 3);
   // Comfortable households spend part of their savings on living well.
   const leisure = Math.max(0, s.money - 4000) * 0.05;
   if (leisure > 0) apply(s, { joy: 1 });
@@ -155,7 +156,7 @@ function yearlyGrowth(s) {
   const growth = EDUCATION_GROWTH[s.education];
   if (growth && s.age < 30) apply(s, { [growth]: 1 });
   if (s.party.length) apply(s, { bond: 1 });
-  growParty(s, 12 + (s.career === 'traveler' ? 8 : 0) + between(s, 0, 8));
+  growParty(s, annualTraining(s));
 }
 
 function ending(s) {
@@ -251,7 +252,9 @@ function applyActions(s, a, origin) {
   if (a.world) shiftRegion(s, a.world);
   if (a.cast) changeCast(s, a.cast);
   if (a.education) s.education = a.education;
-  if (a.career) { s.career = a.career; s.work = { years: 0, satisfaction: 65, cut: 0, retired: false }; }
+  if (a.career && a.career !== s.career) { s.career = a.career; s.careerRank = 0; s.work = { years: 0, satisfaction: 65, cut: 0, retired: false }; }
+  if (a.promotion) { s.careerRank = Math.min(5, (s.careerRank || 0) + 1); s.work.satisfaction = clamp(s.work.satisfaction + 10, 0, 100); }
+  if (a.leaveCareer) { s.career = null; s.careerRank = 0; }
   if (a.work) {
     s.work.satisfaction = clamp(s.work.satisfaction + (a.work.satisfaction || 0), 0, 100);
     if (a.work.cut) s.work.cut = Math.max(s.work.cut, a.work.cut);
@@ -262,6 +265,10 @@ function applyActions(s, a, origin) {
   relocate(s, a);
   if (a.relationship) resolveRelationship(s, a.relationship);
   if (a.join) queue(s, [addPokemon(s, a.join, { origin: a.joinOrigin || 'adopted', affection: a.joinOrigin === 'legend' ? 55 : 40 }).record]);
+  if (a.captureJoin) {
+    queue(s, [addPokemon(s, a.captureJoin, { xp: Math.floor((partnerOf(s)?.xp || 0) * 0.65) }).record]);
+    s.game.catches += 1;
+  }
   if (a.observe && !s.seen.includes(a.observe)) s.seen.push(a.observe);
   if (a.training) { trainParty(s, a.training); queue(s, evolveMembers(s)); }
   if (a.equipment && !s.game.gear.includes(a.equipment)) {

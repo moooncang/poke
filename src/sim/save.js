@@ -29,7 +29,7 @@ function validActions(a) {
     && (a.cost === undefined || num(a.cost, 0, 1e7)) && (!a.career || Boolean(CAREERS[a.career])) && (!a.join || speciesId(a.join))
     && (!a.joinOrigin || ORIGINS.includes(a.joinOrigin)) && (!a.observe || speciesId(a.observe)) && (!a.destination || townId(a.destination))
     && (a.move === undefined || [true, false, 'region', 'random'].includes(a.move)) && (!a.equipment || a.equipment in MECHANICS)
-    && (a.training === undefined || num(a.training, 0, 10000)) && (!a.tone || a.tone in DISPOSITIONS)
+    && (a.training === undefined || num(a.training, 0, 10000)) && (!a.captureJoin || speciesId(a.captureJoin)) && (!a.tone || a.tone in DISPOSITIONS)
     && (a.cast === undefined || isObject(a.cast) && Object.values(a.cast).every(isObject))
     && (a.follow === undefined || list(a.follow, 5, f => isObject(f) && Boolean(CONSEQUENCES[f.id])))
     && (a.battle === undefined || isObject(a.battle) && BATTLE_KINDS.includes(a.battle.kind) && (a.battle.opponent === undefined || speciesId(a.battle.opponent)))
@@ -60,7 +60,8 @@ function validState(s) {
     && int(s.age, 0, 105) && Number.isInteger(s.rng) && typeof s.ended === 'boolean' && !(s.ended && s.age < 60) && int(s.season, 0, 3)
     && townId(s.town) && townId(s.hometown) && int(s.lifespan, 60, 106)
     && isObject(s.stats) && Object.keys(STAT_LABELS).every(k => num(s.stats[k], 0, 100))
-    && num(s.money, 0, 1e9) && num(s.reputation, 0, 100) && (!s.career || Boolean(CAREERS[s.career]))
+    && num(s.money, 0, 1e9) && num(s.reputation, 0, 100) && (!s.career || Boolean(CAREERS[s.career])) && int(s.careerRank ?? 0, 0, 5)
+    && (s.lastWildOffer === undefined || int(s.lastWildOffer, 0, 105))
     && isObject(s.disposition) && Object.entries(s.disposition).every(([k, v]) => k in DISPOSITIONS && int(v, 0, 1e5))
     && isObject(s.work) && int(s.work.years, 0, 120) && num(s.work.satisfaction, 0, 100) && int(s.work.cut, 0, 99)
     && isObject(s.flags) && isObject(s.cooldowns) && isObject(s.background) && typeof s.background.environment === 'string'
@@ -91,11 +92,14 @@ function migrateV1(old) {
   s.game = { ...freshGear(), ...Object.fromEntries(Object.entries(g).filter(([k]) => k in freshGear())) };
   if (!ALL_TYPES.includes(s.game.teraType)) s.game.teraType = '노말';
   s.nextUid = 0;
-  s.party = (Array.isArray(s.party) ? s.party : []).map((m, i) => ({
+  const member = (m, origin) => ({
     uid: ++s.nextUid, id: m.id, joined: m.joined, shiny: m.shiny, xp: Number.isInteger(m.xp) ? m.xp : Math.max(0, (s.age - m.joined) * 5),
-    affection: 50, origin: i === 0 ? 'partner' : 'wild', ...(isLegendary(m.id) ? { locked: true } : {}),
-  }));
-  s.box = [];
+    affection: 50, origin, ...(isLegendary(m.id) ? { locked: true } : {}),
+  });
+  s.party = (Array.isArray(s.party) ? s.party : []).map((m, i) => member(m, i === 0 ? 'partner' : 'wild'));
+  // Saves from the career-balance update already kept overflow Pokémon in a storage box.
+  s.box = (Array.isArray(s.box) ? s.box : []).map(m => member(m, 'wild'));
+  s.careerRank ??= 0;
   s.reputation = Math.min(60, 5 + Object.values(s.game.badges).reduce((a, b) => a + b, 0) * 2);
   s.disposition = { bold: 0, curious: 0, caring: 0, pragmatic: 0, easygoing: 0 };
   s.work = { years: s.career ? Math.max(0, s.age - 16) : 0, satisfaction: 60, cut: 0, retired: s.age >= 65 };

@@ -193,6 +193,7 @@ export default function App() {
 
     {pendingEntry && decisionHidden && !activeEncounter && !modal && !detail && <div className="decision-dock" role="status">
       <span><b>선택 대기 중 · 진행 정지</b><small>{formatText(pendingEntry.title, life, pendingEntry)}</small></span>
+      <label className="dock-speed">선택 후 배속<select aria-label="선택창 숨김 중 진행 배속" value={prefs.speed} onChange={e => setPref('speed', Number(e.target.value))}>{SPEEDS.map(n => <option key={n} value={n}>{n}×</option>)}</select></label>
       <button className="primary-button" onClick={() => setHiddenDecision(null)}>선택지 다시 열기 <ArrowRight size={16}/></button>
     </div>}
     {modal === 'birth' && <BirthModal life={life} onGender={setGender} onStart={() => { setModal(null); setRunning(true); }}/>}
