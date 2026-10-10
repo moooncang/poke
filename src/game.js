@@ -9,7 +9,7 @@ export const MOVE_TYPES = {'노말':'몸통박치기','불꽃':'화염방사','�
 export const xpLevel = p => Math.min(100,5+Math.floor((p.xp||0)/25));
 export const maxHP = p => 35+xpLevel(p)*3;
 export const typeMultiplier = (type,defenders)=>defenders.reduce((n,t)=>n*(TYPE_CHART[`${type}>${t}`]??1),1);
-export function freshGame(){return {ap:6,position:{x:8,y:7},badges:{},gear:[],megaStones:[],crystals:[],gmax:[],teraType:'노말',teraCharge:true,balls:8,battle:null,feed:[],steps:0,focus:'balanced',wins:0,catches:0,claimed:[]};}
+export function freshGame(){return {position:{x:8,y:7},badges:{},gear:[],megaStones:[],crystals:[],gmax:[],teraType:'노말',teraCharge:true,balls:8,battle:null,feed:[],steps:0,focus:'balanced',wins:0,catches:0,claimed:[]};}
 export function ensureGame(s){s.game ||= freshGame();for(const p of s.party){p.xp??=Math.max(0,(s.age-p.joined)*5);p.hp??=maxHP(p);}return s;}
 function rng(s){s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;}
 function sample(s,a){return a[Math.floor(rng(s)*a.length)];}
@@ -41,8 +41,8 @@ export function gameAction(input,action,value){
  if(action==='leader'){if(!Number.isInteger(value)||value<0||value>=s.party.length)return input;[s.party[0],s.party[value]]=[s.party[value],s.party[0]];return s;}
  if(action==='teraType'){if(!(value in MOVE_TYPES))return input;g.teraType=value;return s;}
  if(action==='travel'){
-  const dest=TOWNS.find(x=>x.id===value);if(!dest||dest.id===s.town||s.age<10||s.money<300||g.ap<1)return input;
-  s.money-=300;g.ap--;s.town=dest.id;if(!s.visited.includes(dest.id))s.visited.push(dest.id);g.position={x:8,y:7};return report(s,`${dest.region} · ${dest.name} 도착. 이동비 300P.`);
+  const dest=TOWNS.find(x=>x.id===value);if(!dest||dest.id===s.town||s.age<10||s.money<300)return input;
+  s.money-=300;s.town=dest.id;if(!s.visited.includes(dest.id))s.visited.push(dest.id);g.position={x:8,y:7};return report(s,`${dest.region} · ${dest.name} 도착. 이동비 300P.`);
  }
  if(action==='heal'){if(s.money<100||!p)return input;s.money-=100;s.party.forEach(x=>x.hp=maxHP(x));g.teraCharge=true;return report(s,'포켓몬센터: 전원 HP 회복 / 테라스탈오브 충전. −100P.');}
  if(action==='balls'){if(s.money<200)return input;s.money-=200;g.balls+=5;return report(s,'몬스터볼 5개 구입. −200P.');}
@@ -53,19 +53,19 @@ export function gameAction(input,action,value){
   if(value==='z')g.crystals=Object.keys(MOVE_TYPES);
   return report(s,`${m.name} 장비 세트 획득. −500P. ${m.detail}`);
  }
- if(g.ap<1||s.age<6)return input;
+ if(s.age<6)return input;
  if(action==='starter'){
   if(g.claimed.includes(t.map)||s.party.length>=6||s.money<300)return input;
   const id=Number(value);if(!regionOf(t).starters.includes(id))return input;
-  g.ap--;s.money-=300;g.claimed.push(t.map);const member={id,joined:s.age,shiny:false,xp:0};member.hp=maxHP(member);s.party.push(member);if(!s.seen.includes(id))s.seen.push(id);return report(s,'연구소에서 스타팅 포켓몬을 분양받았다. −300P.');
+  s.money-=300;g.claimed.push(t.map);const member={id,joined:s.age,shiny:false,xp:0};member.hp=maxHP(member);s.party.push(member);if(!s.seen.includes(id))s.seen.push(id);return report(s,'연구소에서 스타팅 포켓몬을 분양받았다. −300P.');
  }
- if(action==='rest'){g.ap--;s.party.forEach(x=>x.hp=maxHP(x));s.stats.vitality=Math.min(100,s.stats.vitality+5);return report(s,'캠프 휴식: 파티 HP 회복 / 건강 +5.');}
- if(action==='train'){if(!p||p.hp<=0)return input;g.ap--;p.xp+=35;p.hp=Math.max(1,p.hp-8);evolve(s,p);return report(s,`훈련 완료. 경험치 +35 / 레벨 ${xpLevel(p)}.`);}
- if(action==='research'){g.ap--;s.stats.wisdom=Math.min(100,s.stats.wisdom+4);s.money+=80;const id=sample(s,t.pool);if(!s.seen.includes(id))s.seen.push(id);return report(s,`생태 조사 완료. 도감 #${id} 등록 / 연구비 +80P.`);}
+ if(action==='rest'){s.party.forEach(x=>x.hp=maxHP(x));s.stats.vitality=Math.min(100,s.stats.vitality+5);return report(s,'캠프 휴식: 파티 HP 회복 / 건강 +5.');}
+ if(action==='train'){if(!p||p.hp<=0)return input;p.xp+=35;p.hp=Math.max(1,p.hp-8);evolve(s,p);return report(s,`훈련 완료. 경험치 +35 / 레벨 ${xpLevel(p)}.`);}
+ if(action==='research'){s.stats.wisdom=Math.min(100,s.stats.wisdom+4);s.money+=80;const id=sample(s,t.pool);if(!s.seen.includes(id))s.seen.push(id);return report(s,`생태 조사 완료. 도감 #${id} 등록 / 연구비 +80P.`);}
  if(['wild','gym','raid'].includes(action)){
   if(!p||p.hp<=0)return input;if(action==='raid'&&t.map!=='galar')return input;
   if(action==='gym'&&(g.badges[t.map]||0)>=8)return input;
-  g.ap--;const level=action==='gym'?6+(g.badges[t.map]||0)*5:action==='raid'?25:Math.max(3,xpLevel(p)-2+Math.floor(rng(s)*5));
+  const level=action==='gym'?6+(g.badges[t.map]||0)*5:action==='raid'?25:Math.max(3,xpLevel(p)-2+Math.floor(rng(s)*5));
   const id=action==='raid'?sample(s,GMAX):sample(s,t.pool);const hp=35+level*3;
   if(!s.seen.includes(id))s.seen.push(id);
   g.battle={kind:action,id,level,hp,maxHp:hp,turn:0,transformed:null,form:null,turnsLeft:0,shield:false,result:null,messages:[action==='gym'?`${t.region} 배지 ${(g.badges[t.map]||0)+1} 도전!`:action==='raid'?'거다이맥스 레이드 시작!':'야생 포켓몬 출현!']};return s;
@@ -120,3 +120,5 @@ export function battleAction(input,action,value){
  if(b.turnsLeft>0&&--b.turnsLeft===0){p.hp=Math.ceil(p.hp/2);b.form=null;b.messages.unshift('다이맥스가 종료되었다.');}
  b.messages=b.messages.slice(0,8);if(p.hp===0)return finish(s,'lose');return s;
 }
+
+export function trainParty(s,xp){for(const p of s.party){p.xp+=xp;evolve(s,p);p.hp=maxHP(p);}}
