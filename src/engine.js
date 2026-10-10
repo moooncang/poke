@@ -2,6 +2,8 @@ import { BACKGROUNDS, ENVIRONMENTS, seasonalEvent, resolveSimulation } from './d
 import { relationshipEvent, resolveRelationship } from './data/relationships.js';
 import { MEGA, maxHP, trainParty } from './game.js';
 import { BRANCH_EVENTS } from './data/quests.js';
+import { CHALLENGE_EVENTS, academyExam, successChance } from './data/challenges.js';
+export { successChance } from './data/challenges.js';
 import { REGIONAL_EVENTS } from './data/regional-stories.js';
 import { regionOf } from './data/regions.js';
 import { ensureGame, freshGame } from './game.js';
@@ -113,7 +115,7 @@ function advanceYear(input) {
     18: {title:education==='school'?'학교 졸업 후의 선택':'성인기의 새로운 방향',body:education==='school'?'학교 과정을 마쳤다. 진학은 여러 선택 중 하나다.':'학교 밖에서 쌓은 경험을 바탕으로 앞으로의 생활을 결정한다.',options:[['전문 아카데미에 진학','higher-education',{wisdom:8},'academy'],['현장 견습 시작','field-training',{courage:6,money:300},'apprentice'],['돌봄 센터에 바로 취업','direct-work',{money:500,courage:4},'work'],['지방을 여행하며 탐색','gap-travel',{courage:8,joy:4},'travel'],['휴식하며 다음 계획 준비','adult-break',{vitality:10,joy:5},'pause']]},
     22: {title:education==='academy'?'전문 과정 졸업':education==='apprentice'?'견습 과정 수료':'앞으로의 활동 계획',body:'현재까지의 경험을 바탕으로 활동 방향을 다시 선택한다. 진학이나 취업을 미뤄도 된다.',options:[['전문 교육으로 역량 보완','continued-study',{wisdom:7},'study'],[s.career?'현재 진로에서 경력 확장':'포켓몬 돌봄 업무 시작','experienced',{courage:5,money:400},'work'],['지역 공동체에서 활동','community-worker',{bond:7},'community'],['여행과 자율 연구를 계속','independent-life',{courage:4,wisdom:4},'travel'],['가족과 지내며 재충전','family-break',{bond:5,vitality:7},'pause']]},
   }[s.age];
-  if(school)return log(s,{kind:'choice',title:school.title,body:school.body,choices:school.options.map(([label,flag,effects,education])=>({label,flag,effects,education,...(education==='work'?{career:s.career||'keeper'}:{}),description:'선택한 방식에 따라 이후 사건이 달라집니다',outcome:`${label}을 선택했다. 이후 생활 계획에 반영한다.`}))});
+  if(school)return log(s,{kind:'choice',title:school.title,body:school.body,choices:school.options.map(([label,flag,effects,education])=>({label,flag,effects,education,...(education==='work'?{career:s.career||'keeper'}:{}),description:'선택한 방식에 따라 이후 사건이 달라집니다',outcome:`${label}을 선택했다. 이후 생활 계획에 반영한다.`})).concat(s.age===18||s.age===22?[academyExam]:[])});
   if (s.age === 16) return log(s, { kind: 'choice', title: '진로 선택', body: '진로에 따라 연간 수입과 직업 사건이 달라집니다.', choices: Object.entries(CAREERS).map(([career, data]) => ({ label: data.short, description: data.description, career, effects: { courage: 5, wisdom: 3 }, outcome: `${data.name} 진로를 선택했습니다. 다음 해부터 직업 수입을 받습니다.` })).concat([{label:'아직 진로를 정하지 않는다',description:'탐색과 자율 학습 · 고정 직업 수입 없음',effects:{wisdom:4,joy:3},flag:'career-exploring',outcome:'진로 결정을 미루고 여러 활동을 경험한다.'},{label:'가족과 지역 활동에 집중',description:'유대 +7 · 고정 직업 수입 없음',effects:{bond:7},flag:'career-community',outcome:'고정 직업 없이 가족과 지역 공동체 활동에 참여한다.'}]) });
   if (s.age === 20) return log(s, { kind: 'choice', title: '거주지 변경 제안', body: '새 거주지와 활동 기반을 선택합니다. 이주하면 출현 포켓몬과 지방 사건이 달라집니다.', choices: [
     { label: '새로운 마을로 떠난다', description: '이사 비용 600P · 새로운 만남', cost: 600, move: true, effects: { courage: 8, money: -600 }, outcome: '새 지방으로 이주했습니다. 현재 위치와 방문 기록이 갱신되었습니다.' },
@@ -144,6 +146,9 @@ function advanceYear(input) {
   }
 
   if(s.age>=19&&s.age%2===1){const relationship=relationshipEvent(s);if(relationship)return log(s,relationship);}
+  const challenges = CHALLENGE_EVENTS.filter(e => s.age >= e.min && s.age <= e.max && !s.used.includes(e.id) && (!e.married || s.relationship.status === 'married'));
+  if (s.age >= 23 && !s.flags['elite-academy'] && !s.used.includes('academy-retry')) challenges.push({id:'academy-retry',kind:'choice',title:'아카데미 특별전형 추가 모집',body:'학교 밖 경험도 지원 자격으로 인정한다. 진학 여부를 다시 선택할 수 있다.',choices:[academyExam,{label:'현재 활동을 이어간다',description:'확정 결과 · 지혜 +3',effects:{wisdom:3},outcome:'현재 활동을 계속하기로 했다.'}]});
+  if (challenges.length && random(s) < 0.5) { const event = pick(s, challenges); s.used.push(event.id); return log(s,event); }
   if(s.age>=6&&random(s)<0.35)return log(s,seasonalEvent(s));
 
   const branchPool = [...REGIONAL_EVENTS, ...BRANCH_EVENTS].filter(e => s.age >= e.min && s.age <= e.max && !s.used.includes(e.id) && (!e.region || e.region === townOf(s).map) && (!e.requires || s.flags[e.requires]));
@@ -200,8 +205,17 @@ export function choose(input, index) {
   if (!input.pending || input.encounter) return input;
   const s = structuredClone(input);
   const entry = s.log.find(e => e.id === s.pending);
-  const choice = entry?.choices?.[index];
+  let choice = entry?.choices?.[index];
   if (!choice || (choice.cost || 0) > s.money || (choice.join && s.party.length >= 6)) return input;
+  let check;
+  if (choice.challenge) {
+    const chance = successChance(s, choice);
+    const roll = random(s) * 100;
+    const success = roll < chance;
+    check = { chance, roll, success, stat: choice.challenge.stat };
+    const result = success ? choice : { label: choice.label, ...choice.challenge.failure };
+    choice = { ...result, effects: { ...result.effects, money: (result.effects.money || 0) - (choice.cost || 0) } };
+  }
   apply(s, choice.effects);
   if(choice.education)s.education=choice.education;
   if(choice.destination&&TOWNS.some(t=>t.id===choice.destination))s.town=choice.destination;
@@ -217,6 +231,7 @@ export function choose(input, index) {
   if (choice.join && s.party.length < 6) { s.party.push({ id: choice.join, joined: s.age, shiny: false }); seen(s, choice.join); }
   ensureGame(s);
   entry.resolution = { index, label: choice.label, text: choice.outcome, effects: choice.effects };
+  if (check) entry.resolution.check = check;
   entry.newTown = s.town;
   s.pending = null;
   if(choice.simulation){const message=resolveSimulation(s,choice);const current=s.log.find(e=>e.id===entry.id);current.resolution.text+=' '+message;s.party.forEach(p=>p.hp=maxHP(p));}
@@ -260,7 +275,8 @@ export function parseSave(raw) {
     const validChoice = c => c && typeof c.label === 'string' && typeof c.description === 'string'
       && typeof c.outcome === 'string' && validEffects(c.effects)
       && (!c.career || Boolean(CAREERS[c.career])) && (!c.join || validId(c.join))
-      && (c.cost === undefined || Number.isFinite(c.cost) && c.cost >= 0);
+      && (c.cost === undefined || Number.isFinite(c.cost) && c.cost >= 0)
+      && (!c.challenge || c.challenge.stat in STAT_LABELS && Number.isFinite(c.challenge.difficulty) && typeof c.challenge.failure?.outcome === 'string' && validEffects(c.challenge.failure.effects));
     if (!s || s.version !== VERSION || typeof s.name !== 'string' || typeof s.seed !== 'string'
       || s.name.length > 12 || s.seed.length > 40 || typeof s.family !== 'string' || typeof s.trait !== 'string'
       || !Number.isInteger(s.age) || s.age < 0 || s.age > 105 || !Number.isInteger(s.rng)
