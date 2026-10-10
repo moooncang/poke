@@ -18,6 +18,8 @@
 
 ## 코드 구조
 
+함께 작업하는 에이전트와 사람을 위한 규칙은 [AGENTS.md](AGENTS.md), 최근 구조 변경 내역은 [docs/CHANGES-v2.md](docs/CHANGES-v2.md)에 있습니다.
+
 - `src/engine.js`: 공개 API(`createLife`, `advance`, `choose`, `autoChoice` 등). 한 번의 `advance`는 기록 1개를 추가합니다.
 - `src/sim/`: 시뮬레이션 모듈. `world.js`(지방 정세), `people.js`(인물), `party.js`(파티·박스·진화), `battle.js`(자동 배틀), `consequences.js`(지연 결과), `director.js`(사건 선택), `save.js`(검증·이전 저장 변환), `random.js`(결정적 난수).
 - `src/data/`: 사건·인물·지방 데이터. `storylets.js`는 상태에 따라 열리는 사건, `consequences.js`는 선택의 여파, `species-rules.js`는 `scripts/build_species_rules.mjs`가 PokéAPI 자료에서 생성한 진화·전설 목록입니다.
