@@ -221,6 +221,20 @@ export function choose(input, index) {
   s.pending = null;
   if(choice.simulation){const message=resolveSimulation(s,choice);const current=s.log.find(e=>e.id===entry.id);current.resolution.text+=' '+message;s.party.forEach(p=>p.hp=maxHP(p));}
 
+  const route = BRANCH_EVENTS.find(event => event.id === entry.sourceId);
+  if (choice.flag && !entry.followup && route && !route.requires) {
+    return log(s, {
+      kind: 'choice', followup: true, parentId: entry.id,
+      title: `${entry.title} · 실행 방식`,
+      body: `${choice.label}을(를) 선택했습니다. 활동을 어떻게 진행할지 결정합니다.`,
+      choices: [
+        { label: '파트너 포켓몬과 직접 진행', description: '용기 +4 · 비용 없음', effects: { courage: 4 }, flag: `${choice.flag}-solo`, outcome: '파트너와 직접 활동을 진행했다.' },
+        { label: '전문가의 도움을 받기', description: '300P · 지혜 +10', cost: 300, effects: { money: -300, wisdom: 10 }, flag: `${choice.flag}-expert`, outcome: '전문가의 조언을 받아 활동에 필요한 지식을 배웠다.' },
+        { label: '지역 트레이너들과 협력', description: '유대 +5 · 활동비 100P', effects: { bond: 5, money: 100 }, flag: `${choice.flag}-community`, outcome: '지역 트레이너들과 공동 활동을 마치고 활동비를 받았다.' },
+      ],
+    });
+  }
+
   return s;
 }
 

@@ -77,7 +77,7 @@ test('lifespans vary and most playable years contain a decision; all runs termin
  const ages=new Set();for(let i=0;i<4;i++){let s=createLife({seed:`lifetime-${i}`,town:TOWNS[i%40].id}),steps=0;while(!s.ended&&steps++<1100)s=s.encounter?acknowledge(s):s.pending?autoChoice(s):advance(s);assert.ok(s.ended);assert.ok(s.age>=60&&s.age<=100);assert.ok(s.log.filter(e=>e.choices).length>s.age*.65);ages.add(s.age);}
  assert.ok(ages.size>1);
 });
-test('route decisions retain branch flags without immediate extra choices',()=>{
+test('route decisions allow exactly one same-year follow-up and preserve save state',()=>{
  let s=createLife({seed:'branches',town:'pallet'});while(!s.pending||!s.log.at(-1).sourceId?.startsWith('route-'))s=s.encounter?acknowledge(s):s.pending?autoChoice(s):advance(s);
- const a=choose(s,0),b=choose(s,1);assert.notDeepEqual(a.flags,b.flags);assert.equal(a.pending,null);assert.equal(a.log.length,s.log.length);assert.equal(a.age,s.age);assert.ok(parseSave(JSON.stringify(a)));
+ const a=choose(s,0),b=choose(s,1);assert.notDeepEqual(a.flags,b.flags);assert.ok(a.pending);assert.equal(a.log.length,s.log.length+1);assert.equal(a.age,s.age);assert.ok(a.log.at(-1).followup);assert.equal(a.log.at(-1).parentId,s.pending);const loaded=parseSave(JSON.stringify(a));assert.ok(loaded);assert.equal(advance(loaded),loaded);const poor={...loaded,money:0};assert.equal(choose(poor,1),poor);const settled=choose(loaded,2);assert.equal(settled.pending,null);assert.equal(settled.log.length,a.log.length);assert.equal(settled.age,a.age);assert.equal(advance(settled).age,a.age+1);const skipped=choose(s,2);assert.equal(skipped.pending,null);
 });
