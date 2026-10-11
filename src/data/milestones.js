@@ -1,3 +1,4 @@
+import { talentPathChoice } from './talent-events.js';
 // Age-anchored turning points (learning style and first career). Everything else in a life is condition-driven.
 import { careerReview } from './progression.js';
 import { academyExam } from './challenges.js';
@@ -45,7 +46,7 @@ function schoolEvent(s, plan) {
     description: EDUCATION_GROWTH[education] ? `이 방식을 이어가는 동안 매년 ${STAT_LABELS[EDUCATION_GROWTH[education]]} +1` : '직업 수입으로 생활 시작',
     outcome: `${josa(label, '을', '를')} 선택했다. 이후 생활 계획에 반영한다.`,
   }));
-  return { kind: 'choice', title, body: plan.body(s), choices: [18, 22].includes(s.age) ? [...choices, academyExam] : choices };
+  return { kind: 'choice', title, body: plan.body(s), choices: [...choices, ...([18,22].includes(s.age)?[academyExam]:[]), talentPathChoice(s)] };
 }
 
 /** The fixed event for this age, if any. */

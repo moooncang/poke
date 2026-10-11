@@ -1,15 +1,16 @@
+import { talentBonus } from '../sim/talent.js';
 // Percentages are evaluated before applying a choice's rewards.
 export function successChance(state, choice) {
   if (!choice.challenge) return 100;
   const {stat, difficulty = 0} = choice.challenge;
-  return Math.round(Math.max(5, Math.min(95, 25 + state.stats[stat] * 0.7 - difficulty)));
+  return Math.round(Math.max(5, Math.min(95, 25 + state.stats[stat] * 0.7 - difficulty + talentBonus(state, choice))));
 }
 
 export const academyExam = {
   label: '명문 아카데미 특별전형 응시', description: '응시료 200P · 합격하면 전문 과정과 장학금', cost: 200,
   effects: {wisdom: 10, money: 800}, education: 'academy', flag: 'elite-academy',
   outcome: '특별전형에 합격했다. 전문 과정 입학과 장학금 800P가 확정됐다.',
-  challenge: {stat: 'wisdom', difficulty: 15, failure: {effects: {wisdom: 3, joy: -3}, outcome: '특별전형에서 불합격했다. 오답을 정리했고, 기존 활동을 이어가며 다음 모집에 재도전할 수 있다.'}},
+  challenge: {stat: 'wisdom', talent: 'research', difficulty: 15, failure: {effects: {wisdom: 3, joy: -3}, outcome: '특별전형에서 불합격했다. 오답을 정리했고, 기존 활동을 이어가며 다음 모집에 재도전할 수 있다.'}},
 };
 
 // Six distinct situations per field; each offers two stat checks and a guaranteed alternative.
@@ -96,11 +97,12 @@ const fields = [
   ]},
 ];
 
+const CHALLENGE_TALENT = {study:'research',battle:'battle',research:'research',care:'care',work:'craft'};
 export const CHALLENGE_EVENTS = fields.flatMap(field => field.rows.map(([title,body,success,failure], i) => ({
   id: `challenge-${field.id}-${i}`, min:field.min, max:90, married:Boolean(field.married), kind:'choice', title, body,
   choices:[...field.stats.map((stat, approach) => ({
     label:field.actions[approach], description:`${field.prize} ${approach ? 350 : 650}P · ${approach ? '협력형 도전' : '고난도 도전'}`,
     effects:{[stat]:3,money:approach ? 350 : 650}, flag:`challenge-${field.id}-${i}-success`, outcome:success,
-    challenge:{stat,difficulty:(approach ? -5 : 15) + i * 2, failure:{effects:{[stat]:1,joy:-2},outcome:failure}},
+    challenge:{stat,...(CHALLENGE_TALENT[field.id]?{talent:CHALLENGE_TALENT[field.id]}:{}),difficulty:(approach ? -5 : 15) + i * 2, failure:{effects:{[stat]:1,joy:-2},outcome:failure}},
   })),{label:field.safe,description:'기본 지원 활동 · 유대 +1 · 20P',effects:{bond:1,money:20},outcome:'부담이 적은 지원 활동을 마치고 활동비를 받았다.'}],
 })));

@@ -178,3 +178,9 @@ meter::-webkit-meter-bar{background:#243b45;border:0;border-radius:2px}meter::-w
 .archive-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #34515a; }
 .archive-empty { padding: 35px 0; color: #acc4c5; text-align: center; }
 @media(max-width:600px) { .archive-body { padding: 18px 14px; } .archive-hero { padding: 30px 18px 0; } .archive-stats { grid-template-columns: repeat(3,1fr); } .archive-companions { grid-template-columns: 1fr; } .archive-leagues { grid-template-columns: repeat(2,1fr); } .archive-team img { width: 48px; height: 60px; } }
+
+.talent-panel > b { color: var(--ui-mint); font-size: 14px; }
+.talent-rating { display: flex; gap: 5px; margin: 14px 0; }
+.talent-rating span { flex: 1; height: 8px; background: #263b44; border-radius: 2px; }
+.talent-rating .lit { background: linear-gradient(90deg,#63bea8,#dfc379); }
+.talent-panel p { font-size: 12px; color: #c5d8d3; }

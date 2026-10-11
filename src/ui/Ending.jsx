@@ -1,3 +1,4 @@
+import { talentLabel } from '../sim/talent.js';
 import { useState } from 'react';
 import { Download, Trophy, RotateCcw, Search } from 'lucide-react';
 import { TOWNS, CAREERS } from '../data/world.js';
@@ -52,7 +53,7 @@ export function EndingModal({ life, onDownload, onNew, onClose }) {
       </section>}
       {tab === 'companions' && <section><h3>함께한 모든 동료</h3><p>파티와 PC 박스의 동료를 처음 만난 나이순으로 모았습니다.</p><div className="archive-companions">{members.map(p => <article key={p.uid}><img className="pixel" src={sprite(p.id, p.shiny)} alt=""/><div><small>{ORIGINS[p.origin] || '동료'}{p.shiny ? ' · 색이 다른 포켓몬' : ''}</small><h3>{pokemonName(p.id)} <span>Lv.{xpLevel(p)}</span></h3><p>{p.joined}세에 합류 · 함께한 시간 {Math.max(0, life.age - p.joined)}년</p><small>친밀도 {p.affection} · {life.party.some(m => m.uid === p.uid) ? '마지막 파티' : 'PC 박스'}</small></div></article>)}</div>{!members.length && <p>함께한 포켓몬이 없습니다.</p>}</section>}
       {tab === 'honors' && <section className="archive-honors"><h3><Trophy size={20}/> 리그 명예의 전당</h3><div className="archive-leagues">{REGIONS.map(r => <article key={r.id} className={champions.includes(r) ? 'champion' : ''}><b>{r.name}</b><strong>{champions.includes(r) ? '★ 챔피언' : `배지 ${life.game.badges[r.id] || 0} / 8`}</strong></article>)}</div>
-        <h3>출생과 마지막 경력</h3><p>{life.family} · {life.background.wealth}</p><p>{CAREERS[life.career]?.name || '자율 활동'} · 경력 {life.careerRank || 0}단계 · {life.work.years}년차{life.work.retired ? ' · 은퇴' : ''}</p>
+        <h3>타고난 재능</h3><p>{talentLabel(life)}{life.flags[`talent-${life.talent.field}-trained`]?' · 연습 과정 수료':''}</p><h3>출생과 마지막 경력</h3><p>{life.family} · {life.background.wealth}</p><p>{CAREERS[life.career]?.name || '자율 활동'} · 경력 {life.careerRank || 0}단계 · {life.work.years}년차{life.work.retired ? ' · 은퇴' : ''}</p>
         <h3>머물렀던 마을</h3><div className="archive-route">{life.visited.map((id, i) => { const t = TOWNS.find(t => t.id === id); return <span key={id}><small>{String(i + 1).padStart(2,'0')}</small>{t?.region} · {t?.name}</span>; })}</div>
       </section>}
       <footer className="archive-footer"><button className="primary-button" onClick={onDownload}><Download size={16}/> 전체 기록 내려받기</button><button className="text-button" onClick={onNew}><RotateCcw size={14}/> 새 삶 시작</button></footer>

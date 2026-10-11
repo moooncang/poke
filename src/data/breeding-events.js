@@ -11,7 +11,7 @@ export const BREEDING_EVENTS = [{id:'nursery-breeding',category:'pokemon',min:16
   build:s=>event('두 동료가 맡긴 알의 가능성','키우미집에서 함께 지내기 좋은 두 동료를 찾았다. 실제 알그룹과 개체 성별을 확인한 조합이다. 알을 돌보기로 하면 부모의 이름이 부화 기록에 남는다.',[
     ...breedingPairs(s).slice(0,2).map(({a,b,child})=>opt(`${poke(a.id)} · ${poke(b.id)}에게 함께 쉴 공간을 마련한다`,'부모 포켓몬들이 안정된 공간에서 함께 지내기 시작했다.',{
       description:'유대·부모 친밀도 반영 · 준비비 100P · 성공하면 알 돌봄으로 연결',cost:100,
-      challenge:{stat:'bond',difficulty:(s.career==='keeper'?-10:5)-Math.floor((a.affection+b.affection)/40),failure:{outcome:'둘은 아직 함께 지내기를 원하지 않았다. 무리하지 않고 원래 생활로 돌아갔다.',effects:{wisdom:2}}},
+      challenge:{stat:'bond',talent:'care',difficulty:(s.career==='keeper'?-10:5)-Math.floor((a.affection+b.affection)/40),failure:{outcome:'둘은 아직 함께 지내기를 원하지 않았다. 무리하지 않고 원래 생활로 돌아갔다.',effects:{wisdom:2}}},
       follow:follow('nursery-egg',{a:a.id,b:b.id,child,aUid:a.uid,bUid:b.uid})})),
     opt('이번에는 부모 포켓몬들의 휴식만 돕는다','서두르지 않고 두 동료가 편하게 쉬도록 돌봤다.',{affection:3}),
   ])}];
@@ -19,7 +19,7 @@ export const BREEDING_EVENTS = [{id:'nursery-breeding',category:'pokemon',min:16
 BREEDING_EVENTS.push({id:'nursery-ditto-introduction',category:'pokemon',min:16,once:false,cooldown:5,
  when:s=>s.party.length>0&&![...s.party,...s.box].some(p=>p.id===132)&&breedingPairs(s).length===0,
  build:s=>event('키우미집의 변신 연습생','키우미집의 메타몽이 당신의 파트너를 따라 한다. 돌보미가 충분히 신뢰를 쌓으면 동료로 맞아도 좋다고 한다. 메타몽도 전설이나 미발견 알그룹과는 교배할 수 없다.',[
-  opt('천천히 친해지고 동료로 맞는다','메타몽이 변신을 풀고 당신 곁에 앉았다. 새로운 동료가 되었다.',{description:'유대 판정 · 성공 시 메타몽 합류',join:132,joinOrigin:'adopted',challenge:{stat:'bond',difficulty:5,failure:{outcome:'아직 키우미집을 떠나고 싶지 않은 듯하다. 다음 방문을 기약했다.',effects:{bond:2}}}}),
+  opt('천천히 친해지고 동료로 맞는다','메타몽이 변신을 풀고 당신 곁에 앉았다. 새로운 동료가 되었다.',{description:'유대 판정 · 성공 시 메타몽 합류',join:132,joinOrigin:'adopted',challenge:{stat:'bond',talent:'care',difficulty:5,failure:{outcome:'아직 키우미집을 떠나고 싶지 않은 듯하다. 다음 방문을 기약했다.',effects:{bond:2}}}}),
   opt('변신 연습만 도와준다','파트너와 메타몽이 서로의 동작을 따라 하며 즐겁게 놀았다.',{affection:3}),
  ])});
 export const BREEDING_CONSEQUENCES = {

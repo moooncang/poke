@@ -1,3 +1,4 @@
+import { TALENT_EVENTS } from '../data/talent-events.js';
 import { ADVENTURE_SAGAS } from '../data/adventure-sagas.js';
 import { BREEDING_EVENTS } from '../data/breeding-events.js';
 import { CAREER_SAGAS } from '../data/career-sagas.js';
@@ -123,7 +124,7 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.

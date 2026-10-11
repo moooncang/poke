@@ -1,3 +1,4 @@
+import { createTalent } from './sim/talent.js';
 // Public simulation API used by the UI and tests. A life is a plain JSON object; every function returns a new state.
 //
 // One call to `advance` adds exactly one journal entry. Each year has one main event (usually a decision); a decision
@@ -103,6 +104,7 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
     work: { years: 0, satisfaction: 60, cut: 0, retired: false },
     party: [], box: [], nextUid: 0, people: [], seen: [], log: [], memories: [], used: [], cooldowns: {}, flags: {},
     seeds: [], queue: [], pending: null, encounter: null, ended: false, visited: [], lifespan: 0, game: freshGear() };
+  state.talent = createTalent(state.seed);
   state.gender = Object.hasOwn(GENDERS, gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
   state.lifespan = 64 + Math.floor(random(state) * 37);

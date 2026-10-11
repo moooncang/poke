@@ -1,3 +1,5 @@
+import { talentGrowth } from '../sim/talent.js';
+import { talentPathChoice } from './talent-events.js';
 // Career progression and yearly party training (ported from the career-balance update).
 // The 16-year-old choice is a fixed milestone; later reviews open within an age window instead of on an exact birthday.
 import { CAREERS } from './world.js';
@@ -7,7 +9,7 @@ export function annualTraining(s) {
   const base = { traveler: 48, researcher: 28, keeper: 36, merchant: 18 }[s.career] ?? 20;
   const study = ['school', 'academy', 'study'].includes(s.education) ? 8 : s.education === 'apprentice' ? 12 : s.education === 'travel' ? 10 : 0;
   const focus = s.activity?.mode === 'courage' ? 10 : s.activity?.mode === 'bond' ? 5 : 0;
-  return Math.round((base + study + focus) * (s.stats.vitality < 35 ? 0.6 : 1) * (s.age >= 65 ? 0.7 : 1));
+  return Math.round((base + study + focus) * talentGrowth(s) * (s.stats.vitality < 35 ? 0.6 : 1) * (s.age >= 65 ? 0.7 : 1));
 }
 
 export const CAREER_REVIEWS = { 16: '진로 선택', 26: '첫 경력 평가', 35: '전문 분야 선택', 40: '직업 재설계', 50: '경력 전환과 후배 육성', 60: '은퇴 준비' };
@@ -36,6 +38,11 @@ export function careerReview(s, phase) {
     outcome: '거주지 근처 돌봄 업무를 맡아 가족과 일정을 맞췄다.', challenge: { stat: 'bond', difficulty: 0, failure: { effects: { bond: 1 }, outcome: '이번 지역 채용에 합격하지 못했다. 현재 활동을 유지한다.' } } });
   choices.push({ label: s.career ? '현재 직업을 유지하며 여유 확보' : '아직 진로를 정하지 않는다', description: '직업 유지 · 건강 +3', effects: { vitality: 3 }, work: { satisfaction: 5 }, outcome: '현재 생활을 유지하고 휴식 시간을 확보했다.' });
   choices.push({ label: s.career ? '직업을 내려놓고 가족·자율 활동' : '가족과 지역 활동에 집중', description: '고정 수입 없음 · 유대 +3', leaveCareer: true, effects: { bond: 3 }, outcome: '고정 직업 없이 가족과 자율 활동에 집중한다.' });
+  for (const choice of choices) if (choice.challenge) {
+    const field = {traveler:'battle',researcher:'research',keeper:'care',merchant:'craft'}[choice.career || s.career];
+    if (field) choice.challenge.talent = field;
+  }
+  if (choices.length < 8) choices.push(talentPathChoice(s, true));
   const background = s.career ? `${josa(CAREERS[s.career].name, '으로', '로')} 쌓은 경험` : '지금까지의 학습과 생활 경험';
   return { kind: 'choice', title: CAREER_REVIEWS[phase], choices,
     body: `${background}을 바탕으로 다음 단계를 결정한다.${s.education === 'academy' ? ' 아카데미 이력은 연구직 평가에 반영된다.' : ''} 연 수입은 지방 경기와 명성, 경력 등급에 따라 해마다 달라진다.` };
