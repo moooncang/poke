@@ -246,3 +246,53 @@ meter::-webkit-meter-bar{background:#243b45;border:0;border-radius:2px}meter::-w
 .legacy-partner img, .legacy-party img { width: 36px; height: 36px; object-fit: contain; } .legacy-party { display: flex; flex-wrap: wrap; }
 .legacy-heir { padding: 10px; border: 1px solid #f1cf7c; border-radius: 8px; font-size: 13px; display: flex; gap: 6px; align-items: center; }
 @media (max-width: 640px) { .legacy-life { grid-template-columns: 1fr; } .ending-cards { grid-template-columns: 1fr 1fr; } }
+
+/* ── Simulation report, new-life options, records room (Claude) — functional layout; design: docs/DESIGN-HANDOFF.md ── */
+.simulation-report .report-section { margin: 22px 0; padding: 16px; border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-panel); }
+.report-section h3 { margin: 0 0 12px; font-size: 16px; } .report-section h4 { font-size: 13px; margin: 8px 0; }
+.report-charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.report-chart { margin: 0; } .report-chart figcaption { font-size: 12px; color: var(--ui-muted); margin-bottom: 4px; }
+.report-chart svg { width: 100%; height: auto; display: block; } .report-chart .axis, .report-chart .tick line { stroke: var(--ui-line); }
+.report-chart text { fill: var(--ui-muted); font-size: 11px; }
+.report-chart .series { stroke-width: 2; stroke: var(--ui-mint); } .report-chart .series[data-index="1"] { stroke: var(--ui-rose); } .report-chart .series[data-index="2"] { stroke: #f1cf7c; }
+.report-chart .series[data-index="3"] { stroke: #6aa5d8; } .report-chart .series[data-index="4"] { stroke: #b48be0; }
+.chart-legend { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--ui-muted); }
+.chart-legend li::before { content: ''; display: inline-block; width: 10px; height: 3px; margin-right: 4px; vertical-align: middle; background: var(--ui-mint); }
+.chart-legend li[data-index="1"]::before { background: var(--ui-rose); } .chart-legend li[data-index="2"]::before { background: #f1cf7c; } .chart-legend li[data-index="3"]::before { background: #6aa5d8; } .chart-legend li[data-index="4"]::before { background: #b48be0; }
+.report-highlights, .report-numbers, .legacy-records { list-style: none; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.report-highlights li, .report-numbers li, .legacy-records li { padding: 8px 10px; border: 1px solid var(--ui-line); border-radius: 8px; display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
+.report-highlights span, .report-numbers span, .legacy-records span, .legacy-records small { color: var(--ui-muted); font-size: 11px; } .report-numbers b { font-size: 18px; }
+.legacy-records li[data-set="false"] { opacity: .5; }
+.report-table summary { cursor: pointer; margin-top: 12px; font-size: 13px; } .table-scroll { overflow-x: auto; max-height: 420px; }
+.report-table table { border-collapse: collapse; font-size: 11px; white-space: nowrap; } .report-table th, .report-table td { padding: 4px 6px; border-bottom: 1px solid var(--ui-line); text-align: right; }
+.report-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.report-bars { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; } .report-bars li { display: grid; grid-template-columns: 90px 1fr 36px; gap: 8px; align-items: center; font-size: 12px; }
+.report-bars .bar { height: 8px; background: var(--ui-raised); border-radius: 4px; overflow: hidden; } .report-bars .bar i { display: block; height: 100%; width: calc(var(--share) * 100%); background: var(--ui-mint); }
+.report-bars b { text-align: right; } .report-luck, .report-note { font-size: 12px; color: var(--ui-muted); }
+.member-picker { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; }
+.member-picker button { display: flex; flex-direction: column; align-items: center; min-width: 72px; padding: 6px; border: 1px solid var(--ui-line); border-radius: 8px; font-size: 11px; }
+.member-picker button[aria-selected="true"] { border-color: var(--ui-mint); } .member-picker button[data-in-party="false"] { opacity: .75; } .member-picker img { width: 40px; height: 40px; object-fit: contain; }
+.member-story { margin-top: 10px; } .member-story header { display: flex; gap: 10px; align-items: center; } .member-story header img { width: 72px; height: 72px; object-fit: contain; }
+.member-story h4 { margin: 0; font-size: 15px; } .member-story p { font-size: 12px; color: var(--ui-muted); }
+.member-story dl { display: grid; grid-template-columns: 60px 1fr; gap: 4px 10px; font-size: 12px; } .member-story dd { margin: 0; }
+.member-rename { display: flex; gap: 6px; align-items: flex-end; margin: 10px 0; font-size: 12px; } .member-rename label { display: flex; flex-direction: column; gap: 4px; }
+.member-rename input { padding: 5px 8px; } .member-rename button { padding: 6px 10px; border: 1px solid var(--ui-line); border-radius: 6px; }
+.member-mentions { list-style: none; padding: 0; font-size: 12px; }
+.ribbon-grid { border-collapse: collapse; font-size: 12px; margin-bottom: 12px; } .ribbon-grid caption { text-align: left; margin-bottom: 6px; } .ribbon-grid th, .ribbon-grid td { padding: 4px 10px; text-align: center; }
+.ribbon-grid td[data-earned="true"] { color: #f1cf7c; }
+.symbol-list, .facility-list, .rule-list, .perk-status, .card-catalog { list-style: none; padding: 0; margin: 8px 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; font-size: 12px; }
+.symbol-list li, .facility-list li, .rule-list li, .perk-status li, .card-catalog li { padding: 8px; border: 1px solid var(--ui-line); border-radius: 8px; display: flex; flex-direction: column; gap: 2px; }
+.symbol-list li[data-tier="gold"], .facility-list li[data-tier="3"] { border-color: #f1cf7c; } .symbol-list li[data-tier="silver"] { border-color: #c8d0d8; }
+.perk-status li[data-unlocked="false"], .card-catalog li[data-collected="false"] { opacity: .5; } .perk-status small, .card-catalog small { color: var(--ui-muted); font-size: 11px; }
+.chronicle { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; } .chronicle li { padding: 8px 10px; border-left: 3px solid var(--ui-line); font-size: 12px; }
+.chronicle li[data-kind="news"] { border-left-color: #6aa5d8; } .chronicle li[data-kind="people"] { border-left-color: var(--ui-rose); } .chronicle li[data-kind="echo"] { border-left-color: #f1cf7c; } .chronicle li[data-kind="party"] { border-left-color: var(--ui-mint); }
+.chronicle-age { color: var(--ui-muted); margin-right: 8px; } .chronicle p { margin: 4px 0 0; color: var(--ui-muted); }
+.chronicle-filter { display: inline-flex; gap: 8px; align-items: center; font-size: 12px; }
+.legacy-lineages { list-style: none; padding: 0; display: grid; gap: 8px; } .lineage { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.lineage li { display: flex; flex-direction: column; padding: 6px 10px; border: 1px solid var(--ui-line); border-radius: 8px; font-size: 12px; } .lineage li + li::before { content: '→'; color: var(--ui-muted); }
+.lineage img { width: 32px; height: 32px; object-fit: contain; } .lineage small { color: var(--ui-muted); font-size: 11px; }
+.perk-picker, .rule-picker { border: 1px solid var(--ui-line); border-radius: 8px; padding: 10px; margin: 10px 0; } .perk-picker legend, .rule-picker legend { font-size: 12px; padding: 0 4px; }
+.perk-picker ul, .rule-picker ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.modal .perk-picker label, .modal .rule-picker label { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; } .perk-picker small, .rule-picker small { display: block; font-size: 11px; color: var(--ui-muted); }
+.perk-picker li[data-unlocked="false"] { opacity: .5; } .modal .perk-picker .perk-detail { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+@media (max-width: 640px) { .report-columns { grid-template-columns: 1fr; } .report-charts { grid-template-columns: 1fr; } .simulation-report .report-section { padding: 12px; } }

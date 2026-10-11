@@ -5,9 +5,10 @@ import { REGIONS } from '../data/regions.js';
 import { TOWNS, CAREERS } from '../data/world.js';
 import { GOALS } from '../sim/goals.js';
 import {
-  endingCards, trainerCard, medalsOf, heirCandidates, dexProgress, legacyTotals,
-  MEDALS, MEDAL_GROUPS, STARS, RARITIES, DEX_TOTAL, INHERITANCE_CAP, INHERITANCE_SHARE,
+  endingCards, trainerCard, medalsOf, heirCandidates, dexProgress, legacyTotals, legacyRecords, lineages, cardCollection, perkUnlocked,
+  MEDALS, MEDAL_GROUPS, STARS, RARITIES, DEX_TOTAL, INHERITANCE_CAP, INHERITANCE_SHARE, CARD_KINDS, PERK_UNLOCKS,
 } from '../sim/legacy.js';
+import { PERKS, RULES } from '../sim/perks.js';
 import { sprite } from './assets.js';
 import { formatText, pokemonName } from './format.js';
 
@@ -36,6 +37,8 @@ export function TrainerCardView({ card, compact = false }) {
       <dt>도감</dt><dd>관측 {card.seen} · 동료 {card.owned}</dd>
       <dt>배틀 승리</dt><dd>{card.wins}</dd>
       <dt>명성</dt><dd>{card.reputation}</dd>
+      <dt>리본</dt><dd>{card.ribbons ?? 0}</dd>
+      <dt>심볼</dt><dd>{card.symbols ?? 0}{card.facility ? ` · 시설 기록 ${card.facility}` : ''}</dd>
     </dl>
     {!compact && <ul className="trainer-card-star-list">{STARS.map(star => <li key={star.id} data-earned={card.stars.includes(star.id)}>{card.stars.includes(star.id) ? '★' : '☆'} {star.name}</li>)}</ul>}
   </article>;
@@ -88,7 +91,9 @@ export function LegacyHall({ legacy, life }) {
     <div className="content-title"><div><span className="eyebrow">FAMILY HALL OF FAME</span><h2>가문의 전당</h2>
       <p>이 브라우저에서 끝낸 삶들이 모입니다. 도감과 메달은 모든 삶에 걸쳐 누적됩니다.</p></div></div>
     <ul className="legacy-totals">{[[totals.lives, '끝낸 삶'], [totals.years, '살아온 햇수'], [totals.generations, '최대 세대'], [totals.champions, '리그 타이틀'],
-      [totals.seen, '누적 관측'], [totals.owned, '누적 동료 종'], [totals.shiny, '색이 다른 종'], [`${totals.medals}/${totals.medalTotal}`, '메달'], [totals.cards, '엔딩 카드 종류']]
+      [totals.wins, '배틀 승리'], [totals.ribbons, '리본'], [totals.symbols, '프런티어 심볼'],
+      [totals.seen, '누적 관측'], [totals.owned, '누적 동료 종'], [totals.shiny, '색이 다른 종'], [`${totals.medals}/${totals.medalTotal}`, '메달'], [totals.cards, '엔딩 카드'],
+      [`${totals.perks}/${totals.perkTotal}`, '가문 혜택']]
       .map(([n, label]) => <li key={label}><b>{n}</b><span>{label}</span></li>)}</ul>
     {legacy.heir && <p className="legacy-heir" role="status"><Egg size={15}/> {legacy.heir.ancestor}의 {pokemonName(legacy.heir.egg)} 알이 다음 세대를 기다립니다. ‘새로운 삶’에서 시작할 수 있습니다.</p>}
 
@@ -99,9 +104,26 @@ export function LegacyHall({ legacy, life }) {
         <p>{townName(l.hometown)}에서 태어나 {l.age}세까지 · {GOALS[l.goal]?.name} · {CAREERS[l.career]?.name || '자율 활동'}{l.ancestor ? ` · ${l.ancestor}의 후손` : ''}</p>
         {l.partner && <p className="legacy-partner"><img className="pixel" src={sprite(l.partner.id, l.partner.shiny)} alt=""/> 첫 파트너 {pokemonName(l.partner.id)} · Lv.{l.partner.level} · {l.partner.years}년</p>}
         <span className="legacy-party">{l.party.map((m, i) => <img key={i} className="pixel" src={sprite(m.id, m.shiny)} alt={`${pokemonName(m.id)} Lv.${m.level}`}/>)}</span>
-        <small>메달 {l.medals.length}개 · 엔딩 카드 {l.cards.length}장</small>
+        <small>메달 {l.medals.length}개 · 엔딩 카드 {l.cards.length}장{l.rules?.length ? ` · 규칙: ${l.rules.map(id => RULES[id]?.name).join(', ')}` : ''}</small>
       </div>
     </li>)}</ol> : <p className="legacy-empty">아직 끝낸 삶이 없습니다. 첫 삶을 마치면 이곳에 트레이너 카드가 걸립니다.</p>}
+
+    <h3>기록실</h3>
+    <ul className="legacy-records">{legacyRecords(legacy).map(r => <li key={r.id} data-record={r.id} data-set={Boolean(r.best)}>
+      <span>{r.label}</span>{r.best ? <><b>{r.best.value.toLocaleString()}{r.unit}</b><small>{r.best.holder}{r.best.generation > 1 ? ` · ${r.best.generation}대` : ''}</small></> : <b>—</b>}
+    </li>)}</ul>
+
+    {lineages(legacy).length > 0 && <><h3>가계도</h3>
+      <ol className="legacy-lineages">{lineages(legacy).map(chain => <li key={chain[0].key}><ol className="lineage">{chain.map(l => <li key={l.key} data-generation={l.generation}>
+        {l.partner && <img className="pixel" src={sprite(l.partner.id, l.partner.shiny)} alt=""/>}<b>{l.name}</b><small>{l.generation}대 · {l.age}세 · {l.epithet}</small></li>)}</ol></li>)}</ol></>}
+
+    <h3>가문 혜택</h3>
+    <ul className="perk-status">{Object.entries(PERKS).map(([id, perk]) => <li key={id} data-unlocked={perkUnlocked(legacy, id)}>
+      <b>{perk.name}</b><small>{perk.detail}</small><small className="perk-unlock">{perkUnlocked(legacy, id) ? '해금됨 · 새로운 삶에서 선택' : `조건: ${PERK_UNLOCKS[id].text}`}</small></li>)}</ul>
+
+    <h3>엔딩 카드 도감</h3>
+    <ul className="card-catalog">{Object.entries(CARD_KINDS).map(([kind, name]) => { const c = cardCollection(legacy)[kind];
+      return <li key={kind} data-kind={kind} data-collected={Boolean(c)}><b>{name}</b><small>{c ? `${c.distinct}종 · ${c.copies}장` : '아직 없음'}</small></li>; })}</ul>
 
     <h3>누적 도감</h3>
     <DexProgress ids={legacy.dex.seen} label="모든 삶의 누적 관측"/>

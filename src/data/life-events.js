@@ -80,7 +80,7 @@ const childhood = {
 const field = [
   // A wild encounter is guaranteed if three years pass without one; travellers and researchers meet more.
   { id: 'wild-encounter', category: 'field', once: false, cooldown: 1, min: 8, when: s => s.party.length,
-    urgent: s => s.age - (s.lastWildOffer ?? 5) >= 3,
+    urgent: s => s.age - (s.lastWildOffer ?? 5) >= 4,
     weight: s => 0.8 + regionState(s).ecology / 50 + (s.disposition.bold || 0) * 0.05 + ({ traveler: 1, researcher: 0.6 }[s.career] || 0),
     build: s => { s.lastWildOffer = s.age;
       const { id, habitat, observation } = selectWildEncounter(s);

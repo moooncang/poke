@@ -7,6 +7,7 @@ import { formatText, pokemonName } from './format.js';
 const KINDS = {
   work: [Compass, '직업 활동'],
   choice: [Feather, '선택 사건'],
+  auto: [Feather, '스스로 정한 일'],
   milestone: [Sprout, '주요 사건'],
   ending: [Sprout, '생애 종료'],
   news: [Newspaper, '지방 소식'],

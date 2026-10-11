@@ -4,7 +4,9 @@ import { createLife, choose, parseSave } from '../src/engine.js';
 import { MORE_LIFE } from '../src/data/more-life.js';
 import { MORE_WORK } from '../src/data/more-work.js';
 import { MORE_PLACES } from '../src/data/more-places.js';
-import { VIGNETTES } from '../src/data/vignettes.js';
+import { VIGNETTES as BASE_VIGNETTES } from '../src/data/vignettes.js';
+import { VIGNETTES_EXTRA } from '../src/data/vignettes-extra.js';
+const VIGNETTES = [...BASE_VIGNETTES, ...VIGNETTES_EXTRA];
 import { TOWNS, CAREERS } from '../src/data/world.js';
 import { CONDITIONS } from '../src/sim/world.js';
 import { addPokemon } from '../src/sim/party.js';
@@ -52,7 +54,7 @@ test('every table-driven event can be reached, offers complete choices and keeps
 test('vignettes have unique ids and only use supported tokens', () => {
   const ids = VIGNETTES.map(v => v.id);
   assert.equal(new Set(ids).size, ids.length);
-  for (const v of VIGNETTES) assert.doesNotMatch(v.body, /\{(?!town\}|(partner|friend|spouse)(\}|\|[^|}]+\|[^}]+\}))[^}]*\}/, v.id);
+  for (const v of VIGNETTES) assert.doesNotMatch(v.body, /\{(?!town\}|(partner|friend|spouse|rival|sibling)(\}|\|[^|}]+\|[^}]+\}))[^}]*\}/, v.id);
 });
 
 test('every event keeps at least one free option, and a broke player is never stuck', async () => {

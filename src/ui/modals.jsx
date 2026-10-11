@@ -7,6 +7,8 @@ import { POKEMON, sprite, artwork } from './assets.js';
 import { Modal, PokeBall, EffectChips } from './common.jsx';
 import { formatText, pokemonName } from './format.js';
 import { GOALS, goalOf } from '../sim/goals.js';
+import { PERKS, RULES, PERK_SLOTS } from '../sim/perks.js';
+import { PERK_UNLOCKS, unlockedPerks, starterChoices } from '../sim/legacy.js';
 
 function GoalSelect({ value, onChange, label = '삶의 목표' }) {
   return <select aria-label={label} value={value} onChange={e => onChange(e.target.value)}>
@@ -85,6 +87,32 @@ export function DecisionModal({ life, entry, onChoose, onHide }) {
   </Modal>;
 }
 
+// Family perks (unlocked by earlier lives, up to PERK_SLOTS) and challenge rules for a new life.
+function NewLifeOptions({ legacy, form, setForm, heirUsed }) {
+  const unlocked = legacy ? unlockedPerks(legacy) : [];
+  const toggle = (key, id, limit = Infinity) => setForm(f => ({ ...f, [key]: f[key].includes(id) ? f[key].filter(x => x !== id) : f[key].length < limit ? [...f[key], id] : f[key] }));
+  const starters = form.perks.includes('starter-pick') && legacy ? starterChoices(legacy) : [];
+  return <>
+    <fieldset className="perk-picker"><legend>가문 혜택 <small>{form.perks.length}/{PERK_SLOTS}</small></legend>
+      <ul>{Object.entries(PERKS).map(([id, perk]) => { const open = unlocked.includes(id);
+        return <li key={id} data-unlocked={open} data-selected={form.perks.includes(id)}>
+          <label><input type="checkbox" disabled={!open || (!form.perks.includes(id) && form.perks.length >= PERK_SLOTS)} checked={form.perks.includes(id)} onChange={() => toggle('perks', id, PERK_SLOTS)}/>
+            <span><b>{perk.name}</b><small>{open ? perk.detail : `잠김 · ${PERK_UNLOCKS[id].text}`}</small></span></label>
+        </li>; })}</ul>
+      {form.perks.includes('town-pass') && <label className="perk-detail">태어날 마을<select value={form.town} onChange={e => setForm(f => ({ ...f, town: e.target.value }))}>
+        <option value="random">무작위</option>{TOWNS.map(t => <option key={t.id} value={t.id}>{t.region} · {t.name}</option>)}</select></label>}
+      {form.perks.includes('starter-pick') && (heirUsed ? <small className="perk-detail">물려받은 알이 첫 파트너가 되므로 파트너 선택권은 쓰이지 않습니다.</small>
+        : <label className="perk-detail">첫 파트너<select value={form.starter} onChange={e => setForm(f => ({ ...f, starter: e.target.value }))}>
+          <option value="">마을 연구소에 맡긴다</option>{starters.map(id => <option key={id} value={id}>{pokemonName(id)}</option>)}</select></label>)}
+    </fieldset>
+    <fieldset className="rule-picker"><legend>도전 규칙 <small>선택 사항 · 메달</small></legend>
+      <ul>{Object.entries(RULES).map(([id, rule]) => <li key={id} data-selected={form.rules.includes(id)}>
+        <label><input type="checkbox" checked={form.rules.includes(id)} onChange={() => toggle('rules', id)}/><span><b>{rule.name}</b><small>{rule.detail}</small></span></label>
+      </li>)}</ul>
+    </fieldset>
+  </>;
+}
+
 export function NewLifeModal({ life, legacy, form, setForm, onSubmit, onClose, onDownload }) {
   const update = key => e => setForm(f => ({ ...f, [key]: e.target.value }));
   const heir = legacy?.heir;
@@ -96,6 +124,7 @@ export function NewLifeModal({ life, legacy, form, setForm, onSubmit, onClose, o
     <label>삶의 목표<GoalSelect value={form.goal} onChange={goal => setForm(f => ({ ...f, goal }))}/><small className="goal-detail">{GOALS[form.goal]?.detail}</small></label>
     {heir && <label className="heir-toggle"><input type="checkbox" checked={form.useHeir} onChange={e => setForm(f => ({ ...f, useHeir: e.target.checked }))}/>
       <span><b>{heir.ancestor}의 {pokemonName(heir.egg)} 알로 시작</b><small>{heir.generation}대째 · 6세에 부화해 첫 파트너가 됩니다 · 유산 {heir.inheritance.toLocaleString()}P</small></span></label>}
+    <NewLifeOptions legacy={legacy} form={form} setForm={setForm} heirUsed={Boolean(heir && form.useHeir)}/>
     <div className="birth-random-note">출신 지방 · 가족 구성 · 경제적 형편 · 주거 환경 · 각 지방의 정세는 새 삶이 시작될 때 무작위로 배정됩니다.</div>
     <details><summary>시드 설정</summary>
       <label>게임 시드<input placeholder="비워두면 무작위 생성" maxLength={40} value={form.seed} onChange={update('seed')}/></label>

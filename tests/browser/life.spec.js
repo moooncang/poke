@@ -90,3 +90,30 @@ test('a finished life records ending cards and hands an egg to the next generati
   await expect(page.locator('.legacy-life')).toHaveCount(1);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.legacy.v1')).heir)).toBe(null);
 });
+
+test('the simulation report draws the life graphs, decisions and companion stories', async ({ page }) => {
+  const state = atDecision('report', 40);
+  await load(page, state);
+  await page.goto('/');
+  await page.getByRole('button', { name: '잠깐 숨기고 화면 보기' }).click();
+  await page.getByRole('button', { name: '시뮬레이션 리포트', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '시뮬레이션 리포트' })).toBeVisible();
+  await expect(page.locator('.report-chart svg polyline').first()).toBeVisible();
+  await expect(page.locator('.report-numbers li')).toHaveCount(7);
+  await page.locator('.member-rename input').fill('번개');
+  await page.locator('.member-rename button').click();
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).party.concat(JSON.parse(localStorage.getItem('pokelife.story.v1')).box).some(m => m.nickname === '번개'))).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test('a new life can take challenge rules', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: '이 삶 시작하기' }).click();
+  await page.getByRole('button', { name: '새로운 삶' }).click();
+  const form = page.getByRole('dialog', { name: '새로운 삶 시작하기' });
+  await form.locator('.rule-picker li').filter({ hasText: '무일푼 출발' }).locator('input').check();
+  await expect(form.locator('.perk-picker li[data-unlocked="false"]').first()).toBeVisible();
+  await form.getByRole('button', { name: /게임 시작/ }).click();
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).rules)).toEqual(['poor']);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).money)).toBe(0);
+});

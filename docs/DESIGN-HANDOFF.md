@@ -3,6 +3,54 @@
 작업: Claude · 2026-10-11 · 기준 `54558b8`
 대상: GPT/Codex(디자인 담당). 이번 작업에서 Claude는 **로직·상태·저장·테스트**와 **기능만 갖춘 화면**을 만들었습니다. 색·배치·장식·애니메이션은 비워 두었습니다. 아래 구조와 `data-*` 상태를 쓰면 로직을 건드리지 않고 디자인할 수 있습니다.
 
+## GPT 시작 체크리스트 (디자인만 하면 됩니다)
+
+로직·저장·테스트는 끝난 상태입니다. 아래 순서로 진행하면 엔진 코드를 건드릴 일이 없습니다.
+
+1. **현재 화면 보기.** 개발 서버를 켠 뒤 전체 화면 스크린샷을 만듭니다.
+   ```sh
+   npm run dev   # 다른 터미널에서
+   SCREENSHOTS=1 CHROMIUM_PATH=<chromium 경로> npx playwright test screens
+   ```
+   `docs/screenshots/review/`에 데스크톱·모바일 각 11장이 생깁니다(git에는 올라가지 않음). 결정창, 게임 화면(HUD), 도감, 여행 기록, 시뮬레이션 리포트, 가문의 전당, 파티 관리, 새 삶, 엔딩 카드, 트레이너 카드, 다음 세대 화면입니다.
+2. **디자인할 화면과 우선순위**(지금은 배치만 된 최소 스타일):
+   1. 트레이너 HUD(모바일에서 특히 중요)
+   2. 엔딩 카드·트레이너 카드
+   3. 시뮬레이션 리포트 그래프
+   4. 파티 관리
+   5. 가문의 전당(기록실·가계도·카드 도감)
+   6. 새 삶 옵션(가문 혜택·도전 규칙)
+   7. 사건 기록의 "스스로 정한 일" 카드
+   8. 콘테스트 리본표·프런티어 심볼
+3. **어디를 고치나.**
+   - 스타일은 `src/life.css` 끝에 추가합니다. 마크업이 부족하면 `src/ui/*.jsx`의 JSX를 고쳐도 됩니다.
+   - 색은 기존 토큰(`--ui-bg`, `--ui-panel`, `--ui-raised`, `--ui-line`, `--ui-text`, `--ui-muted`, `--ui-mint`, `--ui-rose`)을 쓰고, 금색은 `#f1cf7c`를 씁니다. 새 토큰은 `:root`에 추가하세요.
+4. **끝나면 확인.**
+   - `npm test`(엔진, 약 3분): 디자인만 바꿨다면 그대로 통과해야 합니다.
+   - `npm run test:browser`(화면 16개, 데스크톱·모바일): 아래 "바꾸면 안 되는 것"의 역할 이름·클래스를 바꿨다면 테스트도 같이 고쳐 주세요.
+   - `PAGES_BASE_PATH=/poke/ npm run build`
+5. **기록.** 바꾼 내용은 `docs/CHANGES-<주제>.md`에 남기고 README 협업 기록 목록에 한 줄을 추가하세요.
+
+### 화면별 파일 지도
+
+| 화면 | 파일 | 이 문서의 절 |
+|---|---|---|
+| 트레이너 HUD | `src/ui/Hud.jsx` | 1 |
+| 파티 관리 | `src/ui/PartyManager.jsx` | 2 |
+| 엔딩(생애 기록관) | `src/ui/Ending.jsx` + `src/ui/Legacy.jsx` | 3 |
+| 가문의 전당 | `src/ui/Legacy.jsx` `LegacyHall` | 4, 8 |
+| 출생·새 삶 | `src/ui/modals.jsx` (`BirthModal`, `NewLifeModal`, `NewLifeOptions`) | 5, 7 |
+| 시뮬레이션 리포트 | `src/ui/Report.jsx` | 6 |
+| 사건 카드("스스로 정한 일" 포함) | `src/ui/StoryCard.jsx` | 9 |
+| 앱 골격·탭 | `src/App.jsx` (상태와 레이아웃만) | — |
+| 사이드바(파트너·세계·리그) | `src/ui/LifeView.jsx` | — |
+
+### 표시할 문자열과 숫자
+
+- **화면에 쓰는 이름·설명은 모두 데이터에 있습니다:** `GOALS`, `PERKS`, `RULES`, `MEDALS`, `CARD_KINDS`, `CONTEST_CATEGORIES`, `FACILITIES`, `RECORDS` 등.
+- **화면에서 따로 계산하지 마세요.** 문구를 바꾸려면 해당 데이터 파일에서 고칩니다.
+- **본문 텍스트는 반드시 `formatText(text, life, entry)`를 거쳐 표시하세요.** 시뮬레이션 문장에는 `{poke:25|이|가}` 같은 토큰이 들어 있습니다.
+
 ## 디자인 작업 규칙
 
 - 스타일은 `src/life.css` 끝에 추가합니다. 지금 들어간 규칙은 `/* ── Trainer HUD, party manager, ending cards, legacy hall (Claude) ── */` 블록에 모여 있으며 **배치용 최소 규칙**입니다. 자유롭게 지우거나 바꿔도 됩니다.
@@ -154,3 +202,73 @@ section.legacy-hall
 | 도감 진행 | `dexProgress(ids)`, `legacy.dex.seen` |
 | 다음 세대 | `heirCandidates(life)`, `chooseHeir(legacy, life, uid)` |
 | 전당 합계 | `legacyTotals(legacy)` |
+
+---
+
+# 2부 — 시뮬레이션 리포트 · 새 삶 옵션 · 전당 확장 · 스스로 정한 일
+
+작업: Claude · 기준 `57eb8f4`. 규칙은 1부와 같습니다(구조·클래스는 바꿔도 되고, 엔진 함수 호출과 저장 키는 유지). 이 부분의 최소 스타일은 `life.css` 끝 `/* ── Simulation report, new-life options, records room (Claude) … */` 블록에 있습니다.
+
+## 6. 시뮬레이션 리포트 탭 — `src/ui/Report.jsx`
+
+주 메뉴 `시뮬레이션 리포트`. 섹션은 모두 `section.report-section`.
+
+```
+section.simulation-report
+├─ 생애 그래프
+│   ├─ .report-charts > figure.report-chart[data-lines] × 6
+│   │     figcaption, svg > line.axis, g.tick, text.max-label, polyline.series[data-series][data-index]
+│   │     ul.chart-legend > li[data-series][data-index] > b(마지막 값)
+│   ├─ ul.report-highlights > li > span, b                      가장 부유/가난/행복/힘든 해 …
+│   └─ details.report-table > .table-scroll > table              연도별 기록(모든 HISTORY_KEYS)
+├─ 결정과 판정
+│   ├─ ul.report-numbers > li > b, span   × 7                   선택 사건·스스로 정한 일·전체 기록·여파…
+│   ├─ p.report-luck × 0~2
+│   └─ .report-columns > ul.report-bars > li[data-id] > span, span.bar(style --share 0~1) > i, b
+├─ 머문 곳: ul.report-bars + p.report-note
+├─ 동료 이야기
+│   ├─ .member-picker[role=tablist] > button[role=tab][aria-selected][data-in-party] > img, span, small
+│   └─ article.member-story[data-in-party][data-shiny] > header, dl, form.member-rename, details > ul.member-mentions
+├─ 리본과 배틀 시설
+│   ├─ table.ribbon-grid > td[data-earned]
+│   ├─ ul.symbol-list > li[data-tier="none|silver|gold"]
+│   └─ ul.facility-list > li[data-tier="0..3"]
+├─ (있을 때) ul.rule-list > li[data-kind="rule|perk"]
+└─ 세계와 사람들의 연대기
+    ├─ label.chronicle-filter > select
+    └─ ol.chronicle > li[data-kind="news|people|echo|party"] > span.chronicle-age, b, p
+```
+
+- 그래프 색은 `polyline.series[data-index]`(0~4)와 `chart-legend li[data-index]`를 맞춰 칠하세요. 지금은 민트·로즈·골드·블루·퍼플입니다.
+- `.report-bars .bar`의 `--share`는 그 목록 최대값 대비 비율입니다.
+- 제안: 그래프에 마우스오버 툴팁, 하이라이트 카드에 아이콘, 연대기를 세로 타임라인으로.
+
+## 7. 새 삶 옵션 — `NewLifeOptions` (`src/ui/modals.jsx`)
+
+```
+fieldset.perk-picker > legend(n/3), ul > li[data-unlocked][data-selected] > label > input[type=checkbox], span > b, small
+  label.perk-detail > select (출생지 선택권: 마을 / 파트너 선택권: 첫 파트너)
+fieldset.rule-picker > legend, ul > li[data-selected] > label > input, span > b, small
+```
+
+잠긴 혜택은 `data-unlocked="false"`, 설명 자리에 해금 조건이 나옵니다.
+
+## 8. 가문의 전당 추가 블록 — `LegacyHall`
+
+```
+ul.legacy-records > li[data-record][data-set] > span(부문), b(값+단위), small(보유자·세대)
+ol.legacy-lineages > li > ol.lineage > li[data-generation] > img, b, small     (화살표는 CSS ::before)
+ul.perk-status > li[data-unlocked] > b, small, small.perk-unlock
+ul.card-catalog > li[data-kind][data-collected] > b, small
+```
+
+- 트레이너 카드 `dl`에 리본·심볼 줄이 추가됐습니다.
+- 지난 삶 카드에는 도전 규칙이 표시됩니다.
+
+## 9. 스스로 정한 일 (사건 기록)
+
+`StoryCard`의 `article.story-row.kind-auto`는 캐릭터가 혼자 결정한 사건입니다. 아이콘은 Feather, 라벨은 "스스로 정한 일"이고, `.choice-result`가 바로 붙어 나옵니다. 플레이어 결정(`kind-choice`)과 시각적으로 구분해 주세요(예: 더 작게, 옅게, 접힌 형태).
+
+## 10. 엔딩 카드 종류 추가
+
+`data-kind`: `ribbons` · `frontier` · `named` · `ace` · `graph` · `rules`. 전체 목록과 이름은 `CARD_KINDS`(`src/sim/achievements.js`).

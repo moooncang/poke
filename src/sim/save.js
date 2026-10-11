@@ -1,5 +1,6 @@
 import { createTalent, TALENT_FIELDS } from './talent.js';
-// Save parsing: validates untrusted JSON; v1 → world simulation v2 → innate talents v3 → goal, party plan, heritage v4.
+// Save parsing: validates untrusted JSON; v1 → world simulation v2 → innate talents v3 → goal, party plan, heritage v4
+// → yearly history, perks, challenge rules and a chosen starter v5.
 import { TOWNS, CAREERS, NPCS } from '../data/world.js';
 import { CONSEQUENCES } from '../data/consequences.js';
 import { STAT_LABELS, EFFECT_LABELS, GENDERS } from './labels.js';
@@ -10,9 +11,13 @@ import { hashSeed } from './random.js';
 import { DISPOSITIONS, isLegendary, PARTY_LIMIT, PARTY_MODES } from './party.js';
 import { GOALS } from './goals.js';
 import { validHeritage } from './legacy.js';
+import { validHistoryRow, HISTORY_LIMIT } from './history.js';
+import { PERKS, RULES, PERK_SLOTS } from './perks.js';
+import { NICKNAME_LIMIT, MEMBER_EVOLUTIONS, MEMBER_RIBBONS } from './party.js';
+import { CONTEST_CATEGORIES, CONTEST_RANKS } from './contest.js';
 import { REGIONS } from '../data/regions.js';
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 const ENCOUNTER_TYPES = ['partner', 'npc', 'legendary', 'shiny', 'evolution'];
 const ORIGINS = ['partner', 'wild', 'adopted', 'starter', 'legend', 'egg', 'gift', 'rescued'];
 
@@ -30,17 +35,18 @@ const shift = (value, keys) => value === undefined || isObject(value) && Object.
 function validActions(a) {
   return isObject(a) && shift(a.effects, EFFECT_LABELS) && shift(a.world, WORLD_KEYS)
     && (a.cost === undefined || num(a.cost, 0, 1e7)) && (!a.career || Boolean(CAREERS[a.career])) && (!a.join || speciesId(a.join))
-    && (!a.joinOrigin || ORIGINS.includes(a.joinOrigin)) && (!a.observe || speciesId(a.observe)) && (!a.destination || townId(a.destination))
+    && (!a.joinOrigin || ORIGINS.includes(a.joinOrigin)) && (a.joinLevel === undefined || int(a.joinLevel, 5, 100)) && (a.joinNickname === undefined || text(a.joinNickname, NICKNAME_LIMIT) && a.joinNickname.length > 0) && (!a.observe || speciesId(a.observe)) && (!a.destination || townId(a.destination))
     && (a.move === undefined || [true, false, 'region', 'random'].includes(a.move)) && (!a.equipment || a.equipment in MECHANICS)
     && (a.training === undefined || num(a.training, 0, 10000)) && (!a.captureJoin || speciesId(a.captureJoin)) && (a.affection === undefined || num(a.affection, -100, 100)) && (!a.tone || a.tone in DISPOSITIONS)
     && (a.cast === undefined || isObject(a.cast) && Object.values(a.cast).every(isObject))
     && (a.follow === undefined || list(a.follow, 5, f => isObject(f) && Boolean(CONSEQUENCES[f.id])))
     && (a.battle === undefined || isObject(a.battle) && BATTLE_KINDS.includes(a.battle.kind) && (a.battle.opponent === undefined || speciesId(a.battle.opponent))
       && (a.battle.level === undefined || int(a.battle.level,1,100))
-      && (a.battle.opponents === undefined || ['league', 'gym'].includes(a.battle.kind) && list(a.battle.opponents,12,speciesId) && a.battle.opponents.length>0 && !a.battle.capture)
+      && (a.battle.opponents === undefined || ['league', 'gym', 'facility'].includes(a.battle.kind) && list(a.battle.opponents,12,speciesId) && a.battle.opponents.length>0 && !a.battle.capture)
       && (a.battle.levels === undefined || Array.isArray(a.battle.opponents) && list(a.battle.levels,12,n => int(n,1,100)) && a.battle.levels.length === a.battle.opponents.length)
       && (a.battle.flags === undefined || Array.isArray(a.battle.opponents) && list(a.battle.flags,12,f => f === null || text(f, 60)) && a.battle.flags.length === a.battle.opponents.length))
     && (a.simulation === undefined || ['capture', 'gym', 'raid'].includes(a.simulation))
+    && (a.contest === undefined || isObject(a.contest) && Object.hasOwn(CONTEST_CATEGORIES, a.contest.category) && int(a.contest.rank, 0, CONTEST_RANKS.length - 1))
     && (a.after === undefined || isObject(a.after) && Object.values(a.after).every(validActions));
 }
 const validChoice = c => validActions(c) && text(c.label, 200) && text(c.description, 300) && text(c.outcome)
@@ -52,8 +58,14 @@ const validEvent = e => isObject(e) && text(e.title) && text(e.body, 2000) && sh
 const validEntry = (s, e) => validEvent(e) && text(e.id, 80) && int(e.age, 0, s.age) && int(e.season, 0, 3) && townId(e.town)
   && (!e.partnerId || speciesId(e.partnerId))
   && (!e.resolution || text(e.resolution.label, 200) && text(e.resolution.text, 2000) && shift(e.resolution.effects, EFFECT_LABELS));
+// Member records (battles, wins, where they met, evolutions, ribbons, nickname) are optional so that members
+// written by older code or other tools stay valid.
 const validMember = (s, m) => isObject(m) && int(m.uid, 1, 1e6) && speciesId(m.id) && int(m.joined, 0, s.age) && typeof m.shiny === 'boolean'
-  && int(m.xp, 0, 1e6) && num(m.affection, 0, 100) && ORIGINS.includes(m.origin) && (!m.locked || isLegendary(m.id));
+  && int(m.xp, 0, 1e6) && num(m.affection, 0, 100) && ORIGINS.includes(m.origin) && (!m.locked || isLegendary(m.id))
+  && (m.battles === undefined || int(m.battles, 0, 1e6)) && (m.wins === undefined || int(m.wins, 0, m.battles ?? 1e6))
+  && (m.met === undefined || townId(m.met)) && (m.nickname === undefined || text(m.nickname, NICKNAME_LIMIT) && m.nickname.length > 0)
+  && (m.evolutions === undefined || list(m.evolutions, MEMBER_EVOLUTIONS, e => Array.isArray(e) && e.length === 2 && int(e[0], 0, s.age) && speciesId(e[1])))
+  && (m.ribbons === undefined || list(m.ribbons, MEMBER_RIBBONS, r => text(r, 40)));
 const validGame = g => isObject(g) && isObject(g.badges) && Object.entries(g.badges).every(([k, n]) => regionId(k) && int(n, 0, 8))
   && list(g.gear, 5, k => k in MECHANICS) && list(g.megaStones, 200, speciesId) && list(g.crystals, 18, t => ALL_TYPES.includes(t))
   && list(g.gmax, 100, speciesId) && ALL_TYPES.includes(g.teraType) && int(g.balls, 0, 1e6) && int(g.wins, 0, 1e6) && int(g.catches, 0, 1e6);
@@ -67,6 +79,10 @@ const validPlan = s => isObject(s.partyPlan) && Object.hasOwn(PARTY_MODES, s.par
 
 function validState(s) {
   return Object.hasOwn(GOALS, s.goal) && (s.heritage === null || validHeritage(s.heritage))
+    && list(s.history, HISTORY_LIMIT, row => validHistoryRow(row, s.age, townId))
+    && list(s.perks, PERK_SLOTS, id => Object.hasOwn(PERKS, id)) && new Set(s.perks).size === s.perks.length
+    && list(s.rules, Object.keys(RULES).length, id => Object.hasOwn(RULES, id)) && new Set(s.rules).size === s.rules.length
+    && (s.starter === null || speciesId(s.starter) && !isLegendary(s.starter))
     && isObject(s.talent) && Object.hasOwn(TALENT_FIELDS, s.talent.field) && int(s.talent.level, 1, 5)
     && text(s.name, 12) && text(s.seed, 40) && typeof s.family === 'string' && typeof s.trait === 'string' && Object.hasOwn(GENDERS, s.gender)
     && int(s.age, 0, 105) && Number.isInteger(s.rng) && typeof s.ended === 'boolean' && !(s.ended && s.age < 60) && int(s.season, 0, 3)
@@ -132,6 +148,8 @@ export function parseSave(raw) {
     if (s.version === 2) { s.talent = createTalent(s.seed); s.version = 3; }
     // v4: the player's life goal, party management (pins / manual mode) and the inherited egg. Old lives start neutral.
     if (s.version === 3) { s.goal = 'free'; s.partyPlan = { mode: 'auto', pinned: [] }; s.heritage = null; s.version = 4; }
+    // v5: yearly history starts empty for an old life; no perks, no challenge rules, no chosen starter.
+    if (s.version === 4) { s.history = []; s.perks = []; s.rules = []; s.starter = null; s.version = 5; }
     s.gender ??= 'unspecified';
     return s.version === SAVE_VERSION && validState(s) ? s : null;
   } catch {

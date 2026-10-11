@@ -35,7 +35,8 @@ export function changeCast(s, changes = {}) {
     const person = s.cast[id];
     if (!person) continue;
     for (const [key, value] of Object.entries(change)) {
-      if (key === 'affinity' || key === 'power') person[key] = clamp(Math.round((person[key] || 0) + value), 0, 100);
+      // Numeric traits are changes, not new values (cast: { family: { health: 5 } } means "+5 health").
+      if (key === 'affinity' || key === 'power' || key === 'health') person[key] = clamp(Math.round((person[key] || 0) + value), 0, 100);
       else person[key] = value;
     }
   }

@@ -1,7 +1,7 @@
 # AGENTS.md — Pokélife 작업 안내
 
 이 저장소는 여러 AI 에이전트(Claude, GPT 등)와 사람이 함께 작업합니다. 코드를 고치기 전에 이 문서를 읽어 주세요.
-최근 구조 변경 내역은 [docs/CHANGES-v2.md](docs/CHANGES-v2.md)에 있습니다. 삶의 목표·파티 직접 관리·전 지방 리그·다회차 기록은 [docs/CHANGES-legacy-league.md](docs/CHANGES-legacy-league.md), 그 화면의 디자인 인계는 [docs/DESIGN-HANDOFF.md](docs/DESIGN-HANDOFF.md)에 있습니다.
+최근 구조 변경 내역은 [docs/CHANGES-v2.md](docs/CHANGES-v2.md)에 있습니다. 삶의 목표·파티 직접 관리·전 지방 리그·다회차 기록은 [docs/CHANGES-legacy-league.md](docs/CHANGES-legacy-league.md), 시뮬레이션 리포트·콘테스트·배틀 시설·가문 혜택·도전 규칙·이벤트 팩 6개·스스로 정한 일은 [docs/CHANGES-depth.md](docs/CHANGES-depth.md), 그 화면들의 디자인 인계는 [docs/DESIGN-HANDOFF.md](docs/DESIGN-HANDOFF.md)에 있습니다.
 
 ## 실행
 
@@ -19,7 +19,12 @@ PAGES_BASE_PATH=/poke/ npm run build
 
 | 경로 | 역할 |
 |---|---|
-| `src/engine.js` | 공개 API: `createLife({ goal, heritage })`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`, `setGoal`, `setPartyMode`, `togglePin`, `movePokemon`, `setLead`. 연간 진행(`advanceYear`)과 선택 적용(`applyActions`) |
+| `src/engine.js` | 공개 API: `createLife({ goal, heritage, perks, rules, starter })`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`, `setGoal`, `setPartyMode`, `togglePin`, `movePokemon`, `setLead`, `renamePokemon`. 연간 진행(`advanceYear`), 선택 해결(`resolveChoice`), 스스로 정한 일(`AUTO_SHARE`) |
+| `src/sim/history.js` · `analytics.js` | 연간 기록(`s.history`)과 리포트용 분석(결정·판정·배틀·연대기·동료 이야기). analytics는 읽기 전용 |
+| `src/sim/contest.js` · `src/data/contests.js` | 콘테스트 5부문 × 4랭크, 리본(`ribbon-<부문>-<랭크>` 플래그와 개체 `ribbons`) |
+| `src/data/frontier.js` | 호연 배틀프런티어 7시설(심볼)과 지방 배틀 시설 8곳(연승 단계). 배틀 종류 `facility` |
+| `src/sim/perks.js` · `src/sim/achievements.js` | 가문 혜택·도전 규칙 / 메달·트레이너 카드·엔딩 카드·지방 도감 |
+| `src/data/town-stories.js` · `type-companions.js` · `villain-arcs.js` · `hobbies.js` · `life-chapters.js` · `vignettes-extra.js` | 이벤트 팩: 마을 120, 타입·종 67, 악당 조직 45, 취미·축제 75, 삶의 장 75, 일상 220. 검증은 `node scripts/check-pack.mjs <파일> <EXPORT> [vignettes]` |
 | `src/sim/goals.js` | 삶의 목표(`GOALS`)와 사건 분류 가중치·자동 결정·육성 보정 |
 | `src/sim/legacy.js` | 다회차 기록(`pokelife.legacy.v1`): 엔딩 카드, 메달, 트레이너 카드, 누적 도감, 다음 세대 알(`heritageFor`). 모두 순수 함수 |
 | `src/sim/talent.js` · `src/data/talent-events.js` | 5단계 재능·20개 사건·판정 보정. 저장 v3. [규칙](docs/CHANGES-talents.md) |
@@ -105,9 +110,10 @@ table('stage', [
 | `world` | 현재 지방의 `economy·safety·ecology` 증감 |
 | `cast` | `{ friend: { affinity: 10, path: 'worker' } }`처럼 인물 상태 변경 |
 | `follow` | `[{ id, delay: [최소, 최대], p, data }]` 몇 년 뒤의 여파. `id`는 `src/data/consequences.js`의 키 |
-| `battle` | `{ kind: 'wild'·'gym'·'raid'·'rival'·'villain'·'league', opponent?, opponents?, level?, levels?, flags?, capture? }` 자동 배틀 |
+| `battle` | `{ kind: 'wild'·'gym'·'raid'·'rival'·'villain'·'league'·'facility', opponent?, opponents?, level?, levels?, flags?, capture? }` 자동 배틀 |
+| `contest` | `{ category: 'cool'·'beauty'·'cute'·'clever'·'tough', rank: 0~3 }` 콘테스트 출전(가장 잘 맞는 파티 포켓몬) |
 | `after` | `{ win: {...}, lose: {...} }` 배틀 결과별 추가 효과 |
-| `join`, `joinOrigin` | 포켓몬 합류(`egg·gift·rescued·adopted·starter·legend`) |
+| `join`, `joinOrigin`, `joinLevel`, `joinNickname` | 포켓몬 합류(`egg·gift·rescued·adopted·starter·legend`), 선택적으로 레벨(5~100)·별명 |
 | `career`, `education`, `work` | 진로·학습 방식·직업 상태(`satisfaction`, `cut`, `retired`) |
 | `promotion`, `leaveCareer` | 경력 등급 +1(최대 5, 등급당 수입 +15%), 직업 내려놓기 |
 | `captureJoin` | 판정 포획 성공 시 해당 종 합류(경험치는 파트너의 65%) |
@@ -125,6 +131,12 @@ table('stage', [
 
 `tests/world.test.js`의 "every storylet builds a valid event" 테스트가 모든 storylet을 실제 상태에서 만들어 보고, 선택지를 하나씩 적용한 뒤 저장 파일이 유효한지 확인합니다. 사건을 추가했다면 이 테스트가 통과하는지 꼭 확인하세요. `tests/fixtures/v1-save.json`은 이전 엔진으로 만든 실제 저장 파일로, 형식 변환 테스트에 씁니다.
 
-연전의 `battle.opponents`는 league·gym 전용 종 ID 1–12개, `battle.level`은 1–100 정수입니다. `battle.levels`(상대별 레벨)와 `battle.flags`(상대별 승리 시 세울 플래그 또는 null)는 opponents와 길이가 같아야 합니다. 전체 연전을 이겨야 `after.win`이 적용되고, 리그 상금은 마지막 승리에서만, 체육관은 승리마다 지급됩니다. 체육관 연전은 그 지방 배지 8개가 되면 멈춥니다. 필드 검증은 `save.js`에 함께 있습니다.
+연전의 `battle.opponents`는 league·gym·facility 전용 종 ID 1–12개, `battle.level`은 1–100 정수입니다. `battle.levels`(상대별 레벨)와 `battle.flags`(상대별 승리 시 세울 플래그 또는 null)는 opponents와 길이가 같아야 합니다. 전체 연전을 이겨야 `after.win`이 적용되고, 리그 상금은 마지막 승리에서만, 체육관은 승리마다 지급됩니다. 체육관 연전은 그 지방 배지 8개가 되면 멈춥니다. 필드 검증은 `save.js`에 함께 있습니다.
+
+**스스로 정한 일.** 결정 사이 자동 기록의 30%는 캐릭터가 혼자 해결하는 사건(`entry.auto`, `kind: 'auto'`)입니다. `director.js`의 `AUTO_CATEGORIES`에 속한 긴급하지 않은 사건만 쓰입니다. 선택 간격은 플레이어 결정(`choices && !auto`)만 셉니다. 테스트나 코드에서 "결정"을 찾을 때는 `e.choices && !e.auto`를 쓰세요. 관계·투자처럼 플레이어가 꼭 골라야 하는 사건은 `cast`·`world` 등 자동 대상이 아닌 분류에 두세요.
+
+**팩의 지연 결과.** `consequences.js`를 고치지 않고 `echoLater(delay, title, body, effects, p)` / `choiceLater(delay, title, body, rows, p)`(event-kit)로 몇 년 뒤의 기록·결정을 사건 안에 쓸 수 있습니다. 문장은 만기 때 `fill`됩니다.
+
+**인물 수치.** `cast` 변경에서 `affinity`·`power`·`health`는 증감이고 나머지 키는 값 덮어쓰기입니다.
 
 다회차 기록(`pokelife.legacy.v1`)은 삶의 저장과 분리돼 있고 UI(`App.jsx`)만 읽고 씁니다. 시뮬레이션 코드에서 가문 기록을 읽지 마세요. 다음 삶에 넘어가는 것은 `createLife({ heritage })` 하나뿐입니다.

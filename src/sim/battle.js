@@ -1,6 +1,7 @@
 // Simplified automatic battles. Type matchups use the official chart; damage numbers and gear rules are this game's own.
 import { TYPES, TYPE_CHART } from '../data/battle-data.js';
 import { random, between, clamp } from './random.js';
+import { hasRule, RULE_TRAINER_POWER } from './perks.js';
 
 export const MEGA = {"3": 10033, "6": 10034, "9": 10036, "65": 10037, "94": 10038, "115": 10039, "127": 10040, "130": 10041, "142": 10042, "150": 10043, "181": 10045, "212": 10046, "214": 10047, "229": 10048, "248": 10049, "257": 10050, "282": 10051, "303": 10052, "306": 10053, "308": 10054, "310": 10055, "354": 10056, "359": 10057, "445": 10058, "448": 10059, "460": 10060, "380": 10062, "381": 10063, "260": 10064, "254": 10065, "302": 10066, "334": 10067, "475": 10068, "531": 10069, "319": 10070, "80": 10071, "208": 10072, "18": 10073, "362": 10074, "719": 10075, "376": 10076, "384": 10079, "323": 10087, "428": 10088, "373": 10089, "15": 10090};
 export const GMAX_FORMS = {"3": 10195, "6": 10196, "9": 10197, "12": 10198, "25": 10199, "52": 10200, "68": 10201, "94": 10202, "99": 10203, "131": 10204, "133": 10205, "143": 10206, "569": 10207, "809": 10208, "812": 10209, "815": 10210, "818": 10211, "823": 10212, "826": 10213, "834": 10214, "839": 10215, "841": 10216, "842": 10217, "844": 10218, "849": 10219, "851": 10220, "858": 10221, "861": 10222, "869": 10223, "879": 10224, "884": 10225, "892": 10226};
@@ -14,7 +15,7 @@ export const MECHANICS = {
 };
 const MOVE_TYPES = { '노말': '몸통박치기', '불꽃': '화염방사', '물': '물의파동', '풀': '잎날가르기', '전기': '전기쇼크', '얼음': '얼음뭉치', '격투': '로킥', '독': '독침', '땅': '땅고르기', '비행': '날개치기', '에스퍼': '염동력', '벌레': '벌레먹기', '바위': '돌떨구기', '고스트': '섀도볼', '드래곤': '용의숨결', '악': '물기', '강철': '메탈크로우', '페어리': '차밍보이스' };
 export const ALL_TYPES = Object.keys(MOVE_TYPES);
-export const BATTLE_KINDS = ['wild', 'gym', 'raid', 'rival', 'villain', 'league'];
+export const BATTLE_KINDS = ['wild', 'gym', 'raid', 'rival', 'villain', 'league', 'facility'];
 
 export const xpLevel = member => Math.min(100, 5 + Math.floor((member.xp || 0) / 25));
 export const typesOf = id => TYPES[id] || ['노말'];
@@ -37,8 +38,8 @@ function bestAttack(attackerId, defenderTypes) {
 
 // Trained opponents (gym, league, rival, villain, raid) use their best type and a practised moveset.
 export const TRAINER_POWER = 1.35;
-const incomingMultiplier = (kind, foeTypes, defend) => kind === 'wild' ? typeMultiplier(foeTypes[0], defend)
-  : Math.max(...foeTypes.map(t => typeMultiplier(t, defend))) * TRAINER_POWER;
+const incomingMultiplier = (kind, foeTypes, defend, s = null) => kind === 'wild' ? typeMultiplier(foeTypes[0], defend)
+  : Math.max(...foeTypes.map(t => typeMultiplier(t, defend))) * TRAINER_POWER * (s && hasRule(s, 'hard') ? RULE_TRAINER_POWER : 1);
 
 // The trainer picks the lead whose level and matchup look best against this opponent.
 // The member in the first slot (the player's chosen lead) goes first unless another matchup is clearly better.
@@ -67,6 +68,7 @@ function opponentLevel(s, kind, lead, regionId) {
   if (kind === 'rival') return clamp(Math.round(5 + (s.cast?.rival?.power || 20) * 0.5), 5, 70);
   if (kind === 'villain') return clamp(Math.round(12 + s.age * 0.4), 12, 60);
   if (kind === 'league') return clamp(Math.round(30 + (s.reputation || 0) * 0.2), 30, 60);
+  if (kind === 'facility') return 50;
   return Math.max(3, own - 2 + between(s, 0, 4));
 }
 
@@ -98,17 +100,19 @@ export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false
     }
     const defend = transformation === 'tera' ? [g.teraType] : typesOf(lead.id);
     // Wild Pokémon attack with their main type. Trainers' Pokémon pick their best type against the lead and hit harder.
-    const incoming = incomingMultiplier(kind, foeTypes, defend);
+    const incoming = incomingMultiplier(kind, foeTypes, defend, s);
     if (incoming > 0) hp -= Math.max(1, Math.round((6 + level * 0.75) * incoming));
     if (giant && turn === 2) hp = Math.ceil(hp / 2);
     if (hp <= 0) { result = 'lose'; break; }
   }
 
+  lead.battles = (lead.battles || 0) + 1;
   if (result === 'win') {
     g.wins += 1;
+    lead.wins = (lead.wins || 0) + 1;
     lead.xp = (lead.xp || 0) + (kind === 'wild' ? 35 : 70);
-    s.money += reward ? ({ gym: 500, league: 1200, villain: 300, rival: 200, raid: 300 }[kind] ?? 150) : 0;
-    s.reputation = clamp((s.reputation || 0) + (reward ? ({ gym: 4, league: 12, villain: 5, rival: 3, raid: 3 }[kind] ?? 1) : 0), 0, 100);
+    s.money += reward ? ({ gym: 500, league: 1200, villain: 300, rival: 200, raid: 300, facility: 250 }[kind] ?? 150) : 0;
+    s.reputation = clamp((s.reputation || 0) + (reward ? ({ gym: 4, league: 12, villain: 5, rival: 3, raid: 3, facility: 1 }[kind] ?? 1) : 0), 0, 100);
     if (kind === 'gym') g.badges[regionId] = Math.min(8, (g.badges[regionId] || 0) + 1);
     if (kind === 'raid' && GMAX_FORMS[opponentId] && !g.gmax.includes(opponentId)) g.gmax.push(opponentId);
   } else lead.xp = (lead.xp || 0) + 15;

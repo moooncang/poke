@@ -69,10 +69,12 @@ test('non-school route avoids graduation and retains the option of later study',
     until: s => s.age >= 22 && !s.scheduledEvent,
     decide: s => route[s.age] ?? s.log.find(e => e.id === s.pending).choices.length - 1,
   });
-  assert.equal(s.log.find(e => e.age === 18 && e.choices).title, '성인기의 새로운 방향');
-  assert.equal(s.log.at(-1).title, '앞으로의 활동 계획');
+  // Events the character settled alone (entry.auto) are not the milestone decisions.
+  assert.equal(s.log.find(e => e.age === 18 && e.choices && !e.auto).title, '성인기의 새로운 방향');
+  const plan = s.log.findLast(e => e.choices && !e.auto);
+  assert.equal(plan.title, '앞으로의 활동 계획');
   assert.equal(s.education, 'travel');
-  assert.ok(s.log.at(-1).choices.some(c => c.education === 'study'));
+  assert.ok(plan.choices.some(c => c.education === 'study'));
   assert.ok(parseSave(JSON.stringify(s)));
 });
 

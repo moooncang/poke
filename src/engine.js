@@ -17,6 +17,10 @@ import { createWorld, tickWorld, shiftRegion, currentRegion, economyFactor, regi
 import { createCast, tickPeople, changeCast } from './sim/people.js';
 import { addPokemon, reorganize, evolveMembers, growParty, trainParty, partnerOf, PARTY_LIMIT } from './sim/party.js';
 import { goalFit } from './sim/goals.js';
+import { recordYear } from './sim/history.js';
+import { runContest } from './sim/contest.js';
+import { hasPerk, hasRule, cleanPerks, cleanRules, RULE_FRAIL_LIFESPAN, WANDER_EVERY } from './sim/perks.js';
+import { LEGENDARY } from './data/species-rules.js';
 import { validHeritage } from './sim/legacy.js';
 import { autoBattle, battleSummary, freshGear, MEGA, GMAX, ALL_TYPES } from './sim/battle.js';
 import { plantSeeds, resolveEchoes, takeDueChoice } from './sim/consequences.js';
@@ -26,7 +30,7 @@ import { GOALS as GOAL_TABLE } from './sim/goals.js';
 const GOALS_LIST = Object.keys(GOAL_TABLE);
 
 export { STAT_LABELS, GENDERS, successChance, partnerOf, PARTY_LIMIT, hashSeed };
-export { setPartyMode, togglePin, movePokemon, setLead, PARTY_MODES } from './sim/party.js';
+export { setPartyMode, togglePin, movePokemon, setLead, renamePokemon, PARTY_MODES } from './sim/party.js';
 export { setGoal, GOALS } from './sim/goals.js';
 import { SAVE_VERSION } from './sim/save.js';
 export { parseSave } from './sim/save.js';
@@ -38,6 +42,8 @@ export const stageOf = age => age < 6 ? '유년기' : age < 16 ? '초보 트레�
 
 const TRAIT_DISPOSITION = { '신중한 관찰자': 'curious', '탐구형 트레이너': 'curious', '겁 없는 모험가': 'bold', '느긋한 낙천가': 'easygoing', '계획형 트레이너': 'pragmatic' };
 const MEMORABLE = ['encounter', 'milestone', 'choice', 'ending'];
+/** Share of filler records that become an event the character decides alone. */
+export const AUTO_SHARE = 0.3;
 
 // ── Bookkeeping ──
 function apply(state, effects = {}) {
@@ -57,17 +63,24 @@ function queue(state, records) {
   }
 }
 
+// Player decisions only: events the character settled on their own (entry.auto) do not reset the spacing.
+const isDecision = e => e.choices && !e.auto;
 function recordsSinceDecision(state) {
-  const index = state.log.findLastIndex(e => e.choices);
+  const index = state.log.findLastIndex(isDecision);
   return index < 0 ? state.log.length : state.log.length - index - 1;
 }
-const recordGap = state => 4 + hashSeed(`${state.seed}-gap-${state.log.filter(e => e.choices).length}`) % 4;
+const recordGap = state => 4 + hashSeed(`${state.seed}-gap-${state.log.filter(isDecision).length}`) % 4;
 
 function nextFiller(state) {
   if (state.activity?.step === 0) return activityRecord(state, townOf(state));
   while (state.queue.length) {
     const record = state.queue.shift();
     if (record.kind !== 'news' || state.age - record.queuedAt <= 1) { delete record.queuedAt; return record; }
+  }
+  // Between the player's decisions the character also settles smaller matters alone (see AUTO_CATEGORIES).
+  if (state.age >= 6 && chance(state, AUTO_SHARE)) {
+    const event = directEvent(state, { auto: true });
+    if (event) return { ...event, auto: true, kind: 'auto' };
   }
   return (chance(state, 0.35) && vignetteRecord(state, townOf(state), () => random(state))) || activityRecord(state, townOf(state));
 }
@@ -82,7 +95,7 @@ function encounterEffects(state, data) {
 }
 
 function log(state, event) {
-  if (event.choices && recordsSinceDecision(state) < recordGap(state)) {
+  if (event.choices && !event.auto && recordsSinceDecision(state) < recordGap(state)) {
     state.scheduledEvent = event;
     return log(state, nextFiller(state));
   }
@@ -97,7 +110,10 @@ function log(state, event) {
   apply(state, entry.effects);
   if (entry.encounter) state.encounter = { ...entry.encounter, logId: entry.id };
   if (entry.memory || MEMORABLE.includes(entry.kind)) state.memories.push(entry.id);
-  if (entry.choices) state.pending = entry.id;
+  if (entry.choices && entry.auto) {
+    const index = pickChoice(state, entry);
+    if (index >= 0) resolveChoice(state, entry, index, { auto: true });
+  } else if (entry.choices) state.pending = entry.id;
   return state;
 }
 
@@ -106,7 +122,7 @@ function log(state, event) {
  * `heritage` (optional) comes from the previous generation (sim/legacy.js heritageFor): the egg that hatches into
  * the first partner at 6, plus a small inheritance. An invalid heritage is ignored.
  */
-export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null } = {}) {
+export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null, perks = [], rules = [], starter = null } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0, season: 0,
     town: '', hometown: '', family: '', trait: '', career: null, careerRank: 0, education: null, money: 1800, reputation: 5,
     stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 },
@@ -118,6 +134,11 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   state.goal = goal;
   state.partyPlan = { mode: 'auto', pinned: [] };
   state.heritage = validHeritage(heritage) ? structuredClone(heritage) : null;
+  state.perks = cleanPerks(perks);
+  state.rules = cleanRules(rules);
+  // A chosen first partner (perk "파트너 선택권"); an inherited egg takes precedence.
+  state.starter = Number.isInteger(starter) && starter >= 1 && starter <= 1025 && !LEGENDARY.has(starter) && !state.heritage ? starter : null;
+  state.history = [];
   state.gender = Object.hasOwn(GENDERS, gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
   state.lifespan = 64 + Math.floor(random(state) * 37);
@@ -134,10 +155,15 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   state.cast = createCast(state);
   if (!GOALS_LIST.includes(state.goal)) state.goal = 'free';
   const h = state.heritage;
-  if (h) state.money += h.inheritance;
+  if (h && !hasRule(state, 'poor')) state.money += h.inheritance;
+  if (hasRule(state, 'poor')) state.money = 0;
+  if (hasRule(state, 'frail')) state.lifespan = Math.min(state.lifespan, RULE_FRAIL_LIFESPAN);
+  if (hasPerk(state, 'long-line')) state.lifespan += 4;
+  if (hasPerk(state, 'renowned')) state.reputation += 10;
+  if (hasPerk(state, 'ball-case')) state.game.balls += 12;
   log(state, { title: '출생 등록', kind: 'milestone', memory: true,
     body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났다. 이웃집에는 동갑내기 ${state.cast.friend.name}가 산다. `
-      + (h ? `${h.generation}대째 트레이너 가문이다. ${josa(h.ancestor, '이', '가')} 남긴 ${poke(h.egg, '의', '의')} 알과 유산 ${h.inheritance.toLocaleString()}P를 물려받았다. 알은 6세에 부화해 첫 파트너가 된다. `
+      + (h ? `${h.generation}대째 트레이너 가문이다. ${josa(h.ancestor, '이', '가')} 남긴 ${poke(h.egg, '의', '의')} 알${hasRule(state, 'poor') ? '을' : `과 유산 ${h.inheritance.toLocaleString()}P를`} 물려받았다. 알은 6세에 부화해 첫 파트너가 된다. `
         : '6세에 첫 파트너를 만나고 ')
       + '7세에 배울 방식을 정한다.' });
   return state;
@@ -150,7 +176,7 @@ function yearlyEconomy(s) {
   if (s.career && !s.work.retired) {
     s.work.years += 1;
     s.work.satisfaction = clamp(s.work.satisfaction - between(s, 0, 3) + (s.reputation > 50 ? 1 : 0), 0, 100);
-    income = CAREERS[s.career].income * (1 + (s.careerRank || 0) * 0.15) * factor * (s.career === 'merchant' ? factor : 1) * (1 + s.reputation / 200) * (s.work.cut > 0 ? 0.5 : 1);
+    income = CAREERS[s.career].income * (hasPerk(s, 'amulet-coin') ? 1.1 : 1) * (1 + (s.careerRank || 0) * 0.15) * factor * (s.career === 'merchant' ? factor : 1) * (1 + s.reputation / 200) * (s.work.cut > 0 ? 0.5 : 1);
     if (s.work.cut > 0 && s.work.cut < 99) s.work.cut -= 1;
   } else if (s.work.retired) income = 100 + s.reputation * 2;
   else if (s.age >= 18) income = 80 * factor;
@@ -184,6 +210,16 @@ function yearlyGrowth(s) {
   growParty(s, annualTraining(s));
 }
 
+// Challenge rule "떠돌이 운명": every few years the trainer moves to a town in another region.
+function wander(s) {
+  const here = townOf(s);
+  s.town = pick(s, TOWNS.filter(t => t.map !== here.map)).id;
+  if (!s.visited.includes(s.town)) s.visited.push(s.town);
+  const there = townOf(s);
+  return { kind: 'life', automatic: true, title: '떠돌이 운명', effects: { wisdom: 2 },
+    body: `${here.region}지방을 떠나 ${there.region}지방 ${josa(there.name, '으로', '로')} 거처를 옮겼다. 낯선 길이 또 시작된다.` };
+}
+
 function ending(s) {
   s.ended = true;
   return log(s, { kind: 'ending', title: '생애 종료', memory: true,
@@ -203,6 +239,8 @@ function advanceYear(input) {
   const evolutions = evolveMembers(s);
   queue(s, [reorganize(s)]);
   queue(s, resolveEchoes(s));
+  if (hasRule(s, 'wanderer') && s.age >= 16 && s.age % WANDER_EVERY === 1) queue(s, [wander(s)]);
+  recordYear(s);
 
   if (s.age === 6 && s.heritage) {
     const h = s.heritage;
@@ -212,8 +250,9 @@ function advanceYear(input) {
   }
   if (s.age === 6) {
     return log(s, { kind: 'encounter', title: '첫 파트너 등록', effects: { bond: 20, joy: 10 },
-      body: '마을 연구소에서 첫 파트너를 등록했다. 이제 생활 속 배틀·포획·훈련 사건에서 파트너와 함께 결정한다.',
-      encounter: { type: 'partner', pokemonId: pick(s, townOf(s).pool), join: true, title: '첫 파트너 등록', subtitle: 'PARTNER REGISTERED', body: '첫 파트너가 생겼다.' } });
+      body: s.starter ? '가문이 대대로 함께해 온 포켓몬 계열에서 첫 파트너를 맞았다. 이제 생활 속 배틀·포획·훈련 사건에서 파트너와 함께 결정한다.'
+        : '마을 연구소에서 첫 파트너를 등록했다. 이제 생활 속 배틀·포획·훈련 사건에서 파트너와 함께 결정한다.',
+      encounter: { type: 'partner', pokemonId: s.starter || pick(s, townOf(s).pool), join: true, title: '첫 파트너 등록', subtitle: 'PARTNER REGISTERED', body: '첫 파트너가 생겼다.' } });
   }
   if (s.age === 10) {
     const npc = townOf(s).region === '관동' ? 'oak' : 'steven';
@@ -295,7 +334,11 @@ function applyActions(s, a, origin) {
   if (a.unflag) delete s.flags[a.unflag];
   relocate(s, a);
   if (a.relationship) resolveRelationship(s, a.relationship);
-  if (a.join) queue(s, [addPokemon(s, a.join, { origin: a.joinOrigin || 'adopted', affection: a.joinOrigin === 'legend' ? 55 : 40 }).record]);
+  if (a.join) {
+    const joined = addPokemon(s, a.join, { origin: a.joinOrigin || 'adopted', affection: a.joinOrigin === 'legend' ? 55 : a.joinLevel ? 70 : 40, xp: a.joinLevel ? (a.joinLevel - 5) * 25 : 0 });
+    if (a.joinNickname) joined.member.nickname = a.joinNickname;
+    queue(s, [joined.record]);
+  }
   if (a.captureJoin) {
     queue(s, [addPokemon(s, a.captureJoin, { xp: Math.floor((partnerOf(s)?.xp || 0) * 0.65) }).record]);
     s.game.catches += 1;
@@ -323,8 +366,8 @@ function runBattle(s, choice, origin) {
     // A gym expedition ends early once this region's eight badges are complete.
     if (index > 0 && spec.kind === 'gym' && (s.game.badges[currentRegion(s)] || 0) >= 8) { text += ' 이 지방의 배지 8개를 모두 모아 원정을 마쳤다.'; break; }
     if (!s.seen.includes(opponentId)) s.seen.push(opponentId);
-    // League series pay their prize once, after the last battle; every gym in an expedition pays its own.
-    const reward = spec.kind !== 'league' || index === opponents.length - 1;
+    // League and facility series pay their prize once, after the last battle; every gym in an expedition pays its own.
+    const reward = !['league', 'facility'].includes(spec.kind) || index === opponents.length - 1;
     result = autoBattle(s, { kind: spec.kind, opponentId, regionId: currentRegion(s), allowCapture: Boolean(spec.capture), level: spec.levels?.[index] ?? spec.level, reward });
     text += ` ${opponents.length>1?`${index+1}/${opponents.length}차전 · `:''}${poke(opponentId)} 상대. ${battleSummary(result, id => poke(id, '을', '를'))}`;
     // Stage flags are kept as soon as their battle is won, so a later loss does not erase them.
@@ -342,12 +385,13 @@ function runBattle(s, choice, origin) {
   return text;
 }
 
-export function choose(input, index) {
-  if (!input.pending || input.encounter) return input;
-  const s = structuredClone(input);
-  const entry = s.log.find(e => e.id === s.pending);
+/**
+ * Resolves choice `index` of `entry` on `s` (mutated): stat check, effects, battles, contests, disposition.
+ * Returns false when the choice cannot be taken. Player decisions also start the follow-up activity records.
+ */
+function resolveChoice(s, entry, index, { auto = false } = {}) {
   let choice = entry?.choices?.[index];
-  if (!choice || (choice.cost || 0) > s.money) return input;
+  if (!choice || (choice.cost || 0) > s.money) return false;
   let check;
   if (choice.challenge) {
     const chanceValue = successChance(s, choice), roll = random(s) * 100, success = roll < chanceValue;
@@ -357,9 +401,8 @@ export function choose(input, index) {
     choice = { ...result, effects: { ...result.effects, money: (result.effects?.money || 0) - (choice.cost || 0) } };
   }
   const origin = { age: entry.age, title: entry.title, label: choice.label };
-  s.pending = null;
   applyActions(s, choice, origin);
-  const battleText = runBattle(s, choice, origin);
+  const battleText = runBattle(s, choice, origin) + (choice.contest ? runContest(s, choice.contest) : '');
   const tone = toneOf(choice);
   s.disposition[tone] = (s.disposition[tone] || 0) + 1;
 
@@ -367,10 +410,21 @@ export function choose(input, index) {
   if (check) entry.resolution.check = check;
   if (choice.follow?.length || choice.after) entry.resolution.lasting = true;
   entry.newTown = s.town;
+  if (auto) return true;
 
   const mode = ['school', 'home', 'academy', 'study'].includes(choice.education) ? 'wisdom' : choice.relationship ? 'bond'
     : Object.keys(STAT_LABELS).sort((a, b) => (choice.effects?.[b] || 0) - (choice.effects?.[a] || 0))[0];
   s.activity = { label: choice.label, mode, parentId: entry.id, step: 0, failed: check?.success === false };
+  return true;
+}
+
+export function choose(input, index) {
+  if (!input.pending || input.encounter) return input;
+  const s = structuredClone(input);
+  const entry = s.log.find(e => e.id === s.pending);
+  if (!entry?.choices?.[index] || (entry.choices[index].cost || 0) > s.money) return input;
+  s.pending = null;
+  resolveChoice(s, entry, index);
   return s;
 }
 
@@ -380,12 +434,17 @@ export function toggleMemory(input, id) {
 }
 
 /** Lets the character decide by themselves: options that fit their personality and look winnable are preferred. */
-export function autoChoice(input) {
-  if (!input.pending) return input;
-  const s = structuredClone(input);
-  const entry = s.log.find(e => e.id === s.pending);
+// The character's own pick: options that fit their personality and goal and look winnable. Returns -1 if none.
+function pickChoice(s, entry) {
   const total = Object.values(s.disposition).reduce((a, b) => a + b, 0) || 1;
   const options = entry.choices.map((c, i) => ({ c, i })).filter(({ c }) => !c.cost || c.cost <= s.money);
   const picked = weighted(s, options, ({ c }) => (0.5 + 3 * (s.disposition[toneOf(c)] || 0) / total) * (c.challenge ? 0.3 + successChance(s, c) / 100 : 1) * goalFit(s, c));
-  return picked ? choose(s, picked.i) : s;
+  return picked ? picked.i : -1;
+}
+
+export function autoChoice(input) {
+  if (!input.pending) return input;
+  const s = structuredClone(input);
+  const index = pickChoice(s, s.log.find(e => e.id === s.pending));
+  return index >= 0 ? choose(s, index) : s;
 }

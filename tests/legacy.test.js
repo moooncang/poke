@@ -131,7 +131,8 @@ test('an inherited egg hatches into the first partner, and the lineage continues
 });
 
 test('heritage events build valid choices only for inheriting lives', () => {
-  const heritage = heritageFor(finished, heirCandidates(finished)[0].uid);
+  // Every optional part of a heritage (the ancestor's partner and rival) is present, so every event can open.
+  const heritage = { partner: { id: 25, level: 60 }, rival: '그린', ...heritageFor(finished, heirCandidates(finished)[0].uid) };
   const base = play(createLife({ seed: 'heritage-events', heritage }), { until: x => x.age >= 20 && !x.pending && !x.encounter && !x.scheduledEvent });
   base.relationship.children = 1;
   base.town = TOWNS.find(t => t.id !== heritage.hometown).id;

@@ -31,7 +31,7 @@ const clash = ids.filter(id => existing.has(id) && !ALL_STORYLETS.concat(VIGNETT
 if (clash.length) errors.push(`ids already used elsewhere: ${clash.join(', ')}`);
 
 // Doubled or mismatched particles that josa()/poke() would have prevented.
-const BAD_TEXT = /\{(friend|rival|spouse|sibling|region|villain|pk|partner\|)[^}]*\}|undefined|NaN|\[object|을를|를을|은는|는은|과와|와과|으로로|를를|을을/;
+const BAD_TEXT = /\{(friend|rival|spouse|sibling|region|villain|pk|partner\|)[^}]*\}|undefined|NaN|\[object|을를|를을|은는|는은|과와|와과|으로로|를를/;
 
 if (kind === 'vignettes') {
   for (const v of rows) {

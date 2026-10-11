@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLife,parseSave,choose,successChance} from '../src/engine.js';
+import {VERSION,createLife,parseSave,choose,successChance} from '../src/engine.js';
 import {createTalent,talentGrowth} from '../src/sim/talent.js';
 import {TALENT_EVENTS,TALENT_CONSEQUENCES} from '../src/data/talent-events.js';
 import {milestoneEvent} from '../src/data/milestones.js';
@@ -15,7 +15,7 @@ test('five talent tiers are assigned reproducibly without changing simulation RN
 test('v2 migration preserves pending choices and RNG and rejects malformed current talent',()=>{
  const old=createLife({seed:'talent-migration'});old.age=18;
  const event=milestoneEvent(old),pending=present(old,event);pending.version=2;delete pending.talent;
- const saved=parseSave(JSON.stringify(pending));assert.ok(saved);assert.equal(saved.version,4);
+ const saved=parseSave(JSON.stringify(pending));assert.ok(saved);assert.equal(saved.version,VERSION);
  assert.equal(saved.rng,pending.rng);assert.deepEqual(saved.log,pending.log);assert.equal(saved.pending,pending.pending);
  assert.deepEqual(parseSave(JSON.stringify(pending)),saved);
  for(const talent of [{field:'fake',level:3},{field:'battle',level:0},{field:'battle',level:6},{field:'battle',level:2.5},null]) assert.equal(parseSave(JSON.stringify({...saved,talent})),null);

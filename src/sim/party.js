@@ -4,11 +4,17 @@ import { EVOLUTIONS, LEGENDARY } from '../data/species-rules.js';
 import { xpLevel, typesOf } from './battle.js';
 import { hashSeed, clamp } from './random.js';
 import { poke } from './text.js';
+import { hasRule } from './perks.js';
 
 export const PARTY_LIMIT = 6;
 // The player can keep favourites (pins) or take over the line-up completely (manual mode).
 export const PARTY_MODES = { auto: '캐릭터가 편성', manual: '직접 편성' };
 export const BOX_TRAINING = 0.25;
+export const NICKNAME_LIMIT = 12;
+export const MEMBER_EVOLUTIONS = 5;
+export const MEMBER_RIBBONS = 60;
+/** The name to show for a member: the player's nickname, or null to use the species name. */
+export const nicknameOf = member => member?.nickname || null;
 export const partyPlan = s => s.partyPlan || { mode: 'auto', pinned: [] };
 const isPinned = (s, member) => partyPlan(s).pinned.includes(member.uid);
 export const isLegendary = id => LEGENDARY.has(id);
@@ -27,7 +33,8 @@ const REASONS = {
 
 function makeMember(s, id, { shiny = false, xp = 0, origin = 'wild', affection = 35 } = {}) {
   s.nextUid = (s.nextUid || 0) + 1;
-  return { uid: s.nextUid, id, joined: s.age, shiny, xp, affection, origin, ...(isLegendary(id) ? { locked: true } : {}) };
+  return { uid: s.nextUid, id, joined: s.age, shiny, xp, affection, origin, met: s.town, battles: 0, wins: 0, evolutions: [], ribbons: [],
+    ...(isLegendary(id) ? { locked: true } : {}) };
 }
 
 function seen(s, id) { if (!s.seen.includes(id)) s.seen.push(id); }
@@ -65,6 +72,7 @@ const teamValue = (s, team) => team.reduce((sum, m, i) => sum + appeal(s, m, tea
  * when the new line-up is clearly better. Returns a journal record when the line-up changed.
  */
 export function reorganize(s, { force = s.party.length > PARTY_LIMIT, incoming } = {}) {
+  if (hasRule(s, 'solo')) return soloOverflow(s, incoming);
   if (partyPlan(s).mode === 'manual') return force ? manualOverflow(s, incoming) : null;
   const pool = [...s.party, ...s.box];
   const team = pickTeam(s, pool);
@@ -101,12 +109,25 @@ function manualOverflow(s, incoming = s.party.at(-1)) {
   return { kind: 'party', automatic: true, title: '파티 재편성', body, effects: {} };
 }
 
+// Challenge rule "단짝 여행": one companion (the first partner, or the first member) plus any legendaries.
+function soloOverflow(s, incoming) {
+  const companion = s.party.find(m => m.origin === 'partner' && !m.locked) || s.party.find(m => !m.locked);
+  const keep = s.party.filter(m => m === companion || m.locked);
+  if (keep.length === s.party.length) return null;
+  const leaving = s.party.filter(m => !keep.includes(m));
+  s.party = keep;
+  s.box.push(...leaving);
+  s.partyPlan = { ...partyPlan(s), pinned: partyPlan(s).pinned.filter(uid => keep.some(m => m.uid === uid)) };
+  return { kind: 'party', automatic: true, title: '단짝 여행', effects: {},
+    body: `이번 삶은 단짝과 둘이서 여행한다. PC 박스로 보낸 포켓몬: ${leaving.map(m => poke(m.id)).join(', ')}.` };
+}
+
 /** Adds a Pokémon. Legendaries are locked to the party; any overflow triggers an autonomous reorganisation. */
 export function addPokemon(s, id, options) {
   const member = makeMember(s, id, options);
   seen(s, id);
   s.party.push(member);
-  const record = s.party.length > PARTY_LIMIT ? reorganize(s, { force: true, incoming: member }) : null;
+  const record = s.party.length > PARTY_LIMIT || (hasRule(s, 'solo') && s.party.length > 1) ? reorganize(s, { force: true, incoming: member }) : null;
   return { member, record };
 }
 
@@ -118,6 +139,7 @@ export function evolveMembers(s, members = s.party) {
     if (!ready.length) continue;
     const [target] = ready[hashSeed(`${s.seed}-${member.uid}-evolve`) % ready.length];
     records.push({ kind: 'party', automatic: true, title: '진화', body: `${poke(member.id, '이', '가')} ${poke(target, '으로', '로')} 진화했다. (Lv.${xpLevel(member)})`, effects: {}, from: member.id, to: target, partner: member.origin === 'partner' });
+    member.evolutions = [...(member.evolutions || []), [s.age, member.id]].slice(-MEMBER_EVOLUTIONS);
     member.id = target;
     seen(s, target);
   }
@@ -179,6 +201,7 @@ export function movePokemon(input, uid, swapUid = null) {
     return s;
   }
   const joining = s.box.find(m => m.uid === uid);
+  if (hasRule(s, 'solo') && !joining.locked) return input;
   let pinned = plan.pinned;
   if (s.party.length >= PARTY_LIMIT) {
     const swap = s.party.find(m => m.uid === swapUid);
@@ -192,6 +215,17 @@ export function movePokemon(input, uid, swapUid = null) {
   }
   if (!pinned.includes(uid)) pinned = [...pinned, uid];
   s.partyPlan = { ...plan, pinned: pinned.slice(-PARTY_LIMIT) };
+  return s;
+}
+
+/** Gives a party or box member a nickname (trimmed, at most NICKNAME_LIMIT characters). An empty name removes it. */
+export function renamePokemon(input, uid, name) {
+  const member = findMember(input, uid);
+  if (!member || typeof name !== 'string') return input;
+  const nickname = name.replace(/[\u0000-\u001f{}<>]/g, '').trim().slice(0, NICKNAME_LIMIT);
+  if ((member.nickname || '') === nickname) return input;
+  const s = structuredClone(input), target = findMember(s, uid);
+  if (nickname) target.nickname = nickname; else delete target.nickname;
   return s;
 }
 

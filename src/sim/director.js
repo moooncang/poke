@@ -4,7 +4,15 @@ import { BREEDING_EVENTS } from '../data/breeding-events.js';
 import { CAREER_SAGAS } from '../data/career-sagas.js';
 import { LEAGUE_SAGAS, LEAGUE_TRAVEL } from '../data/league-sagas.js';
 import { goalWeight } from './goals.js';
+import { hasPerk } from './perks.js';
 import { LEGACY_EVENTS } from '../data/legacy-events.js';
+import { CONTEST_EVENTS } from '../data/contests.js';
+import { FRONTIER_EVENTS } from '../data/frontier.js';
+import { TOWN_STORIES } from '../data/town-stories.js';
+import { TYPE_COMPANIONS } from '../data/type-companions.js';
+import { VILLAIN_ARCS } from '../data/villain-arcs.js';
+import { HOBBIES } from '../data/hobbies.js';
+import { LIFE_CHAPTERS } from '../data/life-chapters.js';
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
@@ -103,7 +111,7 @@ const legendEncounter = {
 };
 
 const shinyEncounter = {
-  id: 'shiny-encounter', category: 'special', min: 12, weight: s => 0.5 + regionState(s).ecology / 100,
+  id: 'shiny-encounter', category: 'special', min: 12, weight: s => (0.5 + regionState(s).ecology / 100) * (hasPerk(s, 'shiny-charm') ? 3 : 1),
   build: s => ({ kind: 'encounter', title: '색이 다른 포켓몬 출현', body: '풀숲 사이로 낯익고도 낯선 색이 반짝인다. 특별한 색의 포켓몬이 고개를 갸웃하더니 당신의 발걸음을 따라오기 시작했다.', effects: { joy: 10, bond: 4 },
     encounter: { type: 'shiny', pokemonId: pick(s, town(s).pool), join: true, title: '색이 다른 포켓몬 출현', subtitle: 'SHINY ENCOUNTER', body: '특별한 색의 포켓몬이 따라오기 시작했다.' } }),
 };
@@ -126,12 +134,14 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
 const CATEGORY_WEIGHT = {
   league: s => Object.keys(s.flags).some(k=>k.startsWith('league-')&&k.endsWith('-licensed')) ? 7 : s.career==='traveler' ? 3 : 1,
+  contest: s => 0.7 + (s.flags['contest-registered'] ? 0.6 : 0),
+  frontier: () => 0.9,
   childhood: () => 3,
   career: () => 3,
   stage: () => 1.8,
@@ -146,7 +156,7 @@ const CATEGORY_WEIGHT = {
   route: () => 1.3,
   regional: s => 1 + (hasCondition(s, 'syndicate') ? 1.5 : 0) + (regionState(s).safety < 40 ? 0.7 : 0),
   local: () => 1,
-  field: () => 1.4,
+  field: () => 1.2,
   legend: s => (0.45 + (hasCondition(s, 'legend') ? 2 : 0) + (s.flags['legend-quest'] ? 1.2 : 0) + (regionState(s).ecology > 70 ? 0.3 : 0)) * 0.4 ** ownedLegends(s),
   special: () => 0.5,
   plan: () => 0.25,
@@ -156,10 +166,26 @@ const available = (s, st) => s.age >= (st.min ?? 0) && s.age <= (st.max ?? 120)
   && (st.once === false ? s.age - (s.cooldowns[st.id] ?? -99) >= (typeof st.cooldown === 'function' ? st.cooldown(s) : st.cooldown ?? 1) : !s.used.includes(st.id))
   && (!st.when || Boolean(st.when(s)));
 
-/** Chooses and builds this year's main event (mutates RNG and usage bookkeeping). */
-export function directEvent(s) {
+// Small, everyday kinds of events the character may settle alone between the player's decisions.
+// People (cast) and regional (world) events stay with the player: they shape relationships and investments.
+export const AUTO_CATEGORIES = ['local', 'pokemon', 'stage', 'family', 'opportunity', 'work', 'childhood'];
+
+/**
+ * Chooses and builds this year's main event (mutates RNG and usage bookkeeping).
+ * With `auto`, only non-urgent everyday events are considered (an event the character decides alone).
+ */
+export function directEvent(s, { auto = false } = {}) {
   const groups = {};
-  const open = ALL_STORYLETS.filter(st => available(s, st));
+  const open = ALL_STORYLETS.filter(st => available(s, st)
+    && (!auto || AUTO_CATEGORIES.includes(st.category) && !(typeof st.urgent === 'function' ? st.urgent(s) : st.urgent)));
+  if (auto) {
+    if (!open.length) return null;
+    const category = weighted(s, [...new Set(open.map(st => st.category))], c => CATEGORY_WEIGHT[c](s) * goalWeight(s, c));
+    const storylet = weighted(s, open.filter(st => st.category === category), st => st.weight?.(s) ?? 1);
+    if (storylet.once === false) s.cooldowns[storylet.id] = s.age; else s.used.push(storylet.id);
+    const event = storylet.build(s);
+    return event?.choices?.length && !event.encounter ? { ...event, id: storylet.once === false ? `${storylet.id}@${s.age}` : storylet.id } : null;
+  }
   // Urgent storylets (a death in the family, a crisis) take the year when they become possible.
   const urgent = open.filter(st => typeof st.urgent === 'function' ? st.urgent(s) : st.urgent);
   // A farewell cannot be postponed by routine overdue encounters or league invitations.
@@ -168,7 +194,7 @@ export function directEvent(s) {
   // The player's life goal tilts the categories (see sim/goals.js).
   const category = weighted(s, Object.keys(groups), c => CATEGORY_WEIGHT[c](s) * goalWeight(s, c));
   if (!category) return null;
-  const storylet = weighted(s, groups[category], st => st.weight?.(s) ?? 1);
+  const storylet = weighted(s, groups[category], st => (st.weight?.(s) ?? 1) * (hasPerk(s, 'oval-charm') && st.id.startsWith('nursery-') ? 2 : 1));
   if (storylet.once === false) s.cooldowns[storylet.id] = s.age; else s.used.push(storylet.id);
   const event = storylet.build(s);
   return event && { ...event, id: storylet.once === false ? `${storylet.id}@${s.age}` : storylet.id };

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ArrowUpRight, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Trophy, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BarChart3, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Trophy, Volume2, VolumeX, X } from 'lucide-react';
 import { SEASONS } from './data/world.js';
-import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal } from './engine.js';
-import { LEGACY_KEY, parseLegacy, recordLife, chooseHeir } from './sim/legacy.js';
+import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal, renamePokemon } from './engine.js';
+import { SimulationReport } from './ui/Report.jsx';
+import { LEGACY_KEY, parseLegacy, recordLife, chooseHeir, unlockedPerks } from './sim/legacy.js';
 import { TrainerHud } from './ui/Hud.jsx';
 import { PartyManager } from './ui/PartyManager.jsx';
 import { LegacyHall } from './ui/Legacy.jsx';
@@ -16,7 +17,7 @@ import { formatText } from './ui/format.js';
 
 const OPTIONS_KEY = 'pokelife.preferences.v1';
 const SPEEDS = [1, 2, 3, 4, 16];
-const NAV = [{ id: 'story', label: '게임 화면', icon: BookOpen }, { id: 'pokemon', label: '포켓몬 도감', icon: PokeBall }, { id: 'memories', label: '주요 기록', icon: Bookmark }, { id: 'map', label: '여행 기록', icon: Map }, { id: 'legacy', label: '가문의 전당', icon: Trophy }];
+const NAV = [{ id: 'story', label: '게임 화면', icon: BookOpen }, { id: 'pokemon', label: '포켓몬 도감', icon: PokeBall }, { id: 'memories', label: '주요 기록', icon: Bookmark }, { id: 'map', label: '여행 기록', icon: Map }, { id: 'report', label: '시뮬레이션 리포트', icon: BarChart3 }, { id: 'legacy', label: '가문의 전당', icon: Trophy }];
 const MAJOR_KINDS = ['milestone', 'choice', 'ending', 'echo'];
 
 function initial() {
@@ -76,7 +77,7 @@ export default function App() {
   const [filter, setFilter] = useState('all');
   const [shown, setShown] = useState(8);
   const [saveStatus, setSaveStatus] = useState('saved');
-  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', useHeir: true });
+  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', useHeir: true, perks: [], rules: [], town: 'random', starter: '' });
   const [legacy, setLegacy] = useState(loadLegacy);
   const [hiddenDecision, setHiddenDecision] = useState(null);
   const fileRef = useRef(null);
@@ -124,7 +125,10 @@ export default function App() {
     e.preventDefault();
     rememberPrevious(life);
     const heritage = form.useHeir && legacy.heir ? legacy.heir : null;
-    setLife(createLife({ name: form.name || '하루', gender: form.gender, town: 'random', seed: form.seed || crypto.randomUUID(), goal: form.goal, heritage }));
+    // Perks are only offered once unlocked (see NewLifeModal); town and starter choices need their perk.
+    const perks = form.perks.filter(id => unlockedPerks(legacy).includes(id));
+    setLife(createLife({ name: form.name || '하루', gender: form.gender, seed: form.seed || crypto.randomUUID(), goal: form.goal, heritage, perks, rules: form.rules,
+      town: perks.includes('town-pass') ? form.town : 'random', starter: perks.includes('starter-pick') && !heritage && form.starter ? Number(form.starter) : null }));
     if (heritage) setLegacy(l => ({ ...l, heir: null }));
     setHiddenDecision(null); setModal('birth'); setReplay(null); setTab('story'); setShown(8); setFilter('all'); setRunning(true); setNotice('');
   }
@@ -197,6 +201,7 @@ export default function App() {
           </>}
           {tab === 'pokemon' && <Dex life={life} onPokemon={setDetail}/>}
           {tab === 'map' && <LifeAtlas life={life}/>}
+          {tab === 'report' && <SimulationReport life={life} onRename={(uid, name) => setLife(s => renamePokemon(s, uid, name))}/>}
           {tab === 'legacy' && <LegacyHall legacy={legacy} life={life}/>}
           {tab === 'memories' && <section className="collection-content">
             <div className="content-title"><div><span className="eyebrow">EVENT ARCHIVE</span><h2>주요 사건 기록</h2><p>저장한 사건과 선택 결과를 다시 확인합니다.</p></div><Bookmark size={24}/></div>

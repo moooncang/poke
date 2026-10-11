@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createLife, parseSave, advance, setPartyMode, togglePin, movePokemon, setLead, setGoal, choose, autoChoice } from '../src/engine.js';
+import { VERSION, createLife, parseSave, advance, setPartyMode, togglePin, movePokemon, setLead, setGoal, choose, autoChoice } from '../src/engine.js';
 import { addPokemon, reorganize, growParty, BOX_TRAINING, PARTY_LIMIT } from '../src/sim/party.js';
 import { autoBattle, LEAD_PREFERENCE } from '../src/sim/battle.js';
 import { goalWeight, goalFit, GOALS } from '../src/sim/goals.js';
@@ -110,7 +110,8 @@ test('party plans survive saves, pins must reference real members, and v3 saves 
   assert.equal(parseSave(JSON.stringify({ ...s, goal: 'world-domination' })), null);
   const v3 = structuredClone(s); v3.version = 3; delete v3.goal; delete v3.partyPlan; delete v3.heritage;
   const migrated = parseSave(JSON.stringify(v3));
-  assert.equal(migrated.version, 4);
+  assert.equal(migrated.version, VERSION);
+  assert.deepEqual([migrated.history, migrated.perks, migrated.rules, migrated.starter], [[], [], [], null]);
   assert.equal(migrated.goal, 'free');
   assert.deepEqual(migrated.partyPlan, { mode: 'auto', pinned: [] });
   assert.equal(migrated.heritage, null);

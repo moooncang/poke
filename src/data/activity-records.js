@@ -1,5 +1,7 @@
 import { EVENTS, WORK_EVENTS } from './world.js';
 import { VIGNETTES } from './vignettes.js';
+import { VIGNETTES_EXTRA } from './vignettes-extra.js';
+const ALL_VIGNETTES = [...VIGNETTES, ...VIGNETTES_EXTRA];
 import { fill } from './event-kit.js';
 const RECORDS = {
   wisdom: [
@@ -63,7 +65,7 @@ export function vignetteRecord(state, town, roll) {
     ? WORK_EVENTS[state.career].map(([title, body, effects], i) => ({ id: `work-${state.career}-${i}`, title, body, effects }))
     : [];
   const fits = e => state.age >= e.min && state.age <= e.max && (!e.when || e.when(state));
-  const pool = [...EVENTS.filter(fits), ...VIGNETTES.filter(fits), ...work].filter(e => !state.used.includes(e.id));
+  const pool = [...EVENTS.filter(fits), ...ALL_VIGNETTES.filter(fits), ...work].filter(e => !state.used.includes(e.id));
   if (!pool.length) return null;
   const event = pool[Math.floor(roll() * pool.length)];
   state.used.push(event.id);

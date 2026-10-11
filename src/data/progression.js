@@ -1,5 +1,6 @@
 import { talentGrowth } from '../sim/talent.js';
 import { goalTraining } from '../sim/goals.js';
+import { hasPerk } from '../sim/perks.js';
 import { talentPathChoice } from './talent-events.js';
 // Career progression and yearly party training (ported from the career-balance update).
 // The 16-year-old choice is a fixed milestone; later reviews open within an age window instead of on an exact birthday.
@@ -10,7 +11,7 @@ export function annualTraining(s) {
   const base = { traveler: 48, researcher: 28, keeper: 36, merchant: 18 }[s.career] ?? 20;
   const study = ['school', 'academy', 'study'].includes(s.education) ? 8 : s.education === 'apprentice' ? 12 : s.education === 'travel' ? 10 : 0;
   const focus = s.activity?.mode === 'courage' ? 10 : s.activity?.mode === 'bond' ? 5 : 0;
-  return Math.round((base + study + focus) * talentGrowth(s) * goalTraining(s) * (s.stats.vitality < 35 ? 0.6 : 1) * (s.age >= 65 ? 0.7 : 1));
+  return Math.round((base + study + focus) * talentGrowth(s) * goalTraining(s) * (hasPerk(s, 'exp-share') ? 1.1 : 1) * (s.stats.vitality < 35 ? 0.6 : 1) * (s.age >= 65 ? 0.7 : 1));
 }
 
 export const CAREER_REVIEWS = { 16: '진로 선택', 26: '첫 경력 평가', 35: '전문 분야 선택', 40: '직업 재설계', 50: '경력 전환과 후배 육성', 60: '은퇴 준비' };
