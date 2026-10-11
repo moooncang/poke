@@ -16,12 +16,18 @@ import { STAT_LABELS, GENDERS } from './sim/labels.js';
 import { createWorld, tickWorld, shiftRegion, currentRegion, economyFactor, regionState } from './sim/world.js';
 import { createCast, tickPeople, changeCast } from './sim/people.js';
 import { addPokemon, reorganize, evolveMembers, growParty, trainParty, partnerOf, PARTY_LIMIT } from './sim/party.js';
+import { goalFit } from './sim/goals.js';
+import { validHeritage } from './sim/legacy.js';
 import { autoBattle, battleSummary, freshGear, MEGA, GMAX, ALL_TYPES } from './sim/battle.js';
 import { plantSeeds, resolveEchoes, takeDueChoice } from './sim/consequences.js';
 import { directEvent } from './sim/director.js';
-import { poke } from './sim/text.js';
+import { poke, josa } from './sim/text.js';
+import { GOALS as GOAL_TABLE } from './sim/goals.js';
+const GOALS_LIST = Object.keys(GOAL_TABLE);
 
 export { STAT_LABELS, GENDERS, successChance, partnerOf, PARTY_LIMIT, hashSeed };
+export { setPartyMode, togglePin, movePokemon, setLead, PARTY_MODES } from './sim/party.js';
+export { setGoal, GOALS } from './sim/goals.js';
 import { SAVE_VERSION } from './sim/save.js';
 export { parseSave } from './sim/save.js';
 
@@ -71,7 +77,7 @@ function encounterEffects(state, data) {
   if (data.npc && !state.people.some(p => p.id === data.npc)) state.people.push({ id: data.npc, age: state.age });
   if (data.join) {
     const origin = data.type === 'partner' ? 'partner' : 'wild';
-    queue(state, [addPokemon(state, data.pokemonId, { shiny: data.type === 'shiny', origin, affection: origin === 'partner' ? 60 : 40 }).record]);
+    queue(state, [addPokemon(state, data.pokemonId, { shiny: data.type === 'shiny' || Boolean(data.shiny), origin, affection: origin === 'partner' ? 60 : 40 }).record]);
   }
 }
 
@@ -96,7 +102,11 @@ function log(state, event) {
 }
 
 // ── Life creation ──
-export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random' } = {}) {
+/**
+ * `heritage` (optional) comes from the previous generation (sim/legacy.js heritageFor): the egg that hatches into
+ * the first partner at 6, plus a small inheritance. An invalid heritage is ignored.
+ */
+export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0, season: 0,
     town: '', hometown: '', family: '', trait: '', career: null, careerRank: 0, education: null, money: 1800, reputation: 5,
     stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 },
@@ -105,6 +115,9 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
     party: [], box: [], nextUid: 0, people: [], seen: [], log: [], memories: [], used: [], cooldowns: {}, flags: {},
     seeds: [], queue: [], pending: null, encounter: null, ended: false, visited: [], lifespan: 0, game: freshGear() };
   state.talent = createTalent(state.seed);
+  state.goal = goal;
+  state.partyPlan = { mode: 'auto', pinned: [] };
+  state.heritage = validHeritage(heritage) ? structuredClone(heritage) : null;
   state.gender = Object.hasOwn(GENDERS, gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
   state.lifespan = 64 + Math.floor(random(state) * 37);
@@ -119,8 +132,14 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   state.disposition[TRAIT_DISPOSITION[state.trait]] = 3;
   state.world = createWorld(state);
   state.cast = createCast(state);
+  if (!GOALS_LIST.includes(state.goal)) state.goal = 'free';
+  const h = state.heritage;
+  if (h) state.money += h.inheritance;
   log(state, { title: '출생 등록', kind: 'milestone', memory: true,
-    body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났다. 이웃집에는 동갑내기 ${state.cast.friend.name}가 산다. 6세에 첫 파트너를 만나고 7세에 배울 방식을 정한다.` });
+    body: `${townOf(state).region}지방 ${townOf(state).name}. ${state.family}의 품에서 태어났다. 이웃집에는 동갑내기 ${state.cast.friend.name}가 산다. `
+      + (h ? `${h.generation}대째 트레이너 가문이다. ${josa(h.ancestor, '이', '가')} 남긴 ${poke(h.egg, '의', '의')} 알과 유산 ${h.inheritance.toLocaleString()}P를 물려받았다. 알은 6세에 부화해 첫 파트너가 된다. `
+        : '6세에 첫 파트너를 만나고 ')
+      + '7세에 배울 방식을 정한다.' });
   return state;
 }
 
@@ -185,6 +204,12 @@ function advanceYear(input) {
   queue(s, [reorganize(s)]);
   queue(s, resolveEchoes(s));
 
+  if (s.age === 6 && s.heritage) {
+    const h = s.heritage;
+    return log(s, { kind: 'encounter', title: '물려받은 알의 부화', memory: true, effects: { bond: 24, joy: 12 },
+      body: `${josa(h.ancestor, '이', '가')} 남긴 알이 부화했다. ${poke(h.egg, '이', '가')} 첫 파트너가 되었다. 선대의 ${poke(h.parent, '과', '와')} 같은 계열이지만 새로운 개체다.`,
+      encounter: { type: 'partner', pokemonId: h.egg, shiny: h.shiny, join: true, title: '물려받은 알의 부화', subtitle: 'INHERITED EGG HATCHED', body: '선대가 남긴 알에서 첫 파트너가 태어났다.' } });
+  }
   if (s.age === 6) {
     return log(s, { kind: 'encounter', title: '첫 파트너 등록', effects: { bond: 20, joy: 10 },
       body: '마을 연구소에서 첫 파트너를 등록했다. 이제 생활 속 배틀·포획·훈련 사건에서 파트너와 함께 결정한다.',
@@ -295,9 +320,15 @@ function runBattle(s, choice, origin) {
   const opponents = spec.opponents || [spec.opponent ?? opponentFor(s, spec.kind)];
   let result, text = '';
   for (const [index, opponentId] of opponents.entries()) {
+    // A gym expedition ends early once this region's eight badges are complete.
+    if (index > 0 && spec.kind === 'gym' && (s.game.badges[currentRegion(s)] || 0) >= 8) { text += ' 이 지방의 배지 8개를 모두 모아 원정을 마쳤다.'; break; }
     if (!s.seen.includes(opponentId)) s.seen.push(opponentId);
-    result = autoBattle(s, { kind: spec.kind, opponentId, regionId: currentRegion(s), allowCapture: Boolean(spec.capture), level: spec.level, reward:index===opponents.length-1 });
+    // League series pay their prize once, after the last battle; every gym in an expedition pays its own.
+    const reward = spec.kind !== 'league' || index === opponents.length - 1;
+    result = autoBattle(s, { kind: spec.kind, opponentId, regionId: currentRegion(s), allowCapture: Boolean(spec.capture), level: spec.levels?.[index] ?? spec.level, reward });
     text += ` ${opponents.length>1?`${index+1}/${opponents.length}차전 · `:''}${poke(opponentId)} 상대. ${battleSummary(result, id => poke(id, '을', '를'))}`;
+    // Stage flags are kept as soon as their battle is won, so a later loss does not erase them.
+    if (['win', 'caught'].includes(result.result) && spec.flags?.[index]) s.flags[spec.flags[index]] = true;
     if (result.captured) {
       const { record } = addPokemon(s, result.captured, { xp: Math.max(0, (result.level - 5) * 25) });
       text += ` ${poke(result.captured, '이', '가')} 파티에 합류했다.${record ? ' 파티가 가득 차 구성을 다시 짰다.' : ''}`;
@@ -355,6 +386,6 @@ export function autoChoice(input) {
   const entry = s.log.find(e => e.id === s.pending);
   const total = Object.values(s.disposition).reduce((a, b) => a + b, 0) || 1;
   const options = entry.choices.map((c, i) => ({ c, i })).filter(({ c }) => !c.cost || c.cost <= s.money);
-  const picked = weighted(s, options, ({ c }) => (0.5 + 3 * (s.disposition[toneOf(c)] || 0) / total) * (c.challenge ? 0.3 + successChance(s, c) / 100 : 1));
+  const picked = weighted(s, options, ({ c }) => (0.5 + 3 * (s.disposition[toneOf(c)] || 0) / total) * (c.challenge ? 0.3 + successChance(s, c) / 100 : 1) * goalFit(s, c));
   return picked ? choose(s, picked.i) : s;
 }

@@ -2,7 +2,9 @@ import { TALENT_EVENTS } from '../data/talent-events.js';
 import { ADVENTURE_SAGAS } from '../data/adventure-sagas.js';
 import { BREEDING_EVENTS } from '../data/breeding-events.js';
 import { CAREER_SAGAS } from '../data/career-sagas.js';
-import { LEAGUE_SAGAS } from '../data/league-sagas.js';
+import { LEAGUE_SAGAS, LEAGUE_TRAVEL } from '../data/league-sagas.js';
+import { goalWeight } from './goals.js';
+import { LEGACY_EVENTS } from '../data/legacy-events.js';
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
@@ -124,7 +126,7 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
@@ -163,7 +165,8 @@ export function directEvent(s) {
   // A farewell cannot be postponed by routine overdue encounters or league invitations.
   const farewell = open.filter(st => st.id === 'family-farewell');
   for (const st of farewell.length ? farewell : urgent.length ? urgent : open) (groups[st.category] ||= []).push(st);
-  const category = weighted(s, Object.keys(groups), c => CATEGORY_WEIGHT[c](s));
+  // The player's life goal tilts the categories (see sim/goals.js).
+  const category = weighted(s, Object.keys(groups), c => CATEGORY_WEIGHT[c](s) * goalWeight(s, c));
   if (!category) return null;
   const storylet = weighted(s, groups[category], st => st.weight?.(s) ?? 1);
   if (storylet.once === false) s.cooldowns[storylet.id] = s.age; else s.used.push(storylet.id);

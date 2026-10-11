@@ -24,6 +24,8 @@ export function freshGear() {
   return { badges: {}, gear: [], megaStones: [], crystals: [], gmax: [], teraType: '노말', balls: 8, wins: 0, catches: 0 };
 }
 export const badgeCount = s => Object.values(s.game?.badges || {}).reduce((a, b) => a + b, 0);
+/** Regional league titles won so far. Each title makes the next region's gyms and league stronger. */
+export const championships = s => Object.keys(s.flags || {}).filter(k => /^league-[a-z]+-champion$/.test(k)).length;
 
 // The strongest move type a species can use against a defender, including STAB.
 function bestAttack(attackerId, defenderTypes) {
@@ -33,10 +35,18 @@ function bestAttack(attackerId, defenderTypes) {
     .sort((a, b) => b.power - a.power)[0];
 }
 
+// Trained opponents (gym, league, rival, villain, raid) use their best type and a practised moveset.
+export const TRAINER_POWER = 1.35;
+const incomingMultiplier = (kind, foeTypes, defend) => kind === 'wild' ? typeMultiplier(foeTypes[0], defend)
+  : Math.max(...foeTypes.map(t => typeMultiplier(t, defend))) * TRAINER_POWER;
+
 // The trainer picks the lead whose level and matchup look best against this opponent.
-function chooseLead(party, opponentId) {
+// The member in the first slot (the player's chosen lead) goes first unless another matchup is clearly better.
+export const LEAD_PREFERENCE = 25;
+function chooseLead(party, opponentId, kind = 'wild') {
   const foe = typesOf(opponentId);
-  const score = member => xpLevel(member) * 2 + bestAttack(member.id, foe).power * 20 - typeMultiplier(foe[0], typesOf(member.id)) * 12;
+  const score = member => xpLevel(member) * 2 + bestAttack(member.id, foe).power * 20 - incomingMultiplier(kind, foe, typesOf(member.id)) * 12
+    + (member === party[0] ? LEAD_PREFERENCE : 0);
   return [...party].sort((a, b) => score(b) - score(a))[0];
 }
 
@@ -52,7 +62,7 @@ function transformationFor(s, lead, kind, regionId) {
 
 function opponentLevel(s, kind, lead, regionId) {
   const own = xpLevel(lead);
-  if (kind === 'gym') return 8 + (s.game.badges[regionId] || 0) * 5;
+  if (kind === 'gym') return 8 + (s.game.badges[regionId] || 0) * 5 + championships(s) * 4;
   if (kind === 'raid') return 28;
   if (kind === 'rival') return clamp(Math.round(5 + (s.cast?.rival?.power || 20) * 0.5), 5, 70);
   if (kind === 'villain') return clamp(Math.round(12 + s.age * 0.4), 12, 60);
@@ -66,7 +76,7 @@ function opponentLevel(s, kind, lead, regionId) {
  * A captured species is returned rather than added so the caller can run party reorganisation.
  */
 export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false, level: specifiedLevel, reward = true }) {
-  const g = s.game, lead = chooseLead(s.party, opponentId);
+  const g = s.game, lead = chooseLead(s.party, opponentId, kind);
   const level = specifiedLevel ?? opponentLevel(s, kind, lead, regionId);
   const foeTypes = typesOf(opponentId), attack = bestAttack(lead.id, foeTypes);
   const transformation = transformationFor(s, lead, kind, regionId);
@@ -87,7 +97,8 @@ export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false
       if (random(s) < 0.15 + 0.7 * (1 - foeHp / maxHp)) { result = 'caught'; captured = opponentId; break; }
     }
     const defend = transformation === 'tera' ? [g.teraType] : typesOf(lead.id);
-    const incoming = typeMultiplier(foeTypes[0], defend);
+    // Wild Pokémon attack with their main type. Trainers' Pokémon pick their best type against the lead and hit harder.
+    const incoming = incomingMultiplier(kind, foeTypes, defend);
     if (incoming > 0) hp -= Math.max(1, Math.round((6 + level * 0.75) * incoming));
     if (giant && turn === 2) hp = Math.ceil(hp / 2);
     if (hp <= 0) { result = 'lose'; break; }
