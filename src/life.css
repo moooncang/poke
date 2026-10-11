@@ -130,3 +130,51 @@ meter::-webkit-meter-bar{background:#243b45;border:0;border-radius:2px}meter::-w
 
 /* League paths use existing flags, so old saves show their current badges immediately. */
 .league-progress-row{display:grid;grid-template-columns:auto 1fr;gap:6px;padding:12px 0;border-bottom:1px solid var(--ui-line)}.league-progress-row b{color:var(--ui-mint);font-size:12px}.league-progress-row span{text-align:right;font-size:11px;color:var(--ui-text)}.league-progress-row small{grid-column:1/-1}.league-progress>small{display:block;margin-top:10px;line-height:1.8}
+
+/* Lifetime archive: scoped to avoid altering live play and other dialogs. */
+.life-archive .modal { width: min(1060px, 96vw); max-width: 1060px; padding: 0; text-align: left; background: var(--ui-bg); }
+.archive-hero { position: relative; overflow: hidden; padding: 38px 34px 0; border-bottom: 2px solid var(--ui-mint); background: linear-gradient(125deg,#193b40,#172631 70%); }
+.archive-hero h2 { position: relative; font-size: clamp(25px,4vw,38px); margin: 12px 0; color: var(--ui-text); }
+.archive-hero p { color: #b6cec9; }
+.archive-title { display: inline-block; color: #f1cf7c; margin: 12px 0; }
+.archive-watermark { position: absolute; right: 30px; top: 20px; width: 180px; height: 180px; opacity: .08; }
+.archive-team { display: flex; flex-wrap: wrap; min-height: 60px; }
+.archive-team img { width: 82px; height: 82px; object-fit: contain; }
+.archive-body { padding: 24px 30px; }
+.archive-stats { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; }
+.archive-stats div { padding: 14px 5px; border: 1px solid #2a454b; text-align: center; background: var(--ui-panel); }
+.archive-stats b { display: block; font-size: 25px; color: var(--ui-mint); }
+.archive-stats span { font-size: 11px; color: #b6cec9; }
+.archive-tabs { display: flex; gap: 6px; margin: 26px 0 20px; border-bottom: 1px solid #365059; }
+.archive-tabs button { flex: 1; padding: 13px 4px; border: 0; border-bottom: 3px solid transparent; color: #bed0ce; background: transparent; }
+.archive-tabs button[aria-pressed=true] { color: var(--ui-mint); border-bottom-color: var(--ui-mint); background: #162d32; }
+.archive-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.archive-filters label { display: flex; align-items: center; flex: 1; min-width: 180px; gap: 8px; }
+.archive-filters input, .archive-filters select { width: auto; min-width: 0; background: #152830; color: var(--ui-text); border: 1px solid #365059; padding: 10px; border-radius: 4px; }
+.archive-filters input { width: 100%; }
+.archive-count, .archive-timeline small, .archive-companions small { color: #acc4c5; font-size: 12px; }
+.archive-timeline article { display: grid; grid-template-columns: 48px 1fr; gap: 14px; padding: 20px 0; border-bottom: 1px solid #284048; }
+.archive-age { color: var(--ui-mint); font-size: 25px; border-right: 2px solid #365059; }
+.archive-age small { display: block; }
+.archive-timeline h3, .archive-companions h3 { margin: 6px 0 10px; color: var(--ui-text); font-size: 16px; }
+.archive-timeline p, .archive-honors p, .archive-companions p { color: #c8d8d5; font-size: 13px; line-height: 1.85; white-space: pre-line; overflow-wrap: anywhere; }
+.archive-decision { padding: 14px; border-left: 3px solid var(--ui-rose); background: #182d35; margin-top: 12px; }
+.archive-decision b { color: #f2b1c4; font-size: 13px; }
+.archive-decision small { display: block; margin-top: 6px; }
+.archive-source { color: #e3c27c; font-size: 12px; margin-top: 10px; }
+.archive-companions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.archive-companions article { display: flex; align-items: center; padding: 12px; border: 1px solid #34515a; background: var(--ui-panel); }
+.archive-companions img { width: 86px; height: 86px; object-fit: contain; }
+.archive-companions h3 span { font-size: 12px; color: var(--ui-mint); }
+.archive-honors h3 { display: flex; align-items: center; gap: 8px; margin-top: 25px; }
+.archive-leagues { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.archive-leagues article { padding: 18px; background: var(--ui-panel); border: 1px solid #34515a; }
+.archive-leagues strong { display: block; color: #acc4c5; margin-top: 10px; font-size: 13px; }
+.archive-leagues .champion { border-color: #c9a254; background: #332f22; }
+.archive-leagues .champion strong { color: #f1cf7c; }
+.archive-route { display: flex; flex-wrap: wrap; gap: 8px; }
+.archive-route span { padding: 10px; background: var(--ui-panel); font-size: 13px; }
+.archive-route small { color: var(--ui-mint); margin-right: 8px; }
+.archive-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #34515a; }
+.archive-empty { padding: 35px 0; color: #acc4c5; text-align: center; }
+@media(max-width:600px) { .archive-body { padding: 18px 14px; } .archive-hero { padding: 30px 18px 0; } .archive-stats { grid-template-columns: repeat(3,1fr); } .archive-companions { grid-template-columns: 1fr; } .archive-leagues { grid-template-columns: repeat(2,1fr); } .archive-team img { width: 48px; height: 60px; } }

@@ -104,6 +104,8 @@ test('every storylet builds a valid event in many real states', () => {
 
 test('urgent family events take precedence when they become possible', () => {
   const s = play(lifeAt(40, 'family'), { until: x => !x.pending && !x.encounter && !x.scheduledEvent });
+  // This fixture explicitly reopens the farewell, even if the simulated family already died.
+  s.used = s.used.filter(id => id !== 'family-farewell');
   s.cast.family.health = 0;
   s.cast.family.path = 'home';
   const event = directEvent(structuredClone(s));
