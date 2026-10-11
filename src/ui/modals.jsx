@@ -6,6 +6,13 @@ import { DISPOSITIONS } from '../sim/party.js';
 import { POKEMON, sprite, artwork } from './assets.js';
 import { Modal, PokeBall, EffectChips } from './common.jsx';
 import { formatText, pokemonName } from './format.js';
+import { GOALS, goalOf } from '../sim/goals.js';
+
+function GoalSelect({ value, onChange, label = '삶의 목표' }) {
+  return <select aria-label={label} value={value} onChange={e => onChange(e.target.value)}>
+    {Object.entries(GOALS).map(([id, g]) => <option key={id} value={id}>{g.name}</option>)}
+  </select>;
+}
 
 function GenderSelect({ value, onChange, label }) {
   return <select aria-label={label} value={value} onChange={e => onChange(e.target.value)}>
@@ -13,7 +20,7 @@ function GenderSelect({ value, onChange, label }) {
   </select>;
 }
 
-export function BirthModal({ life, onGender, onStart }) {
+export function BirthModal({ life, onGender, onGoal, onStart }) {
   const town = townOf(life);
   return <Modal title="출생 배정 결과" className="birth-modal"><div className="birth-report">
     <PokeBall/><span className="eyebrow">A NEW POKÉMON LIFE</span>
@@ -28,7 +35,9 @@ export function BirthModal({ life, onGender, onStart }) {
       <dt>소꿉친구</dt><dd>{life.cast.friend.name}</dd>
       <dt>타고난 재능</dt><dd>{talentLabel(life)}</dd>
       <dt>타고난 성향</dt><dd>{life.trait}</dd>
-      <dt>시작 소지금</dt><dd>{life.money.toLocaleString()} P</dd>
+      <dt>시작 소지금</dt><dd>{life.money.toLocaleString()} P{life.heritage ? ` (유산 ${life.heritage.inheritance.toLocaleString()}P 포함)` : ''}</dd>
+      {life.heritage && <><dt>물려받은 알</dt><dd className="birth-heritage">{pokemonName(life.heritage.egg)}의 알 · {life.heritage.ancestor}에게서 · {life.heritage.generation}대째</dd></>}
+      <dt>삶의 목표</dt><dd><GoalSelect value={goalOf(life)} onChange={onGoal}/><small className="goal-detail">{GOALS[goalOf(life)].detail}</small></dd>
     </dl>
     <p>배정된 환경에서 삶이 자동으로 진행됩니다.<br/>세계와 주변 사람들도 저마다 변해 갑니다. 사건이 생기면 선택지를 골라 주세요.</p>
     <button className="primary-button wide" onClick={onStart}>이 삶 시작하기 <ArrowRight size={16}/></button>
@@ -76,13 +85,17 @@ export function DecisionModal({ life, entry, onChoose, onHide }) {
   </Modal>;
 }
 
-export function NewLifeModal({ life, form, setForm, onSubmit, onClose, onDownload }) {
+export function NewLifeModal({ life, legacy, form, setForm, onSubmit, onClose, onDownload }) {
   const update = key => e => setForm(f => ({ ...f, [key]: e.target.value }));
+  const heir = legacy?.heir;
   return <Modal title="새로운 삶 시작하기" onClose={onClose}><form onSubmit={onSubmit} className="new-life-form">
     <span className="modal-emblem"><Sprout size={28}/></span><span className="eyebrow">NEW GAME</span>
     <h2>트레이너 생성</h2><p>이름을 입력하고 무작위로 배정된 환경에서 시작합니다.</p>
     <label>당신의 이름<input autoComplete="off" maxLength={12} placeholder="하루" value={form.name} onChange={update('name')}/></label>
     <label>플레이어 성별<select value={form.gender} onChange={update('gender')}><option value="random">무작위</option>{Object.entries(GENDERS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
+    <label>삶의 목표<GoalSelect value={form.goal} onChange={goal => setForm(f => ({ ...f, goal }))}/><small className="goal-detail">{GOALS[form.goal]?.detail}</small></label>
+    {heir && <label className="heir-toggle"><input type="checkbox" checked={form.useHeir} onChange={e => setForm(f => ({ ...f, useHeir: e.target.checked }))}/>
+      <span><b>{heir.ancestor}의 {pokemonName(heir.egg)} 알로 시작</b><small>{heir.generation}대째 · 6세에 부화해 첫 파트너가 됩니다 · 유산 {heir.inheritance.toLocaleString()}P</small></span></label>}
     <div className="birth-random-note">출신 지방 · 가족 구성 · 경제적 형편 · 주거 환경 · 각 지방의 정세는 새 삶이 시작될 때 무작위로 배정됩니다.</div>
     <details><summary>시드 설정</summary>
       <label>게임 시드<input placeholder="비워두면 무작위 생성" maxLength={40} value={form.seed} onChange={update('seed')}/></label>

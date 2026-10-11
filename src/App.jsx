@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ArrowUpRight, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Trophy, Volume2, VolumeX, X } from 'lucide-react';
 import { SEASONS } from './data/world.js';
-import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf } from './engine.js';
+import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal } from './engine.js';
+import { LEGACY_KEY, parseLegacy, recordLife, chooseHeir } from './sim/legacy.js';
+import { TrainerHud } from './ui/Hud.jsx';
+import { PartyManager } from './ui/PartyManager.jsx';
+import { LegacyHall } from './ui/Legacy.jsx';
 import { PokeBall } from './ui/common.jsx';
 import { Encounter, playChime } from './ui/Encounter.jsx';
 import { StoryCard } from './ui/StoryCard.jsx';
@@ -12,7 +16,7 @@ import { formatText } from './ui/format.js';
 
 const OPTIONS_KEY = 'pokelife.preferences.v1';
 const SPEEDS = [1, 2, 3, 4, 16];
-const NAV = [{ id: 'story', label: '게임 화면', icon: BookOpen }, { id: 'pokemon', label: '포켓몬 도감', icon: PokeBall }, { id: 'memories', label: '주요 기록', icon: Bookmark }, { id: 'map', label: '여행 기록', icon: Map }];
+const NAV = [{ id: 'story', label: '게임 화면', icon: BookOpen }, { id: 'pokemon', label: '포켓몬 도감', icon: PokeBall }, { id: 'memories', label: '주요 기록', icon: Bookmark }, { id: 'map', label: '여행 기록', icon: Map }, { id: 'legacy', label: '가문의 전당', icon: Trophy }];
 const MAJOR_KINDS = ['milestone', 'choice', 'ending', 'echo'];
 
 function initial() {
@@ -27,6 +31,11 @@ function initial() {
   } catch {
     return { life: createLife(), notice: '이 브라우저에서는 자동 저장을 사용할 수 없습니다. 저장 파일을 내려받아 보관하세요.' };
   }
+}
+
+// The legacy (finished lives, cumulative dex, medals, the egg for the next generation) lives in its own key.
+function loadLegacy() {
+  try { return parseLegacy(localStorage.getItem(LEGACY_KEY) || ''); } catch { return parseLegacy(''); }
 }
 
 function loadOptions() {
@@ -67,7 +76,8 @@ export default function App() {
   const [filter, setFilter] = useState('all');
   const [shown, setShown] = useState(8);
   const [saveStatus, setSaveStatus] = useState('saved');
-  const [form, setForm] = useState({ name: '', seed: '', gender: 'random' });
+  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', useHeir: true });
+  const [legacy, setLegacy] = useState(loadLegacy);
   const [hiddenDecision, setHiddenDecision] = useState(null);
   const fileRef = useRef(null);
 
@@ -82,6 +92,9 @@ export default function App() {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(life)); setSaveStatus('saved'); } catch { setSaveStatus('failed'); }
   }, [life]);
   useEffect(() => { try { localStorage.setItem(OPTIONS_KEY, JSON.stringify(prefs)); } catch { /* noncritical preferences */ } }, [prefs]);
+  // A finished life is added to the legacy once (recordLife ignores a life it already has).
+  useEffect(() => { if (life.ended) setLegacy(l => recordLife(l, life)); }, [life]);
+  useEffect(() => { try { localStorage.setItem(LEGACY_KEY, JSON.stringify(legacy)); } catch { /* the hall is a convenience */ } }, [legacy]);
   useEffect(() => {
     if (!running || autoBlocked || life.ended || (life.pending && !prefs.autoDecisions) || document.hidden) return;
     const timer = setTimeout(() => setLife(s => s.pending ? autoChoice(s) : advance(s)), 3600 / prefs.speed);
@@ -97,6 +110,9 @@ export default function App() {
   const setPref = (key, value) => setPrefs(p => ({ ...p, [key]: value }));
   const toggleSound = () => { if (!prefs.sound) playChime(); setPref('sound', !prefs.sound); };
   const setGender = gender => setLife(s => ({ ...s, gender }));
+  const changeGoal = goal => setLife(s => setGoal(s, goal));
+  const party = { onMode: mode => setLife(s => setPartyMode(s, mode)), onPin: uid => setLife(s => togglePin(s, uid)),
+    onMove: (uid, swap) => setLife(s => movePokemon(s, uid, swap)), onLead: uid => setLife(s => setLead(s, uid)) };
   const keep = id => setLife(s => toggleMemory(s, id));
   const decide = i => { setLife(s => choose(s, i)); setRunning(true); };
   const hideDecision = () => { setHiddenDecision(life.pending); setRunning(false); };
@@ -107,7 +123,9 @@ export default function App() {
   function begin(e) {
     e.preventDefault();
     rememberPrevious(life);
-    setLife(createLife({ name: form.name || '하루', gender: form.gender, town: 'random', seed: form.seed || crypto.randomUUID() }));
+    const heritage = form.useHeir && legacy.heir ? legacy.heir : null;
+    setLife(createLife({ name: form.name || '하루', gender: form.gender, town: 'random', seed: form.seed || crypto.randomUUID(), goal: form.goal, heritage }));
+    if (heritage) setLegacy(l => ({ ...l, heir: null }));
     setHiddenDecision(null); setModal('birth'); setReplay(null); setTab('story'); setShown(8); setFilter('all'); setRunning(true); setNotice('');
   }
 
@@ -153,6 +171,7 @@ export default function App() {
           <span className="nav-life-id">LIFE № {String(life.seed).replace(/[^0-9a-z]/gi, '').slice(-6).toUpperCase() || '000001'}</span>
         </nav>
         <div className="main-grid"><LifeSidebar life={life} onPokemon={setDetail} side="trainer"/><main>
+          <TrainerHud life={life} onParty={() => openModal('party')} onGoal={changeGoal}/>
           {tab === 'story' && <>
             <section className="chapter-header">
               <div><span className="eyebrow">CHAPTER {String(chapterOf(life.age)).padStart(2, '0')}</span><h2>{stageOf(life.age)}<span>{life.age}세</span></h2>
@@ -178,6 +197,7 @@ export default function App() {
           </>}
           {tab === 'pokemon' && <Dex life={life} onPokemon={setDetail}/>}
           {tab === 'map' && <LifeAtlas life={life}/>}
+          {tab === 'legacy' && <LegacyHall legacy={legacy} life={life}/>}
           {tab === 'memories' && <section className="collection-content">
             <div className="content-title"><div><span className="eyebrow">EVENT ARCHIVE</span><h2>주요 사건 기록</h2><p>저장한 사건과 선택 결과를 다시 확인합니다.</p></div><Bookmark size={24}/></div>
             {[...life.log].reverse().filter(e => life.memories.includes(e.id)).map(entry => <div className="memory-entry" key={entry.id}>
@@ -194,15 +214,16 @@ export default function App() {
       <label className="dock-speed">선택 후 배속<select aria-label="선택창 숨김 중 진행 배속" value={prefs.speed} onChange={e => setPref('speed', Number(e.target.value))}>{SPEEDS.map(n => <option key={n} value={n}>{n}×</option>)}</select></label>
       <button className="primary-button" onClick={() => setHiddenDecision(null)}>선택지 다시 열기 <ArrowRight size={16}/></button>
     </div>}
-    {modal === 'birth' && <BirthModal life={life} onGender={setGender} onStart={() => { setModal(null); setRunning(true); }}/>}
+    {modal === 'birth' && <BirthModal life={life} onGender={setGender} onGoal={changeGoal} onStart={() => { setModal(null); setRunning(true); }}/>}
+    {modal === 'party' && !activeEncounter && <PartyManager life={life} {...party} onClose={() => setModal(null)}/>}
     {pendingEntry && !decisionHidden && !activeEncounter && !modal && !detail && <DecisionModal life={life} entry={pendingEntry} onChoose={decide} onHide={hideDecision}/>}
     {activeEncounter && <Encounter data={activeEncounter} age={replay?.age ?? life.age} sound={prefs.sound} toggleSound={toggleSound} replay={Boolean(replay)} decisionNext={!replay && Boolean(life.pending)}
       onClose={() => { if (replay) setReplay(null); else { setLife(acknowledge); setRunning(true); } }}/>}
-    {modal === 'new' && !activeEncounter && <NewLifeModal life={life} form={form} setForm={setForm} onSubmit={begin} onClose={() => setModal(null)} onDownload={() => download(life)}/>}
+    {modal === 'new' && !activeEncounter && <NewLifeModal life={life} legacy={legacy} form={form} setForm={setForm} onSubmit={begin} onClose={() => setModal(null)} onDownload={() => download(life)}/>}
     {modal === 'settings' && !activeEncounter && <SettingsModal life={life} prefs={prefs} notice={notice} onGender={setGender} onSound={toggleSound} setPref={setPref}
       onDownload={() => download(life)} onImport={importStory} fileRef={fileRef} onClose={() => setModal(null)}/>}
     {detail && !activeEncounter && <PokemonModal life={life} id={detail} onClose={() => setDetail(null)}/>}
-    {modal === 'ending' && !activeEncounter && <EndingModal life={life} onDownload={() => download(life, true)} onNew={() => setModal('new')} onClose={() => setModal(null)}/>}
+    {modal === 'ending' && !activeEncounter && <EndingModal life={life} legacy={legacy} onChooseHeir={life.ended ? uid => setLegacy(l => chooseHeir(l, life, uid)) : null} onDownload={() => download(life, true)} onNew={() => setModal('new')} onClose={() => setModal(null)}/>}
     {modal === 'about' && !activeEncounter && <AboutModal onClose={() => setModal(null)}/>}
   </>;
 }

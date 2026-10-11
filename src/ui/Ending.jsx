@@ -8,11 +8,13 @@ import { xpLevel } from '../sim/battle.js';
 import { Modal, EffectChips, PokeBall } from './common.jsx';
 import { sprite } from './assets.js';
 import { formatText, pokemonName } from './format.js';
+import { EndingCards, TrainerCardView, MedalCase, DexProgress, HeirPicker } from './Legacy.jsx';
+import { trainerCard, medalsOf } from '../sim/legacy.js';
 
 const ORIGINS = { partner: '첫 파트너', wild: '야생에서 만남', adopted: '입양', starter: '첫 동료', legend: '전설의 만남', egg: '알에서 부화', gift: '선물', rescued: '구조' };
 const FILTERS = { all: '전체 기록', choices: '선택과 결과', echoes: '선택의 여파', party: '포켓몬', people: '인연', saved: '저장한 추억' };
-export function EndingModal({ life, onDownload, onNew, onClose }) {
-  const [tab, setTab] = useState('journey');
+export function EndingModal({ life, legacy, onChooseHeir, onDownload, onNew, onClose }) {
+  const [tab, setTab] = useState('cards');
   const [filter, setFilter] = useState('all');
   const [decade, setDecade] = useState('all');
   const [query, setQuery] = useState('');
@@ -38,7 +40,13 @@ export function EndingModal({ life, onDownload, onNew, onClose }) {
     </header>
     <div className="archive-body">
       <div className="archive-stats">{[[life.visited.length, '머문 마을'], [members.length, '함께한 동료'], [life.game.wins, '배틀 승리'], [choices.length, '내린 결정'], [echoes.length, '이어진 여파'], [life.seen.length, '도감 발견']].map(([n, label]) => <div key={label}><b>{n}</b><span>{label}</span></div>)}</div>
-      <nav className="archive-tabs" aria-label="기록관 분류">{[['journey','생애 연표'], ['companions','동료 앨범'], ['honors','업적 · 발자취']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}</nav>
+      <nav className="archive-tabs" aria-label="기록관 분류">{[['cards','엔딩 카드'], ['trainer','트레이너 카드'], ['journey','생애 연표'], ['companions','동료 앨범'], ['honors','업적 · 발자취'], ['heir','다음 세대']].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}</nav>
+      {tab === 'cards' && <section className="archive-cards"><h3>이 삶의 엔딩 카드</h3><EndingCards life={life}/></section>}
+      {tab === 'trainer' && <section className="archive-trainer"><TrainerCardView card={trainerCard(life)}/>
+        <h3>메달</h3><MedalCase earned={medalsOf(life)} legacyMedals={legacy?.medals}/>
+        <h3>이 삶의 도감</h3><DexProgress ids={life.seen} label="이 삶의 지방별 도감"/></section>}
+      {tab === 'heir' && <section className="archive-heir"><h3>다음 세대에게 알 물려주기</h3>
+        {onChooseHeir ? <HeirPicker life={life} heir={legacy?.heir} onChoose={onChooseHeir}/> : <p>생애가 끝난 뒤에 고를 수 있습니다.</p>}</section>}
       {tab === 'journey' && <section>
         <div className="archive-filters"><label><Search size={15}/><input aria-label="생애 기록 검색" placeholder="사건, 포켓몬, 선택 검색" value={query} onChange={reset(setQuery)}/></label>
           <select aria-label="기록 종류" value={filter} onChange={reset(setFilter)}>{Object.entries(FILTERS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select>

@@ -92,7 +92,7 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
           <button key={member.uid} onClick={() => onPokemon(member.id)} title={`${pokemonName(member.id)} Lv.${xpLevel(member)}`}><img className="pixel" src={sprite(member.id, member.shiny)} alt={pokemonName(member.id)}/></button>)}</div>
           : <p>아직 맡긴 포켓몬이 없다.</p>}
       </details>
-      <small>6마리를 넘으면 성향에 따라 스스로 파티를 다시 짠다. 전설의 포켓몬은 언제나 파티에 둔다.</small>
+      <small>6마리를 넘으면 성향에 따라 스스로 파티를 다시 짠다. 상단의 파티 버튼에서 좋아하는 포켓몬을 고정하거나 직접 편성할 수 있다. 전설의 포켓몬은 언제나 파티에 둔다.</small>
     </section>
     <section className="dex-panel world-panel"><h3>{region.name}지방 정세</h3>
       {Object.entries(WORLD_KEYS).map(([key, label]) => <Meter key={key} label={label} value={state[key]} detail={levelLabel(state[key])}/>)}

@@ -184,3 +184,65 @@ meter::-webkit-meter-bar{background:#243b45;border:0;border-radius:2px}meter::-w
 .talent-rating span { flex: 1; height: 8px; background: #263b44; border-radius: 2px; }
 .talent-rating .lit { background: linear-gradient(90deg,#63bea8,#dfc379); }
 .talent-panel p { font-size: 12px; color: #c5d8d3; }
+
+/* ── Trainer HUD, party manager, ending cards, legacy hall (Claude) ──
+   Functional layout only. Visual design is GPT's: see docs/DESIGN-HANDOFF.md for structure and data-* states. */
+.hud { position: sticky; top: 0; z-index: 20; display: grid; grid-template-columns: auto auto 1fr auto; grid-template-areas: "id money stats league" "goal goal party party"; gap: 8px 14px; align-items: center; padding: 10px 12px; margin-bottom: 14px; background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 10px; }
+.hud-identity { grid-area: id; display: flex; flex-direction: column; } .hud-name { font-size: 15px; } .hud-age { font-size: 12px; color: var(--ui-muted); }
+.hud-money { grid-area: money; display: flex; flex-direction: column; font-size: 12px; } .hud-money b { font-size: 16px; color: #f1cf7c; } .hud-ledger.down { color: var(--ui-rose); } .hud-ledger.up { color: var(--ui-mint); }
+.hud-stats { grid-area: stats; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; list-style: none; margin: 0; padding: 0; }
+.hud-stat { display: grid; grid-template-columns: auto 1fr; gap: 0 4px; font-size: 11px; } .hud-stat b { text-align: right; } .hud-stat meter { grid-column: 1 / -1; width: 100%; height: 6px; }
+.hud-stat[data-level="low"] b { color: var(--ui-rose); }
+.hud-league { grid-area: league; display: flex; gap: 10px; font-size: 12px; color: var(--ui-muted); } .hud-league b { color: var(--ui-text); } .hud-titles:not([data-count="0"]) b { color: #f1cf7c; }
+.hud-goal { grid-area: goal; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ui-muted); } .hud-goal select { padding: 4px 6px; }
+.hud-party { grid-area: party; display: flex; align-items: center; justify-content: flex-end; gap: 10px; font-size: 11px; color: var(--ui-muted); }
+.hud-party-slots { display: flex; gap: 4px; }
+.hud-slot { position: relative; width: 38px; height: 38px; border: 1px solid var(--ui-line); border-radius: 50%; display: grid; place-items: center; }
+.hud-slot img { width: 34px; height: 34px; object-fit: contain; } .hud-slot small { position: absolute; bottom: -4px; right: -4px; font-size: 9px; background: var(--ui-bg); padding: 0 2px; border-radius: 4px; }
+.hud-slot svg { position: absolute; top: -3px; right: -3px; } .hud-slot[data-lead="true"] { border-color: var(--ui-mint); } .hud-slot.empty { border-style: dashed; opacity: .5; }
+@media (max-width: 800px) {
+  .hud { grid-template-columns: 1fr auto; grid-template-areas: "id money" "stats stats" "league league" "goal goal" "party party"; padding: 8px 10px; gap: 6px; }
+  .hud-party { justify-content: space-between; } .hud-slot { width: 32px; height: 32px; } .hud-slot img { width: 28px; height: 28px; }
+}
+
+.party-manager .modal { max-width: 640px; padding: 26px; }
+.pm-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border: 0; padding: 0; margin: 14px 0 8px; } .pm-mode legend { font-size: 12px; margin-bottom: 6px; }
+.pm-mode label { display: flex; gap: 8px; padding: 10px; border: 1px solid var(--ui-line); border-radius: 8px; } .pm-mode label[data-active="true"] { border-color: var(--ui-mint); }
+.pm-mode small, .pm-rule { display: block; font-size: 11px; color: var(--ui-muted); line-height: 1.7; }
+.pm-party ol, .pm-box ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; } .pm-party h3, .pm-box h3 { margin: 16px 0 8px; font-size: 14px; }
+.pm-member { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--ui-line); border-radius: 8px; }
+.pm-member[data-lead="true"] { border-color: var(--ui-mint); } .pm-member[data-selected="true"] { outline: 2px solid #f1cf7c; }
+.pm-info { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; } .pm-info img { width: 48px; height: 48px; object-fit: contain; } .pm-meta { display: block; font-size: 11px; color: var(--ui-muted); }
+.pm-tags { display: flex; gap: 4px; } .pm-tag { font-style: normal; font-size: 10px; padding: 2px 6px; border: 1px solid var(--ui-line); border-radius: 999px; display: inline-flex; gap: 3px; align-items: center; }
+.pm-actions { display: flex; flex-wrap: wrap; gap: 4px; } .pm-actions button { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; padding: 5px 8px; border: 1px solid var(--ui-line); border-radius: 6px; }
+.pm-actions button:disabled { opacity: .4; } .pm-swap-hint { font-size: 12px; color: #f1cf7c; }
+@media (max-width: 560px) { .pm-mode { grid-template-columns: 1fr; } .party-manager .modal { padding: 18px 14px; } }
+
+.ending-cards { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.ending-card { position: relative; padding: 14px; border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-panel); }
+.ending-card[data-rarity="rare"] { border-color: #6aa5d8; } .ending-card[data-rarity="epic"] { border-color: #b48be0; } .ending-card[data-rarity="legendary"] { border-color: #f1cf7c; }
+.ending-card-rarity { font-size: 10px; color: var(--ui-muted); } .ending-card h4 { margin: 6px 0; font-size: 14px; } .ending-card p { font-size: 12px; line-height: 1.7; }
+.ending-card-art { width: 72px; height: 72px; object-fit: contain; display: block; } .ending-card-party { display: flex; flex-wrap: wrap; } .ending-card-party img { width: 40px; height: 40px; object-fit: contain; }
+.trainer-card { padding: 16px; border: 2px solid var(--ui-line); border-radius: 12px; background: var(--ui-raised); max-width: 460px; }
+.trainer-card[data-color="green"] { border-color: #6fbf7d; } .trainer-card[data-color="blue"] { border-color: #6aa5d8; } .trainer-card[data-color="red"] { border-color: #e06a6a; } .trainer-card[data-color="silver"] { border-color: #c8d0d8; } .trainer-card[data-color="gold"] { border-color: #f1cf7c; }
+.trainer-card header { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: 1.5px; color: var(--ui-muted); }
+.trainer-card-stars svg[data-earned="true"] { fill: #f1cf7c; color: #f1cf7c; } .trainer-card h3 { margin: 8px 0 2px; } .trainer-card-epithet { font-size: 13px; color: var(--ui-mint); }
+.trainer-card dl { display: grid; grid-template-columns: 70px 1fr; gap: 4px 8px; font-size: 12px; margin: 10px 0 0; } .trainer-card dt { color: var(--ui-muted); } .trainer-card dd { margin: 0; }
+.trainer-card-star-list { list-style: none; padding: 0; margin: 10px 0 0; font-size: 12px; } .trainer-card-star-list li[data-earned="false"] { color: var(--ui-muted); }
+.trainer-card.compact { max-width: none; }
+.medal-case { display: grid; gap: 12px; } .medal-group h4 { font-size: 13px; margin: 4px 0; } .medal-group ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; }
+.medal { display: grid; grid-template-columns: auto 1fr; gap: 0 6px; padding: 8px; border: 1px solid var(--ui-line); border-radius: 8px; font-size: 12px; } .medal small { grid-column: 2; font-size: 11px; color: var(--ui-muted); }
+.medal[data-earned="false"][data-collected="false"] { opacity: .45; } .medal[data-earned="true"] { border-color: #f1cf7c; } .medal[data-earned="true"] svg { color: #f1cf7c; }
+.dex-progress ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; } .dex-progress li { display: grid; grid-template-columns: 56px 1fr 70px; gap: 8px; align-items: center; font-size: 12px; } .dex-progress progress { width: 100%; }
+.dex-progress li[data-complete="true"] span { color: #f1cf7c; }
+.heir-picker ul { list-style: none; padding: 0; margin: 10px 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.heir-option button { width: 100%; display: flex; align-items: center; gap: 8px; text-align: left; padding: 10px; border: 1px solid var(--ui-line); border-radius: 8px; } .heir-option img { width: 48px; height: 48px; object-fit: contain; }
+.heir-option small { display: block; font-size: 11px; color: var(--ui-muted); } .heir-option[data-selected="true"] button { border-color: #f1cf7c; }
+.modal .heir-toggle { display: flex; gap: 8px; align-items: flex-start; padding: 10px; border: 1px solid var(--ui-line); border-radius: 8px; } .heir-toggle small, .goal-detail { display: block; font-size: 11px; color: var(--ui-muted); line-height: 1.6; }
+.legacy-totals { list-style: none; padding: 0; margin: 14px 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.legacy-totals li { padding: 10px; border: 1px solid var(--ui-line); border-radius: 8px; display: flex; flex-direction: column; } .legacy-totals b { font-size: 20px; } .legacy-totals span { font-size: 11px; color: var(--ui-muted); }
+.legacy-hall h3 { margin: 22px 0 10px; } .legacy-lives { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.legacy-life { display: grid; grid-template-columns: minmax(0, 280px) 1fr; gap: 12px; } .legacy-life-detail { font-size: 12px; } .legacy-partner { display: flex; align-items: center; gap: 6px; }
+.legacy-partner img, .legacy-party img { width: 36px; height: 36px; object-fit: contain; } .legacy-party { display: flex; flex-wrap: wrap; }
+.legacy-heir { padding: 10px; border: 1px solid #f1cf7c; border-radius: 8px; font-size: 13px; display: flex; gap: 6px; align-items: center; }
+@media (max-width: 640px) { .legacy-life { grid-template-columns: 1fr; } .ending-cards { grid-template-columns: 1fr 1fr; } }
