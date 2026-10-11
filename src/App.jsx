@@ -40,7 +40,7 @@ function loadOptions() {
 
 function download(life, asText = false) {
   const body = asText
-    ? `${life.name}의 플레이 기록\n${townOf(life).region} · ${life.age}세\n\n${life.log.map(e => `${e.age}세 — ${formatText(e.title, life, e)}\n${formatText(e.body, life, e)}${e.resolution ? `\n${formatText(e.resolution.text, life, e)}` : ''}`).join('\n\n')}`
+    ? `${life.name}의 플레이 기록\n${townOf(life).region} · ${life.age}세\n\n${life.log.map(e => `${e.age}세 — ${formatText(e.title, life, e)}\n${formatText(e.body, life, e)}${e.resolution ? `\n선택: ${formatText(e.resolution.label, life, e)}${e.resolution.check ? ` (${e.resolution.check.success ? '성공' : '실패'}, 성공률 ${e.resolution.check.chance}%)` : ''}\n${formatText(e.resolution.text, life, e)}` : ''}`).join('\n\n')}`
     : JSON.stringify(life, null, 2);
   const url = URL.createObjectURL(new Blob([body], { type: asText ? 'text/plain;charset=utf-8' : 'application/json' }));
   const a = document.createElement('a');

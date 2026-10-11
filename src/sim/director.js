@@ -157,7 +157,9 @@ export function directEvent(s) {
   const open = ALL_STORYLETS.filter(st => available(s, st));
   // Urgent storylets (a death in the family, a crisis) take the year when they become possible.
   const urgent = open.filter(st => typeof st.urgent === 'function' ? st.urgent(s) : st.urgent);
-  for (const st of urgent.length ? urgent : open) (groups[st.category] ||= []).push(st);
+  // A farewell cannot be postponed by routine overdue encounters or league invitations.
+  const farewell = open.filter(st => st.id === 'family-farewell');
+  for (const st of farewell.length ? farewell : urgent.length ? urgent : open) (groups[st.category] ||= []).push(st);
   const category = weighted(s, Object.keys(groups), c => CATEGORY_WEIGHT[c](s));
   if (!category) return null;
   const storylet = weighted(s, groups[category], st => st.weight?.(s) ?? 1);

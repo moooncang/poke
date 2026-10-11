@@ -1,3 +1,4 @@
+import { selectWildEncounter } from '../sim/encounters.js';
 // Events that only exist because of the current state of the world, the people around the player and
 // earlier decisions. Each storylet: { id, category, min, max, once?, cooldown?, when?(s), weight?(s), build(s) }.
 import { TOWNS, CAREERS, NPCS } from './world.js';
@@ -230,21 +231,21 @@ export const STORYLETS = [
       opt('지금의 마을에 남는다', '행복 +4 · 지혜 +3', '지금의 마을도 고향이 되었다.', { effects: { joy: 4, wisdom: 3 } }),
     ]) },
   { id: 'shelter-adopt', category: 'opportunity', once: false, cooldown: 7, min: 14, weight: s => 1 + (s.disposition.caring || 0) * 0.08,
-    build: s => { const id = pick(s, town(s).pool);
+    build: s => { const { id } = selectWildEncounter(s);
       return choice('보호소의 포켓몬', `보호소에 ${poke(id, '이', '가')} 새 가족을 기다린다. 파티가 가득 차면 누구를 데려갈지 스스로 정한다.`, [
         opt('입양한다', '300P · 파티 합류', `${poke(id, '을', '를')} 가족으로 맞았다.`, { tone: 'caring', cost: 300, join: id, joinOrigin: 'adopted', effects: { money: -300, joy: 6 } }),
         opt('주말 봉사를 한다', '유대 +4', '보호소 청소와 산책을 도왔다.', { effects: { bond: 4 } }),
         opt('후원금만 보낸다', '100P · 명성 +1', '운영비를 후원했다.', { cost: 100, effects: { money: -100, reputation: 1, joy: 2 } }),
       ]); } },
   { id: 'mysterious-egg', category: 'opportunity', once: false, cooldown: 7, min: 10, weight: s => 1 + (s.disposition.caring || 0) * 0.05,
-    build: s => { const id = pick(s, town(s).pool);
+    build: s => { const { id } = selectWildEncounter(s);
       return choice('맡겨진 알', `${town(s).name}의 키우미집에서 주인을 찾지 못한 알을 맡아 줄 사람을 찾는다.`, [
         opt('직접 부화시킨다', '파티 합류 · 가득 차면 스스로 재편성', `따뜻하게 품은 알에서 ${poke(id, '이', '가')} 태어났다.`, { tone: 'caring', join: id, joinOrigin: 'egg', effects: { bond: 5, joy: 4 } }),
         opt('부화 연구에 기증한다', '지혜 +4 · 100P · 도감 등록', '연구소가 부화 기록을 공유해 주었다.', { tone: 'curious', observe: id, effects: { wisdom: 4, money: 100 } }),
         opt(`${josa(friend(s).name, '에게', '에게')} 넘긴다`, '친구 관계 +8', '알을 받은 친구가 몹시 기뻐했다.', { cast: { friend: { affinity: 8 } }, effects: { joy: 2 } }),
       ]); } },
   { id: 'friend-gift', category: 'cast', once: false, cooldown: 12, min: 12, weight: () => 1.5, when: s => friend(s).affinity >= 60,
-    build: s => { const id = pick(s, TOWNS.find(t => t.id === friend(s).town)?.pool || town(s).pool);
+    build: s => { const { id } = selectWildEncounter(s);
       return choice('친구의 선물', `${friend(s).name}의 포켓몬이 알을 낳았다며 한 마리를 맡아 달라고 했다.`, [
         opt('고맙게 받는다', '파티 합류', `${poke(id, '이', '가')} 새 식구가 되었다.`, { tone: 'caring', join: id, joinOrigin: 'gift', cast: { friend: { affinity: 5 } }, effects: { joy: 5 } }),
         opt('마음만 받는다', '지혜 +2', '지금은 돌볼 여유가 없다며 정중히 사양했다.', { cast: { friend: { affinity: -2 } }, effects: { wisdom: 2 } }),

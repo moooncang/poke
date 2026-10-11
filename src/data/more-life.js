@@ -1,3 +1,4 @@
+import { selectWildEncounter } from '../sim/encounters.js';
 // Everyday decisions across a life: growing up, adulthood, middle and later life, personality-driven moments,
 // family life and the party's own small dramas. Rows: [id, min, max, title, body, options, meta].
 import { table, check, later, localSpecies, farTown, working } from './event-kit.js';
@@ -186,7 +187,7 @@ const adulthood = table('stage', [
   ]],
   ['ya-pet-sitting', 20, 40, '이웃의 부탁', '출장을 가는 이웃이 포켓몬을 한 달간 맡아 달라고 한다.', [
     ['맡아 준다', 'caring', { bond: 5, money: 150 }, '한 달 내내 집이 시끌벅적했다.'],
-    ['아예 입양을 제안받는다', 'caring', { joy: 4 }, '', s => { const id = localSpecies(s); return { join: id, joinOrigin: 'adopted', outcome: `이웃이 이사를 가게 되어 ${poke(id, '을', '를')} 가족으로 맞았다.` }; }],
+    ['아예 입양을 제안받는다', 'caring', { joy: 4 }, '', s => { const { id } = selectWildEncounter(s); return { join: id, joinOrigin: 'adopted', outcome: `이웃이 이사를 가게 되어 ${poke(id, '을', '를')} 가족으로 맞았다.` }; }],
     ['정중히 거절한다', 'pragmatic', { joy: 1 }, '다른 돌보미를 소개해 주었다.'],
   ]],
   ['ya-language', 20, 35, '다른 지방 말 배우기', '다른 지방 출신 친구가 언어 교환을 제안했다.', [
@@ -361,7 +362,7 @@ const temperament = table('stage', [
     ['파트너와 소원을 빈다', 'caring', { joy: 4, bond: 2 }, '둘이 같은 소원을 빌었을지도 모른다.'],
   ], leaning('curious')],
   ['tone-stray', 10, 90, '길 잃은 포켓몬', '비 오는 골목에서 떨고 있는 포켓몬을 발견했다.', [
-    ['데려가 돌본다', 'caring', { bond: 4 }, '', s => { const id = localSpecies(s); return { join: id, joinOrigin: 'rescued', outcome: `몸을 말리고 먹이를 주자 ${poke(id, '이', '가')} 곁을 떠나지 않았다.` }; }],
+    ['데려가 돌본다', 'caring', { bond: 4 }, '', s => { const { id } = selectWildEncounter(s); return { join: id, joinOrigin: 'rescued', outcome: `몸을 말리고 먹이를 주자 ${poke(id, '이', '가')} 곁을 떠나지 않았다.` }; }],
     ['센터에 맡긴다', 'pragmatic', { reputation: 1 }, '센터에서 보호를 맡았다.'],
   ], leaning('caring')],
   ['tone-cant-say-no', 18, 80, '거절하지 못하는 부탁', '이번 주만 세 번째 부탁이다. 오늘은 이웃이 이사를 도와 달라고 한다.', [
@@ -435,7 +436,7 @@ const family = table('family', [
   ], { when: married }],
   ['fam-empty-nest', 45, 85, '빈 둥지', '아이가 독립해 집이 조용해졌다.', [
     ['둘만의 취미를 찾는다', 'caring', { joy: 5 }, '{spouse|과|와} 춤을 배우기 시작했다.'],
-    ['새 포켓몬을 들인다', 'bold', { joy: 4 }, '', s => { const id = localSpecies(s); return { join: id, joinOrigin: 'adopted', outcome: `빈 방에 ${poke(id, '이', '가')} 들어왔다.` }; }],
+    ['새 포켓몬을 들인다', 'bold', { joy: 4 }, '', s => { const { id } = selectWildEncounter(s); return { join: id, joinOrigin: 'adopted', outcome: `빈 방에 ${poke(id, '이', '가')} 들어왔다.` }; }],
     ['조용함을 즐긴다', 'easygoing', { vitality: 3, wisdom: 2 }, '조용한 아침이 나쁘지 않다.'],
   ], { when: s => hasKids(s) && s.age >= 45 }],
   ['solo-trip', 28, 80, '혼자만의 여행', '혼자인 지금이 아니면 못 할 여행이 있다.', [

@@ -124,18 +124,7 @@ export function PokemonModal({ life, id, onClose }) {
   </div></Modal>;
 }
 
-export function EndingModal({ life, onDownload, onNew, onClose }) {
-  return <Modal title="인생 회고" onClose={onClose} className="ending-modal"><div className="ending-content">
-    <span className="eyebrow">FINAL RESULTS</span><Sprout className="ending-sprout" size={42}/>
-    <h2>{life.name}의<br/>최종 기록</h2>
-    <p>{TOWNS.find(t => t.id === life.hometown).name} 출생 · {life.age}세에 생애를 마쳤습니다.</p>
-    <div className="ending-stats"><span><b>{life.visited.length}</b>머문 마을</span><span><b>{life.seen.length}</b>만난 포켓몬</span><span><b>{life.party.length + life.box.length}</b>함께한 포켓몬</span><span><b>{life.reputation}</b>명성</span></div>
-    <div className="ending-party">{life.party.map(p => <img key={p.uid} src={sprite(p.id, p.shiny)} className="pixel" alt={pokemonName(p.id)}/>)}</div>
-    <p>배틀 승리 {life.game.wins}회 · 포획 {life.game.catches}회 · 완료 선택 {life.log.filter(e => e.resolution).length}개 · 이어진 여파 {life.log.filter(e => e.echo).length}개</p>
-    <button className="primary-button wide" onClick={onDownload}><Download size={16}/> 전체 기록 내려받기</button>
-    <button className="text-button" onClick={onNew}><RotateCcw size={14}/> 새 게임 시작</button>
-  </div></Modal>;
-}
+export { EndingModal } from './Ending.jsx';
 
 export function AboutModal({ onClose }) {
   return <Modal title="게임 정보" onClose={onClose}><div className="about-content">

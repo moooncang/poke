@@ -5,6 +5,7 @@ import { MECHANICS } from '../sim/battle.js';
 import { regionState, hasCondition } from '../sim/world.js';
 import { pick } from '../sim/random.js';
 import { poke } from '../sim/text.js';
+import { selectWildEncounter } from '../sim/encounters.js';
 
 export const BACKGROUNDS=[
  {id:'farm',family:'부모와 조부모가 함께 사는 나무열매 농가',wealth:'검소한 살림',home:'농장 옆 단독주택',money:900,wisdom:4,bond:6},
@@ -82,9 +83,13 @@ const field = [
     urgent: s => s.age - (s.lastWildOffer ?? 5) >= 3,
     weight: s => 0.8 + regionState(s).ecology / 50 + (s.disposition.bold || 0) * 0.05 + ({ traveler: 1, researcher: 0.6 }[s.career] || 0),
     build: s => { s.lastWildOffer = s.age;
-      const owned = [...s.party, ...s.box].map(m => m.id), fresh = town(s).pool.filter(id => !owned.includes(id));
-      const id = pick(s, fresh.length ? fresh : town(s).pool);
-      return { kind: 'choice', title: `${poke(id, '과', '와')}의 조우`, body: `${town(s).name}의 서식지에서 ${poke(id, '을', '를')} 만났다. 파티가 가득 차 있으면 데려갈 포켓몬을 스스로 다시 고른다.`, choices: [
+      const { id, habitat, observation } = selectWildEncounter(s);
+      if (observation) return { kind: 'choice', title: '익숙한 서식지의 새 발견', body: '탐색 가능한 서식지의 포켓몬 계열을 모두 동료로 맞았다. 오늘은 포획 대신 야생의 생활을 살펴본다.', choices: [
+        opt('무리의 행동을 연구한다', '지혜 +3', '익숙한 종의 새로운 행동을 도감에 덧붙였다.', { observe: id, effects: { wisdom: 3 } }),
+        opt('파트너와 서식지를 돌본다', '유대 +3', '야생 무리가 안전하게 지낼 공간을 정비했다.', { effects: { bond: 3 } }),
+      ] };
+      const location = habitat.id === town(s).id ? `${habitat.name}의 서식지` : `${habitat.region}지방 ${habitat.name}으로 나선 탐사`;
+      return { kind: 'choice', title: `${poke(id, '과', '와')}의 조우`, body: `${location}에서 ${poke(id, '을', '를')} 만났다. 아직 함께하지 않은 진화 계열의 포켓몬이다. 파티가 가득 차 있으면 데려갈 포켓몬을 스스로 다시 고른다.`, choices: [
         opt('파트너와 배틀하며 포획', '몬스터볼 사용 · 배틀 상황에 따라 판정', '야생 포켓몬의 움직임에 맞춰 포획을 시도했다.', { tone: 'bold', battle: { kind: 'wild', opponent: id, capture: true }, effects: { courage: 1 } }),
         opt('먹이로 경계심을 낮춰 데려오기', '먹이 60P · 유대에 따른 성공률', '경계심을 푼 포켓몬이 동행에 응했다.', { tone: 'caring', cost: 60, captureJoin: id, effects: { bond: 2 },
           challenge: { stat: 'bond', difficulty: -10, failure: { effects: { bond: 1 }, outcome: '먹이는 받아먹었지만 동행하지 않고 서식지로 돌아갔다.' } } }),
