@@ -25,7 +25,7 @@ export function PartyManager({ life, onMode, onPin, onMove, onLead, onClose }) {
   const bring = uid => full ? setIncoming(uid) : onMove(uid);
   const swap = uid => { onMove(incoming, uid); setIncoming(null); };
   return <Modal title="파티 관리" onClose={onClose} className="party-manager">
-    <span className="eyebrow">PARTY &amp; PC BOX</span><h2>파티 관리</h2>
+    <header className="pm-heading"><span className="eyebrow">PARTY &amp; PC BOX</span><h2>파티 관리</h2><p>함께할 동료를 고르고, 다음 모험을 준비하세요.</p></header>
     <fieldset className="pm-mode"><legend>편성 방식</legend>
       {Object.entries(PARTY_MODES).map(([id, label]) => <label key={id} data-active={plan.mode === id}>
         <input type="radio" name="party-mode" value={id} checked={plan.mode === id} onChange={() => onMode(id)}/>

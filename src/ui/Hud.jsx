@@ -1,11 +1,11 @@
-// Always-visible summary of the trainer: age, money, the five stats, badges/titles, life goal and party.
-// Layout and look are intentionally plain; see docs/DESIGN-HANDOFF.md for the class names and states.
+// Trainer console: presentation of existing summary values, goal control and party access.
+// Public class names and data states follow docs/DESIGN-HANDOFF.md.
 import { Lock, Pin, Users } from 'lucide-react';
 import { stageOf } from '../engine.js';
 import { badgeCount, championships, xpLevel } from '../sim/battle.js';
 import { GOALS, goalOf } from '../sim/goals.js';
 import { PARTY_LIMIT, partyPlan } from '../sim/party.js';
-import { sprite } from './assets.js';
+import { sprite, asset } from './assets.js';
 import { pokemonName } from './format.js';
 
 export const HUD_STATS = { vitality: '건강', joy: '행복', courage: '용기', wisdom: '지식', bond: '유대' };
@@ -16,8 +16,9 @@ export function TrainerHud({ life, onParty, onGoal }) {
   const slots = Array.from({ length: PARTY_LIMIT }, (_, i) => life.party[i] || null);
   return <section className="hud" aria-label="트레이너 요약">
     <div className="hud-identity">
-      <b className="hud-name">{life.name}</b>
-      <span className="hud-age">{life.age}세 · {stageOf(life.age)}</span>
+      <span className="hud-avatar"><img className="pixel" src={asset(life.gender === 'female' ? 'assets/trainers/leaf.png' : 'assets/trainers/red.png')} alt=""/></span>
+      <div className="hud-identity-text"><span className="hud-kicker">TRAINER STATUS</span><b className="hud-name">{life.name}</b>
+      <span className="hud-age">{life.age}세 · {stageOf(life.age)}</span></div>
     </div>
     <div className="hud-money" aria-label="소지금"><span>소지금</span><b>{life.money.toLocaleString()}P</b>
       {life.ledger && <small className={life.ledger.income >= life.ledger.expense ? 'hud-ledger up' : 'hud-ledger down'}>

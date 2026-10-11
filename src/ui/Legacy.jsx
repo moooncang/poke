@@ -1,6 +1,6 @@
 // Ending extras and the multi-life hall. Data comes from sim/legacy.js; this file only renders it.
 // Every block exposes its state through data-* attributes (rarity, earned, color, percent) for styling.
-import { Egg, Medal, Star } from 'lucide-react';
+import { Egg, Medal, Star, Trophy, Compass, Heart, Sparkles, BookOpen, Flag } from 'lucide-react';
 import { REGIONS } from '../data/regions.js';
 import { TOWNS, CAREERS } from '../data/world.js';
 import { GOALS } from '../sim/goals.js';
@@ -14,14 +14,17 @@ import { formatText, pokemonName } from './format.js';
 
 const townName = id => TOWNS.find(t => t.id === id)?.name || '';
 
+const CARD_ICONS = { champion: Trophy, badges: Medal, dex: BookOpen, family: Heart, friend: Heart, rival: Flag, travel: Compass, heritage: Egg };
+
 export function EndingCards({ life }) {
-  return <ul className="ending-cards">{endingCards(life).map(card => <li key={card.id} className="ending-card" data-kind={card.kind} data-rarity={card.rarity}>
-    <span className="ending-card-rarity">{RARITIES[card.rarity]}</span>
+  return <ul className="ending-cards">{endingCards(life).map(card => { const Icon = CARD_ICONS[card.kind] || Sparkles; return <li key={card.id} className="ending-card" data-kind={card.kind} data-rarity={card.rarity}>
+    <div className="ending-card-top"><span className="ending-card-rarity">{RARITIES[card.rarity]}</span><Icon size={17} aria-hidden="true"/></div>
+    {!card.pokemon && !card.party && <div className="ending-card-emblem" aria-hidden="true"><Icon size={36}/></div>}
     {card.pokemon && <img className="pixel ending-card-art" src={sprite(card.pokemon, card.shiny)} alt={pokemonName(card.pokemon)}/>}
     {card.party && <span className="ending-card-party">{card.party.map((m, i) => <img key={i} className="pixel" src={sprite(m.id, m.shiny)} alt={`${pokemonName(m.id)} Lv.${m.level}`}/>)}</span>}
     <h4>{card.title}</h4>
     <p>{formatText(card.body, life)}</p>
-  </li>)}</ul>;
+  </li>; })}</ul>;
 }
 
 export function TrainerCardView({ card, compact = false }) {
