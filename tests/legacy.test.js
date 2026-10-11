@@ -43,6 +43,8 @@ test('ending cards, medals and the trainer card are derived from a finished life
 
 test('a champion gets champion cards, medals and a star', () => {
   const s = structuredClone(finished);
+  // The simulated life may already hold titles; start from a clean slate so the counts below are exact.
+  for (const r of LEAGUE_REGIONS) delete s.flags[championFlag(r)];
   s.flags[championFlag(LEAGUE_REGIONS[0])] = true;
   s.flags[championFlag(LEAGUE_REGIONS[3])] = true;
   assert.equal(championships(s), 2);
