@@ -1,3 +1,4 @@
+import { breedingPairs } from '../sim/breeding.js';
 import {LEAGUE_REGIONS,championFlag} from '../data/league-sagas.js';
 import { Lock } from 'lucide-react';
 import { GENDERS, PARTY_LIMIT } from '../engine.js';
@@ -105,6 +106,11 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
         return <div className="league-progress-row" key={r.id}><b>{r.name}{life.flags[championFlag(r)]?' ★':''}</b><span>{status}</span><small>지역 배지 {life.game.badges[r.id]||0}/8 · 최종 상대 {r.champion}</small></div>;
       })}
       <small>초대 조건: 명성 15 이상 트레이너 또는 현재 지방 배지 2개. 파트너가 있어야 도전할 수 있습니다.</small>
+    </section>
+    <section className="dex-panel nursery-panel"><h3>키우미집 · 알 돌봄</h3>
+      <p>교배 가능한 조합 {breedingPairs(life).length}쌍 · 알 출신 동료 {[...life.party,...life.box].filter(p=>p.origin==='egg').length}마리</p>
+      {life.seeds.filter(seed=>seed.id.startsWith('nursery-')).map((seed,i)=><p key={`${seed.id}-${i}`}>● {{'nursery-egg':'알 발견 기다리는 중','nursery-hatch':'부화 준비 중','nursery-first-steps':'어린 동료 성장 중','nursery-generation':'두 세대의 소식 기다리는 중','nursery-letter':'새 가족의 편지 기다리는 중'}[seed.id]}</p>)}
+      <small>16세 이후 조건에 맞으면 사건으로 시작합니다. 파티·박스의 알그룹과 개체 성별을 확인합니다. 알 돌봄 → 부화 → 성장 기록으로 이어집니다.</small>
     </section>
     <section className="dex-panel"><h3>장비와 리그</h3>
       {Object.entries(MECHANICS).map(([id, m]) => <p key={id}>{life.game.gear.includes(id) ? '●' : '○'} {m.name}</p>)}
