@@ -35,3 +35,7 @@
 - 필드 트레이너 시트: 이미 수집한 pret/pokefirered `graphics/object_events/pics/people/red_normal.png`를 그대로 사용한다. CSS로 프레임을 선택하며 원본 이미지는 수정하지 않았다.
 - 타입 상성: 보존된 `type_efficacy.csv`, 기본 타입: `src/data/pokemon.json`에서 `src/data/battle-data.js`를 생성했다.
 - 새 지방 노선도·공통 필드 SVG·분기 사건은 이 프로젝트에서 작성했다. 원작 지도나 공식 사건으로 표시하지 않는다.
+
+## 교배 자료 추가 (2026-10-11)
+
+기존에 고정한 PokéAPI 커밋 `c80757193bd0889054e36f4209762360bdaa4b95`의 `pokemon_egg_groups.csv`, `pokemon_species.csv`에서 종 1–1025의 알그룹·성비·베이비 정보를 추출했습니다. `node scripts/build_breeding_rules.mjs`로 `src/data/breeding-rules.js`를 재생성합니다. 기존 PokéAPI 라이선스·상표 구분을 적용합니다. 교배 사건·대사·시간 단위·성별 배정 방식은 이 게임의 창작 규칙입니다.

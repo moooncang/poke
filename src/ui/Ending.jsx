@@ -24,7 +24,7 @@ export function EndingModal({ life, onDownload, onNew, onClose }) {
   const echoes = life.log.filter(e => e.echo);
   const matches = life.log.filter(e => {
     const category = filter === 'all' || (filter === 'choices' && e.resolution) || (filter === 'echoes' && e.echo)
-      || (filter === 'party' && (e.kind === 'party' || e.encounter?.pokemonId)) || (filter === 'people' && e.kind === 'people') || (filter === 'saved' && life.memories.includes(e.id));
+      || (filter === 'party' && (e.kind === 'party' || e.encounter?.pokemonId || e.choices?.some(c => c.join || c.captureJoin))) || (filter === 'people' && e.kind === 'people') || (filter === 'saved' && life.memories.includes(e.id));
     return category && (decade === 'all' || Math.floor(e.age / 10) === Number(decade))
       && text(`${e.title} ${e.body} ${e.resolution?.label || ''} ${e.resolution?.text || ''}`, e).toLowerCase().includes(query.toLowerCase().trim());
   });

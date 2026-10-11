@@ -32,6 +32,7 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/data/storylets.js` | 상태 조건으로 열리는 사건(인물·지방 상황·기회) |
 | `src/data/more-life.js` · `more-work.js` · `more-places.js` | 표 형식으로 쓴 사건 184개(인생 단계·성향·가족·포켓몬·직업·마을 환경·지방 문화·지방 상황) |
 | `src/data/career-sagas.js` · `league-sagas.js` | 직업 32개 프로젝트(96단계 사건), 지방별 리그·챔피언 경로(90개). 진행은 기존 flags/cooldowns 사용. [작업 기록](docs/CHANGES-career-sagas.md) |
+| `src/data/adventure-projects.js` · `adventure-sagas.js` · `breeding-events.js` | 108개 모험 장면, 교배와 알 돌봄. [추가 규칙](docs/CHANGES-breeding-adventures.md). 교배 데이터는 `scripts/build_breeding_rules.mjs`로 생성 |
 | `src/data/event-kit.js` | 표 형식 사건 작성 도구(`table`, `check`, `later`, `fill`) |
 | `src/data/vignettes.js` | 결정 사이에 나오는 일상 기록(계절·환경·나이·가족·파티 조건) |
 | `src/data/consequences.js` | 선택의 여파 정의 |
