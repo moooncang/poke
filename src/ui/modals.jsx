@@ -140,7 +140,7 @@ function Toggle({ on, onClick, label }) {
   return <button className={`toggle ${on ? 'on' : ''}`} onClick={onClick} role="switch" aria-checked={on} aria-label={label}><i/></button>;
 }
 
-export function SettingsModal({ life, prefs, notice, onGender, onSound, setPref, onDownload, onImport, fileRef, onClose }) {
+export function SettingsModal({ life, prefs, notice, onGender, onSound, setPref, onDownload, onImport, fileRef, onClose, slots = [], onSaveSlot, onLoadSlot, onShare }) {
   return <Modal title="게임 설정" onClose={onClose}><div className="settings-content">
     <span className="eyebrow">GAME SETTINGS</span><h2>게임 설정</h2><p>플레이어 정보·자동 진행·저장 데이터를 관리합니다.</p>
     <div className="setting-row"><span><b>플레이어 성별</b><small>능력치나 진로에는 영향을 주지 않습니다.</small></span><GenderSelect label="플레이어 성별 변경" value={life.gender} onChange={onGender}/></div>
@@ -148,10 +148,23 @@ export function SettingsModal({ life, prefs, notice, onGender, onSound, setPref,
     <div className="setting-row"><span><b>자동 결정</b><small>캐릭터가 자신의 성향과 성공 가능성을 보고 스스로 고릅니다.</small></span><Toggle on={prefs.autoDecisions} onClick={() => setPref('autoDecisions', !prefs.autoDecisions)} label="자동 선택"/></div>
     <div className="setting-row"><span><b>자동 진행 속도</b><small>특별한 만남에서는 언제나 잠시 멈춥니다.</small></span>
       <select aria-label="자동 진행 속도" value={prefs.speed} onChange={e => setPref('speed', Number(e.target.value))}>{[1, 2, 3, 4, 16].map(n => <option key={n} value={n}>{n}×</option>)}</select></div>
+    {onSaveSlot && <div className="settings-slots"><h3>저장 슬롯</h3>
+      <p>삶을 여러 개 번갈아 가며 살 수 있습니다. 슬롯 1은 자동 저장과 같은 자리입니다.</p>
+      <ul className="slot-list">{slots.map((slot, i) => <li key={i} className="slot" data-filled={Boolean(slot)} data-current={slot?.seed === life.seed}>
+        <span className="slot-label">슬롯 {i + 1}</span>
+        <span className="slot-detail">{slot ? `${slot.name} · ${slot.age}세${slot.ended ? ' · 생애 종료' : ''}` : '비어 있음'}</span>
+        <span className="slot-actions">
+          <button className="secondary-button" onClick={() => onSaveSlot(i + 1)}>여기에 저장</button>
+          <button className="secondary-button" disabled={!slot} onClick={() => onLoadSlot(i + 1)}>불러오기</button>
+        </span>
+      </li>)}</ul>
+    </div>}
+    <div className="settings-keys"><h3>단축키</h3><p><kbd>1</kbd>–<kbd>8</kbd> 선택지 고르기 · <kbd>Space</kbd> 진행/정지 · <kbd>N</kbd> 기록 한 줄 · <kbd>F</kbd> 다음 선택까지</p></div>
     <div className="settings-storage"><h3>저장 데이터 관리</h3>
       <p>진행 상황은 이 브라우저에 저장됩니다. 다른 기기로 옮기거나 브라우저 데이터를 지우기 전에는 기록을 내려받아 주세요.</p>
       <button className="secondary-button" onClick={onDownload}><Download size={15}/> 기록 내려받기</button>
       <button className="secondary-button" onClick={() => fileRef.current?.click()}><BookOpen size={15}/> 기록 불러오기</button>
+      {onShare && <button className="secondary-button" onClick={onShare}>요약 복사</button>}
       <input hidden ref={fileRef} type="file" accept="application/json,.json" onChange={onImport}/>
       {notice && <p className="form-notice" role="status">{notice}</p>}
     </div>

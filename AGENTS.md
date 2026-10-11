@@ -24,6 +24,8 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/sim/contest.js` · `src/data/contests.js` | 콘테스트 5부문 × 4랭크, 리본(`ribbon-<부문>-<랭크>` 플래그와 개체 `ribbons`) |
 | `src/data/frontier.js` | 호연 배틀프런티어 7시설(심볼)과 지방 배틀 시설 8곳(연승 단계). 배틀 종류 `facility` |
 | `src/sim/perks.js` · `src/sim/achievements.js` | 가문 혜택·도전 규칙 / 메달·트레이너 카드·엔딩 카드·지방 도감 |
+| `src/sim/standing.js` | 사회적 위치: 명성·악명 등급, 직업 등급명(`careerTitle`), 빚·이자·파산, 수배·체포·복역, 조직(`syndicate`) 직업. 연간 처리 `tickStanding` |
+| `src/data/misfortune.js` · `villain-route.js` | 불운 팩, 어두운 길 팩(유혹·조직 생활·탈출·감옥·악명의 그림자) |
 | `src/data/town-stories.js` · `type-companions.js` · `villain-arcs.js` · `hobbies.js` · `life-chapters.js` · `vignettes-extra.js` | 이벤트 팩: 마을 120, 타입·종 67, 악당 조직 45, 취미·축제 75, 삶의 장 75, 일상 220. 검증은 `node scripts/check-pack.mjs <파일> <EXPORT> [vignettes]` |
 | `src/sim/goals.js` | 삶의 목표(`GOALS`)와 사건 분류 가중치·자동 결정·육성 보정 |
 | `src/sim/legacy.js` | 다회차 기록(`pokelife.legacy.v1`): 엔딩 카드, 메달, 트레이너 카드, 누적 도감, 다음 세대 알(`heritageFor`). 모두 순수 함수 |
@@ -103,7 +105,8 @@ table('stage', [
 | 필드 | 효과 |
 |---|---|
 | `label`, `description`, `outcome` | 필수 문구 |
-| `effects` | `joy·vitality·courage·wisdom·bond·money·reputation` 증감 |
+| `effects` | `joy·vitality·courage·wisdom·bond·money·reputation·infamy·debt` 증감. 능력치·명성은 70 이상에서 절반, 85 이상에서 3분의 1만 오릅니다(`diminished`). 손실은 그대로 |
+| `loan`, `prison`, `losePokemon` | 대출(빚으로 남음, 총 5,000P 한도) · 징역(1~8년, 복역 중엔 `prison` 분류 사건만) · 동료 상실(`'random'·'box'·'party'`, 파트너·전설 제외) |
 | `challenge.talent` | 재능 적용 분야 battle/research/care/craft. 생략하면 재능 보정 없음. 스탯 판정의 5–95% 상한 유지 |
 | `cost` | 이 금액이 없으면 고를 수 없음. 판정 없는 선택지는 `effects.money`에 `-cost`를 직접 넣어야 하고, 판정 선택지는 성공·실패와 관계없이 자동으로 지불 |
 | `challenge` | `{ stat, difficulty, failure: { outcome, effects, ...다른 필드 } }`. 성공률 `25 + 스탯×0.7 − 난이도 + 해당 분야 재능·숙련 보정`, 5~95% |
@@ -113,8 +116,8 @@ table('stage', [
 | `battle` | `{ kind: 'wild'·'gym'·'raid'·'rival'·'villain'·'league'·'facility', opponent?, opponents?, level?, levels?, flags?, capture? }` 자동 배틀 |
 | `contest` | `{ category: 'cool'·'beauty'·'cute'·'clever'·'tough', rank: 0~3 }` 콘테스트 출전(가장 잘 맞는 파티 포켓몬) |
 | `after` | `{ win: {...}, lose: {...} }` 배틀 결과별 추가 효과 |
-| `join`, `joinOrigin`, `joinLevel`, `joinNickname` | 포켓몬 합류(`egg·gift·rescued·adopted·starter·legend`), 선택적으로 레벨(5~100)·별명 |
-| `career`, `education`, `work` | 진로·학습 방식·직업 상태(`satisfaction`, `cut`, `retired`) |
+| `join`, `joinOrigin`, `joinLevel`, `joinNickname` | 포켓몬 합류(`egg·gift·rescued·adopted·starter·legend·stolen`), 선택적으로 레벨(5~100)·별명 |
+| `career`, `education`, `work` | 진로·학습 방식·직업 상태(`satisfaction`, `cut`, `retired`). `career: 'syndicate'`는 조직 가입(경력 평가에는 나오지 않는 숨은 직업, `flags['syndicate-region']` 기록) |
 | `promotion`, `leaveCareer` | 경력 등급 +1(최대 5, 등급당 수입 +15%), 직업 내려놓기 |
 | `captureJoin` | 판정 포획 성공 시 해당 종 합류(경험치는 파트너의 65%) |
 | `destination`, `move`, `home` | 이주(`move: 'region'`은 같은 지방 안) |
@@ -136,6 +139,8 @@ table('stage', [
 **스스로 정한 일.** 결정 사이 자동 기록의 30%는 캐릭터가 혼자 해결하는 사건(`entry.auto`, `kind: 'auto'`)입니다. `director.js`의 `AUTO_CATEGORIES`에 속한 긴급하지 않은 사건만 쓰입니다. 선택 간격은 플레이어 결정(`choices && !auto`)만 셉니다. 테스트나 코드에서 "결정"을 찾을 때는 `e.choices && !e.auto`를 쓰세요. 관계·투자처럼 플레이어가 꼭 골라야 하는 사건은 `cast`·`world` 등 자동 대상이 아닌 분류에 두세요.
 
 **팩의 지연 결과.** `consequences.js`를 고치지 않고 `echoLater(delay, title, body, effects, p)` / `choiceLater(delay, title, body, rows, p)`(event-kit)로 몇 년 뒤의 기록·결정을 사건 안에 쓸 수 있습니다. 문장은 만기 때 `fill`됩니다.
+
+**사회적 위치.** `s.infamy`(악명, 조직 밖에서 매년 −1, 60 이상이면 수배·연 `infamy/400` 확률로 체포), `s.debt`(생활비 부족분이 쌓임, 이자 8%, 여유 돈의 30%로 자동 상환, 8,000P에서 파산: 돈 0·박스 절반 상실·명성 −15), `s.prison`(남은 형기). 체포·출소·파산은 그 해의 주 기록(milestone)입니다. 분류 `misfortune`(돈·빚·건강·치안이 나쁠수록), `dark`(조직원 ×3.5, 악명 비례), `prison`(복역 중에만). 행복의 기준값은 빚·빈 지갑·복역·건강에 따라 내려갑니다(`yearlyDrift`). 경력 등급은 `promotion-review`(일하는 중 4년마다)로도 오릅니다.
 
 **인물 수치.** `cast` 변경에서 `affinity`·`power`·`health`는 증감이고 나머지 키는 값 덮어쓰기입니다.
 

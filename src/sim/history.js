@@ -8,7 +8,7 @@ export const HISTORY_LIMIT = 110;
 export const HISTORY_KEYS = {
   money: '소지금', rep: '명성', joy: '행복', vit: '건강', cou: '용기', wis: '지식', bond: '유대',
   lv: '최고 레벨', party: '파티', box: '박스', badges: '배지', titles: '타이틀', seen: '도감',
-  eco: '지방 경기', saf: '지방 치안', ecl: '지방 생태', income: '수입', expense: '지출',
+  eco: '지방 경기', saf: '지방 치안', ecl: '지방 생태', income: '수입', expense: '지출', infamy: '악명', debt: '빚',
 };
 
 /** Appends this year's snapshot (mutates `s`). */
@@ -21,7 +21,7 @@ export function recordYear(s) {
     lv: Math.max(0, ...s.party.map(xpLevel)), party: s.party.length, box: s.box.length,
     badges: badgeCount(s), titles: championships(s), seen: s.seen.length,
     eco: Math.round(region.economy), saf: Math.round(region.safety), ecl: Math.round(region.ecology),
-    income: s.ledger?.income ?? 0, expense: s.ledger?.expense ?? 0,
+    income: s.ledger?.income ?? 0, expense: s.ledger?.expense ?? 0, infamy: s.infamy || 0, debt: Math.round(s.debt || 0),
   });
   if (s.history.length > HISTORY_LIMIT) s.history.splice(0, s.history.length - HISTORY_LIMIT);
 }

@@ -89,6 +89,7 @@ export function summarizeLife(s) {
     cards: endingCards(s).map(c => ({ id: c.id, kind: c.kind, rarity: c.rarity, title: c.title })),
     rules: cleanRules(s.rules), perks: [...(s.perks || [])],
     peakMoney: Math.max(s.money, ...(s.history || []).map(r => r.money)), firstTitleAge: high?.firstTitleAge ?? null,
+    peakInfamy: Math.max(s.infamy || 0, ...(s.history || []).map(r => r.infamy ?? 0)),
     decisions: s.log.filter(e => e.resolution).length,
   };
 }
@@ -188,6 +189,7 @@ export const RECORDS = [
   { id: 'partner-years', label: '첫 파트너와 가장 오래', unit: '년', value: l => l.partner?.years ?? null },
   { id: 'medals', label: '한 삶 최다 메달', unit: '개', value: l => l.medals.length },
   { id: 'stars', label: '트레이너 카드 별', unit: '개', value: l => l.card.stars.length },
+  { id: 'infamy', label: '최고 악명', unit: '', value: l => l.peakInfamy ?? l.card.infamy ?? null },
 ];
 
 /** The best value of each record across the lives in the hall (ties go to the earlier life). */

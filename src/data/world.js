@@ -20,6 +20,16 @@ export const CAREERS = {
   researcher: { name: '포켓몬 생태 연구원', short: '연구원', icon: 'book', description: '작은 호기심에서 시작되는 발견', income: 260 },
   keeper: { name: '포켓몬 돌보미', short: '돌보미', icon: 'heart', description: '곁에 있는 생명을 보살피는 일', income: 200 },
   merchant: { name: '작은 가게 주인', short: '가게 주인', icon: 'home', description: '여행자들의 쉼표가 되는 공간', income: 300 },
+  // The dark road: joined through events, never offered at a career review (hidden). Pays well, costs reputation and freedom.
+  syndicate: { name: '조직의 일원', short: '조직원', icon: 'skull', description: '그늘에서 돈과 힘을 좇는 삶', income: 420, hidden: true },
+};
+/** Rank titles per career (careerRank 0–5). */
+export const CAREER_RANKS = {
+  traveler: ['신인 트레이너', '수련 트레이너', '베테랑 트레이너', '엘리트 트레이너', '사범', '거장'],
+  researcher: ['연구 보조', '연구원', '선임 연구원', '책임 연구원', '수석 연구원', '박사'],
+  keeper: ['견습 돌보미', '돌보미', '주임 돌보미', '센터 책임자', '센터장', '돌봄 명인'],
+  merchant: ['점원', '가게 주인', '상점 대표', '상단 운영자', '상단주', '거상'],
+  syndicate: ['말단 조직원', '행동대원', '소대장', '간부', '참모', '두목'],
 };
 
 export const NPCS = {
@@ -122,5 +132,14 @@ export const WORK_EVENTS = {
     ['장부가 맞지 않는 밤', '숫자가 맞지 않아 한참을 다시 셌습니다. 포기하지 않고 찾은 작은 실수 덕분에 내일부터는 조금 더 꼼꼼해집니다.', { wisdom: 5, vitality: -2 }],
     ['새 간판을 다는 날', '이웃이 손수 만든 간판을 선물했습니다. 장사가 잘되는 것과 사랑받는 가게가 되는 것은 조금 다릅니다.', { joy: 6, money: 100 }],
     ['잠시 쉬어 갑니다', '처음으로 가게 문에 휴가 안내를 붙였습니다. 돌아오니 단골이 남긴 “잘 쉬고 오세요” 쪽지가 있었습니다.', { vitality: 6, joy: 4 }],
+  ],
+  syndicate: [
+    ['새벽의 창고', '동이 트기 전 창고 뒷문으로 상자를 옮겼습니다. 안에 무엇이 들었는지는 묻지 않는 것이 규칙이었습니다.', { courage: 3, joy: -2 }],
+    ['상납 봉투', '이번 달 몫을 봉투에 담아 올렸습니다. 윗선은 숫자만 보고 고개를 끄덕였습니다. {partner}는 봉투 냄새를 싫어했습니다.', { wisdom: 2, joy: -1 }],
+    ['뒷골목의 인사', '골목에서 마주친 동네 사람이 눈을 피했습니다. 예전에는 먼저 인사하던 사람이었습니다.', { joy: -3, courage: 1 }],
+    ['야간 경비', '조직 창고를 밤새 지켰습니다. 아무 일도 없었지만 몬스터볼에서 손을 떼지 못했습니다.', { vitality: -2, courage: 3 }],
+    ['신참 가르치기', '새로 들어온 아이에게 뒷문과 암호를 알려 주었습니다. 자신이 처음 배우던 날이 떠올라 말이 짧아졌습니다.', { wisdom: 3, bond: -1 }],
+    ['수금 순회', '보호비를 걷으러 가게들을 돌았습니다. 주인들은 웃으며 돈을 건넸고, 웃음은 문이 닫히는 순간 사라졌습니다.', { courage: 2, joy: -2 }],
+    ['조용한 저녁', '임무가 없는 저녁, {partner}와 강가에 앉았습니다. 평범한 트레이너처럼 보였을 것입니다.', { joy: 3, bond: 3 }],
   ],
 };

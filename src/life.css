@@ -588,3 +588,24 @@ body { background: radial-gradient(ellipse at 15% 0%,#1d403333,transparent 55%),
   .ending-card { transition: none; }
   .ending-card:hover { transform: none; }
 }
+
+/* ── Character card, standing badges, save slots (Claude) — functional layout; design: docs/DESIGN-HANDOFF.md part 3 ── */
+.character-card { padding: 16px; border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-panel); display: grid; gap: 10px; }
+.character-card[data-mood="outlaw"], .character-card[data-mood="wanted"] { border-color: var(--ui-rose); } .character-card[data-mood="prison"] { border-color: #8b95a1; } .character-card[data-mood="debt"] { border-color: #f1cf7c; }
+.cc-head { display: flex; gap: 12px; align-items: center; } .cc-portrait { width: 56px; height: 64px; object-fit: contain; }
+.cc-identity { display: flex; flex-direction: column; } .cc-epithet { font-size: 11px; color: var(--ui-mint); } .cc-name { margin: 2px 0; font-size: 22px; } .cc-age { font-size: 12px; color: var(--ui-muted); }
+.cc-conditions { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.cc-condition { font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--ui-rose); color: var(--ui-rose); }
+.cc-facts { display: grid; grid-template-columns: 72px 1fr; gap: 6px 10px; font-size: 12px; margin: 0; } .cc-facts dt { color: var(--ui-muted); } .cc-facts dd { margin: 0; } .cc-facts small { color: var(--ui-muted); }
+.cc-infamy { color: var(--ui-rose); }
+.hud-status { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.hud-badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--ui-line); }
+.hud-badge[data-kind="wanted"], .hud-badge[data-kind="outlaw"] { border-color: var(--ui-rose); color: var(--ui-rose); } .hud-badge[data-kind="debt"] { border-color: #f1cf7c; color: #f1cf7c; } .hud-badge[data-kind="prison"] { border-color: #8b95a1; color: #c8d0d8; }
+.hud-skip { margin-left: auto; font-size: 11px; padding: 4px 10px; border: 1px solid var(--ui-line); border-radius: 6px; } .hud-skip:disabled { opacity: .4; }
+.hud-delta { font-size: 10px; margin-left: 3px; } .hud-delta[data-sign="up"] { color: var(--ui-mint); } .hud-delta[data-sign="down"] { color: var(--ui-rose); }
+.hud-debt { color: #f1cf7c; font-size: 11px; } .hud-infamy b { color: var(--ui-rose); }
+.slot-list { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+.slot { display: grid; grid-template-columns: 56px 1fr auto; gap: 8px; align-items: center; padding: 8px; border: 1px solid var(--ui-line); border-radius: 8px; font-size: 12px; }
+.slot[data-current="true"] { border-color: var(--ui-mint); } .slot[data-filled="false"] .slot-detail { color: var(--ui-muted); } .slot-actions { display: flex; gap: 4px; }
+.settings-keys kbd { padding: 1px 5px; border: 1px solid var(--ui-line); border-radius: 4px; font-size: 11px; }
+@media (max-width: 560px) { .slot { grid-template-columns: 1fr; } }

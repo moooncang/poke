@@ -5,22 +5,23 @@ import { talentPathChoice } from './talent-events.js';
 // Career progression and yearly party training (ported from the career-balance update).
 // The 16-year-old choice is a fixed milestone; later reviews open within an age window instead of on an exact birthday.
 import { CAREERS } from './world.js';
+import { STAT_LABELS } from '../sim/labels.js';
 import { josa } from '../sim/text.js';
 
 export function annualTraining(s) {
-  const base = { traveler: 48, researcher: 28, keeper: 36, merchant: 18 }[s.career] ?? 20;
+  const base = { traveler: 48, researcher: 28, keeper: 36, merchant: 18, syndicate: 32 }[s.career] ?? 20;
   const study = ['school', 'academy', 'study'].includes(s.education) ? 8 : s.education === 'apprentice' ? 12 : s.education === 'travel' ? 10 : 0;
   const focus = s.activity?.mode === 'courage' ? 10 : s.activity?.mode === 'bond' ? 5 : 0;
   return Math.round((base + study + focus) * talentGrowth(s) * goalTraining(s) * (hasPerk(s, 'exp-share') ? 1.1 : 1) * (s.stats.vitality < 35 ? 0.6 : 1) * (s.age >= 65 ? 0.7 : 1));
 }
 
 export const CAREER_REVIEWS = { 16: '진로 선택', 26: '첫 경력 평가', 35: '전문 분야 선택', 40: '직업 재설계', 50: '경력 전환과 후배 육성', 60: '은퇴 준비' };
-const STAT_FOR = { traveler: 'courage', researcher: 'wisdom', keeper: 'bond', merchant: 'wisdom' };
+const STAT_FOR = { traveler: 'courage', researcher: 'wisdom', keeper: 'bond', merchant: 'wisdom', syndicate: 'courage' };
 
 /** Career checkpoint for a review phase (16, 26, 35, 40, 50, 60). */
 export function careerReview(s, phase) {
   const first = phase === 16;
-  const choices = Object.entries(CAREERS).filter(([id]) => id !== s.career).map(([career, c]) => ({
+  const choices = Object.entries(CAREERS).filter(([id, c]) => id !== s.career && !c.hidden).map(([career, c]) => ({
     label: first ? c.short : `${c.short} ${s.career ? '전직 평가' : '채용 평가'}`, career,
     description: first ? `기초 활동부터 시작 · 기본 연 수입 ${c.income}P` : '합격 시 직업 변경 · 실패 시 현재 생활 유지',
     effects: { [STAT_FOR[career]]: 3 }, outcome: `${c.name} 활동을 시작했다.`,
@@ -49,3 +50,23 @@ export function careerReview(s, phase) {
   return { kind: 'choice', title: CAREER_REVIEWS[phase], choices,
     body: `${background}을 바탕으로 다음 단계를 결정한다.${s.education === 'academy' ? ' 아카데미 이력은 연구직 평가에 반영된다.' : ''} 연 수입은 지방 경기와 명성, 경력 등급에 따라 해마다 달라진다.` };
 }
+
+/**
+ * Between the fixed reviews, a working life gets a promotion chance every few years. Each rank is harder; a failed
+ * review costs nothing but satisfaction. The syndicate has its own rank events (see data/villain-route.js).
+ */
+export const PROMOTION_REVIEW = {
+  id: 'promotion-review', category: 'work', min: 20, max: 69, once: false, cooldown: 4, weight: () => 2.5,
+  when: s => s.career && !CAREERS[s.career].hidden && !s.work.retired && (s.careerRank || 0) < 5 && s.work.years >= 3,
+  build: s => {
+    const stat = STAT_FOR[s.career], rank = s.careerRank || 0;
+    return { kind: 'choice', title: `${CAREERS[s.career].short} 승급 심사`, body: `${s.work.years}년째 같은 일을 해 왔다. 윗사람들이 다음 등급 심사를 제안한다. 등급이 오르면 연 수입이 15% 늘지만, 떨어지면 당분간 같은 자리다.`,
+      choices: [
+        { label: '승급 심사에 응한다', description: `${STAT_LABELS[stat]} 판정 · 성공 시 경력 등급 ${rank + 1} · 실패 시 만족 −5`, effects: { [stat]: 2 }, promotion: true, tone: 'bold',
+          outcome: '심사를 통과했다. 명함의 직함이 바뀌었다.',
+          challenge: { stat, difficulty: 5 + rank * 6, talent: { traveler: 'battle', researcher: 'research', keeper: 'care', merchant: 'craft' }[s.career],
+            failure: { effects: { [stat]: 1 }, work: { satisfaction: -5 }, outcome: '이번 심사에서는 떨어졌다. 다음 기회까지 같은 자리에서 실력을 쌓는다.' } } },
+        { label: '지금 자리가 편하다', description: '만족 +4 · 건강 +2', effects: { vitality: 2 }, work: { satisfaction: 4 }, tone: 'easygoing', outcome: '책임이 늘어나는 대신 지금의 생활을 지키기로 했다.' },
+      ] };
+  },
+};

@@ -10,12 +10,12 @@ import { WORLD_KEYS, conditionName } from '../sim/world.js';
 import { PATHS } from '../sim/people.js';
 import { DISPOSITIONS, dominantDisposition } from '../sim/party.js';
 import { sprite, asset } from './assets.js';
+import { CharacterCard } from './CharacterCard.jsx';
 import { pokemonName } from './format.js';
 import { annualTraining } from '../data/progression.js';
 
 const STATS = { vitality: '건강', joy: '행복', wisdom: '지식', courage: '용기', bond: '유대' };
 const RELATIONSHIP = { single: '교제 중인 상대 없음', friends: '친구', dating: '교제 중', engaged: '약혼', married: '배우자' };
-const reputationTier = r => r < 15 ? '무명' : r < 35 ? '동네에서 알려짐' : r < 60 ? '지방의 유명인' : r < 85 ? '전국구 트레이너' : '살아 있는 전설';
 const levelLabel = value => value < 35 ? '낮음' : value > 65 ? '높음' : '보통';
 
 function Meter({ label, value, detail }) {
@@ -50,22 +50,16 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
   const cast = Object.entries(life.cast).filter(([id, p]) => id !== 'rival' || p.met);
   return <aside className={`life-sidebar sidebar-${side}`} aria-label={side === 'trainer' ? '트레이너 정보' : '파티와 세계 정보'}>
     {side === 'trainer' ? <>
+    <CharacterCard life={life}/>
     <section className="dex-panel passport">
       <div className="dex-panel-title">TRAINER LICENSE <span>● 등록됨</span></div>
-      <div className="trainer-identity"><img className="pixel" src={asset(life.gender === 'female' ? 'assets/trainers/leaf.png' : 'assets/trainers/red.png')} alt="트레이너"/><div><small>포켓몬 트레이너</small><h2>{life.name}</h2><span>{life.age}세 · {GENDERS[life.gender]}</span></div></div>
       <dl>
-        <dt>성별</dt><dd>{GENDERS[life.gender]}</dd>
-        <dt>출신 지방</dt><dd>{hometown.region} · {hometown.name}</dd>
-        <dt>가족 구성</dt><dd>{life.family}</dd>
-        <dt>가족 형편</dt><dd>{life.background.wealth}</dd>
         <dt>출생 환경</dt><dd>{life.background.home}<br/>{life.background.environment}</dd>
         <dt>성향</dt><dd>{DISPOSITIONS[disposition]} <small>({Object.entries(life.disposition).filter(([, v]) => v).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${DISPOSITIONS[k]} ${v}`).join(' · ')})</small></dd>
-        <dt>명성</dt><dd>{reputationTier(life.reputation)} <small>({life.reputation})</small></dd>
-        <dt>일</dt><dd>{life.career ? `${CAREERS[life.career].name}${life.work.retired ? ' · 은퇴' : ` · 경력 ${life.careerRank || 0}단계 · ${life.work.years}년차 · 만족 ${life.work.satisfaction}`}` : '자율 활동'}</dd>
         <dt>연간 육성</dt><dd>파티 경험치 +{annualTraining(life)}</dd>
       </dl>
       <div className="money-display">소지금 <b>{life.money.toLocaleString()} P</b></div>
-      {life.ledger && <small className="ledger">작년 수입 {life.ledger.income.toLocaleString()}P · 지출 {life.ledger.expense.toLocaleString()}P</small>}
+      {life.ledger && <small className="ledger">작년 수입 {life.ledger.income.toLocaleString()}P · 지출 {life.ledger.expense.toLocaleString()}P{life.debt > 0 ? ` · 빚 ${Math.round(life.debt).toLocaleString()}P` : ''}</small>}
     </section>
     <section className="dex-panel talent-panel"><h3>타고난 재능 <small>{life.talent.level} / 5</small></h3>
       <b>{TALENT_FIELDS[life.talent.field].name} · {TALENT_TIERS[life.talent.level]}</b>

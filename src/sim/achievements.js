@@ -12,6 +12,7 @@ import { ribbonCount, masterRibbons, CONTEST_CATEGORIES } from './contest.js';
 import { frontierSymbols, frontierGold, facilityStreaks, REGION_FACILITIES, facilityTier } from '../data/frontier.js';
 import { historyHighlights } from './history.js';
 import { RULES, hasRule } from './perks.js';
+import { infamyOf, isOutlaw, isWanted, careerTitle, syndicateName, debtOf } from './standing.js';
 
 export const RARITIES = { common: '일반', rare: '레어', epic: '에픽', legendary: '레전드' };
 
@@ -39,7 +40,7 @@ export function dexProgress(ids) {
 
 // ── Medals ──
 // `test` receives the finished (or current) life. Medals are listed in display order and grouped by `group`.
-export const MEDAL_GROUPS = { partner: '파트너', collection: '도감과 수집', battle: '배틀과 리그', contest: '콘테스트', frontier: '배틀 시설', life: '삶과 사람', hobby: '취미와 일상', world: '여행', legacy: '가문', challenge: '도전 규칙' };
+export const MEDAL_GROUPS = { partner: '파트너', collection: '도감과 수집', battle: '배틀과 리그', contest: '콘테스트', frontier: '배틀 시설', life: '삶과 사람', hobby: '취미와 일상', world: '여행', dark: '그늘의 길', legacy: '가문', challenge: '도전 규칙' };
 const finished = s => Boolean(s.ended);
 // Distinct storylets of a pack that this life actually went through (by id prefix, repeatable ids end in @age).
 const seenEvents = (s, prefix) => new Set(s.log.map(e => String(e.sourceId || '').split('@')[0]).filter(id => id.startsWith(prefix))).size;
@@ -125,6 +126,16 @@ export const MEDALS = [
   { id: 'grandchild', group: 'life', name: '손주의 웃음', detail: '손주를 보았다.', test: s => Boolean(s.flags['lc-grandkid']) },
   { id: 'child-wedding', group: 'life', name: '아이의 결혼식', detail: '아이의 결혼식을 지켜보았다.', test: s => Boolean(s.flags['lc-kid-wed']) },
   { id: 'self-made-50', group: 'life', name: '스스로 걸어온 길', detail: '캐릭터가 스스로 정한 일이 50가지를 넘었다.', test: s => s.log.filter(e => e.auto).length >= 50 },
+  // 그늘의 길
+  { id: 'outlaw', group: 'dark', name: '그늘로 들어선 날', detail: '악당 조직에 들어갔다.', test: s => isOutlaw(s) || Boolean(s.flags['syndicate-region']) },
+  { id: 'syndicate-boss', group: 'dark', name: '두목', detail: '조직의 정점에 올랐다.', test: s => isOutlaw(s) && (s.careerRank || 0) >= 5 },
+  { id: 'infamy-60', group: 'dark', name: '수배 전단', detail: '악명 60을 넘겨 수배됐다.', test: s => isWanted(s) || (s.history || []).some(r => (r.infamy ?? 0) >= 60) },
+  { id: 'arrested', group: 'dark', name: '철창 너머', detail: '체포되어 복역했다.', test: s => Boolean(s.flags.arrested) || (s.prison || 0) > 0 },
+  { id: 'redeemed', group: 'dark', name: '돌아온 길', detail: '조직을 떠나 악명을 10 아래로 되돌렸다.', test: s => Boolean(s.flags['syndicate-region']) && !isOutlaw(s) && infamyOf(s) < 10 && (s.history || []).some(r => (r.infamy ?? 0) >= 30) },
+  { id: 'bankrupt', group: 'dark', name: '빈손', detail: '파산했다.', test: s => Boolean(s.flags.bankrupt) },
+  { id: 'debt-free', group: 'dark', name: '빚을 갚은 날', detail: '빚 3,000P 이상을 지고도 모두 갚았다.', test: s => debtOf(s) === 0 && (s.history || []).some(r => (r.debt ?? 0) >= 3000) },
+  { id: 'lost-companion', group: 'dark', name: '빈 몬스터볼', detail: '동료를 영영 잃었다.', test: s => (s.flags.lost || 0) >= 1 },
+  { id: 'survivor', group: 'dark', name: '그래도 살아남다', detail: '빚·복역·동료 상실 중 둘 이상을 겪고 80세를 넘겼다.', test: s => s.age >= 80 && [Boolean(s.flags.bankrupt) || (s.history || []).some(r => (r.debt ?? 0) > 0), Boolean(s.flags.arrested), (s.flags.lost || 0) >= 1].filter(Boolean).length >= 2 },
   // 도전 규칙
   ...Object.entries(RULES).map(([id, rule]) => ({ id: `rule-${id}`, group: 'challenge', name: `${rule.name} 완주`, detail: `‘${rule.name}’ 규칙으로 삶을 끝까지 살았다.`, test: s => finished(s) && hasRule(s, id) })),
   { id: 'rule-solo-champion', group: 'challenge', name: '단짝 챔피언', detail: '‘단짝 여행’ 규칙으로 리그 정상에 올랐다.', test: s => hasRule(s, 'solo') && championships(s) >= 1 },
@@ -149,6 +160,10 @@ export const CARD_COLORS = ['basic', 'green', 'blue', 'red', 'silver', 'gold'];
 /** A title for the whole life, from the most remarkable thing in it. */
 export function epithet(s) {
   const titles = titlesOf(s);
+  if (isOutlaw(s) && (s.careerRank || 0) >= 5) return `${syndicateName(s)}의 두목`;
+  if (isWanted(s)) return '수배 중인 무법자';
+  if (isOutlaw(s)) return `${syndicateName(s)} ${careerTitle(s)}`;
+  if (infamyOf(s) >= 35) return '악명 높은 트레이너';
   if (titles.length >= LEAGUE_REGIONS.length) return '전 지방의 챔피언';
   if (titles.length >= 2) return `${titles.length}개 지방의 챔피언`;
   if (titles.length === 1) return `${titles[0].name} 챔피언`;
@@ -170,7 +185,8 @@ export function trainerCard(s) {
   return { name: s.name, gender: s.gender, epithet: epithet(s), stars, color: CARD_COLORS[stars.length],
     badges: badgeCount(s), champions: titlesOf(s).map(r => r.id), seen: s.seen.length, owned: ownedSpecies(s).length,
     wins: s.game.wins, reputation: s.reputation, money: s.money, age: s.age, generation: s.heritage?.generation || 1,
-    ribbons: ribbonCount(s), symbols: frontierSymbols(s), facility: facilityStreaks(s), rules: [...(s.rules || [])] };
+    ribbons: ribbonCount(s), symbols: frontierSymbols(s), facility: facilityStreaks(s), rules: [...(s.rules || [])],
+    infamy: infamyOf(s), title: careerTitle(s), career: s.career };
 }
 
 // ── Ending cards ──
@@ -238,6 +254,11 @@ export function endingCards(s) {
   const high = historyHighlights(s);
   if (high) cards.push(card('graph', 'life', 'common', '인생 그래프',
     `가장 부유했던 해 ${high.richest.age}세(${high.richest.value.toLocaleString()}P) · 가장 행복했던 해 ${high.happiest.age}세 · 가장 힘들었던 해 ${high.hardest.age}세 · 평생 수입 ${high.totalIncome.toLocaleString()}P.`));
+  const peakInfamy = Math.max(infamyOf(s), ...(s.history || []).map(r => r.infamy ?? 0));
+  if (peakInfamy >= 15 || s.flags['syndicate-region']) cards.push(card('shadow', 'path', peakInfamy >= 60 ? 'legendary' : peakInfamy >= 35 ? 'epic' : 'rare', '그늘의 길',
+    `${s.flags['syndicate-region'] ? `${syndicateName(s)}에 몸담았다. ` : ''}악명은 최고 ${peakInfamy}까지 올랐다.${s.flags.arrested ? ` ${s.flags.arrested}번 체포됐다.` : ''}${!isOutlaw(s) && s.flags['syndicate-region'] ? ' 끝내 조직을 떠났다.' : ''}`));
+  if (s.flags.bankrupt || (s.flags.lost || 0) > 0) cards.push(card('hardship', 'life', 'rare', '잃은 것들',
+    `${s.flags.bankrupt ? '파산을 겪었다. ' : ''}${s.flags.lost ? `동료 ${s.flags.lost}마리가 영영 떠났다. ` : ''}그래도 ${s.age}세까지 걸었다.`));
   if (s.rules?.length) cards.push(card('rules', s.rules.slice().sort().join('+'), s.rules.length >= 3 ? 'legendary' : s.rules.length === 2 ? 'epic' : 'rare', '도전 규칙',
     `${s.rules.map(id => RULES[id].name).join(' · ')} 규칙으로 ${s.age}세까지 살았다.`));
   // 9. The epitaph: always last.
@@ -250,6 +271,6 @@ export const CARD_KINDS = {
   hall: '명예의 전당 · 마지막 파티', partner: '첫 파트너', champion: '지방 챔피언', legend: '전설의 동행', shiny: '반짝이는 동료',
   badges: '배지 케이스', dex: '도감 기록', rival: '라이벌', friend: '소꿉친구', family: '가족', career: '직업', talent: '타고난 재능',
   travel: '발자취', heritage: '가문', ribbons: '리본 케이스', frontier: '배틀 시설 기록', named: '이름 지은 동료', ace: '최다승 동료',
-  graph: '인생 그래프', rules: '도전 규칙', epitaph: '삶의 칭호',
+  graph: '인생 그래프', rules: '도전 규칙', shadow: '그늘의 길', hardship: '잃은 것들', epitaph: '삶의 칭호',
 };
 

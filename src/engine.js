@@ -20,6 +20,7 @@ import { goalFit } from './sim/goals.js';
 import { recordYear } from './sim/history.js';
 import { runContest } from './sim/contest.js';
 import { hasPerk, hasRule, cleanPerks, cleanRules, RULE_FRAIL_LIFESPAN, WANDER_EVERY } from './sim/perks.js';
+import { tickStanding, takeLoan, inPrison, LOAN_LIMIT } from './sim/standing.js';
 import { LEGENDARY } from './data/species-rules.js';
 import { validHeritage } from './sim/legacy.js';
 import { autoBattle, battleSummary, freshGear, MEGA, GMAX, ALL_TYPES } from './sim/battle.js';
@@ -46,11 +47,15 @@ const MEMORABLE = ['encounter', 'milestone', 'choice', 'ending'];
 export const AUTO_SHARE = 0.3;
 
 // ── Bookkeeping ──
+// Gains shrink near the top of a scale, so stats settle in a band where checks still matter (see yearlyDrift).
+export const diminished = (current, value) => value <= 0 ? value : current >= 85 ? Math.ceil(value / 3) : current >= 70 ? Math.ceil(value / 2) : value;
 function apply(state, effects = {}) {
   for (const [key, value] of Object.entries(effects)) {
     if (key === 'money') state.money = Math.max(0, state.money + value);
-    else if (key === 'reputation') state.reputation = clamp(state.reputation + value, 0, 100);
-    else if (key in state.stats) state.stats[key] = clamp(state.stats[key] + value, 0, 100);
+    else if (key === 'reputation') state.reputation = clamp(state.reputation + diminished(state.reputation, value), 0, 100);
+    else if (key === 'infamy') state.infamy = clamp((state.infamy || 0) + value, 0, 100);
+    else if (key === 'debt') state.debt = Math.max(0, (state.debt || 0) + value);
+    else if (key in state.stats) state.stats[key] = clamp(state.stats[key] + diminished(state.stats[key], value), 0, 100);
   }
 }
 
@@ -139,6 +144,7 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   // A chosen first partner (perk "파트너 선택권"); an inherited egg takes precedence.
   state.starter = Number.isInteger(starter) && starter >= 1 && starter <= 1025 && !LEGENDARY.has(starter) && !state.heritage ? starter : null;
   state.history = [];
+  state.infamy = 0; state.debt = 0; state.prison = 0;
   state.gender = Object.hasOwn(GENDERS, gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
   state.lifespan = 64 + Math.floor(random(state) * 37);
@@ -172,6 +178,7 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
 // ── Yearly simulation ──
 function yearlyEconomy(s) {
   const regionId = currentRegion(s), factor = economyFactor(s, regionId), economy = regionState(s, regionId).economy;
+  if (inPrison(s)) { s.ledger = { income: 0, expense: 0 }; return; }
   let income = 0;
   if (s.career && !s.work.retired) {
     s.work.years += 1;
@@ -188,13 +195,19 @@ function yearlyEconomy(s) {
   if (leisure > 0) apply(s, { joy: 1 });
   s.ledger = { income: Math.round(income), expense: Math.round(expense + leisure) };
   s.money = Math.max(0, Math.round(s.money - leisure));
-  s.money = Math.max(0, Math.round(s.money + income - expense));
+  // Living costs that savings cannot cover become debt (see sim/standing.js for interest and bankruptcy).
+  const balance = Math.round(s.money + income - expense);
+  if (balance < 0) { s.debt = (s.debt || 0) - balance; s.flags.shortfalls = (s.flags.shortfalls || 0) + 1; }
+  s.money = Math.max(0, balance);
 }
 
 // Stats drift back toward a baseline every year, so they reflect how someone lives now rather than a lifetime total.
 function yearlyDrift(s) {
-  const vitalityBase = 90 - Math.max(0, s.age - 30) * 0.8;
-  const drift = { joy: [60, 0.1], vitality: [vitalityBase, 0.1], courage: [40, 0.06], wisdom: [40, 0.05], bond: [40, 0.06] };
+  const vitalityBase = 90 - Math.max(0, s.age - 30) * 0.8 - ((s.debt || 0) > 0 ? 3 : 0);
+  // Happiness settles where life actually is: debt, an empty wallet, prison and poor health pull the baseline down.
+  const joyBase = 60 - ((s.debt || 0) > 0 ? 8 : 0) - (s.money <= 0 ? 6 : 0) - (inPrison(s) ? 15 : 0) - (s.stats.vitality < 40 ? 6 : 0)
+    + (s.relationship.status === 'married' ? 3 : 0) + (s.party.length ? 2 : 0);
+  const drift = { joy: [joyBase, 0.15], vitality: [vitalityBase, 0.1], courage: [40, 0.08], wisdom: [40, 0.08], bond: [40, 0.08] };
   for (const [key, [base, rate]] of Object.entries(drift)) {
     const gap = s.stats[key] - base;
     if (gap > 0 || key === 'vitality' || key === 'joy') s.stats[key] = clamp(Math.round(s.stats[key] - gap * rate), 0, 100);
@@ -234,6 +247,9 @@ function advanceYear(input) {
 
   yearlyEconomy(s);
   yearlyGrowth(s);
+  // Arrest, release and bankruptcy are the year's main record; smaller standing notes go to the queue.
+  const standing = tickStanding(s), turning = standing.find(r => r.kind === 'milestone');
+  queue(s, standing.filter(r => r !== turning));
   queue(s, tickWorld(s));
   queue(s, tickPeople(s));
   const evolutions = evolveMembers(s);
@@ -262,6 +278,7 @@ function advanceYear(input) {
   }
   const milestone = milestoneEvent(s);
   if (milestone) { queue(s, evolutions); return log(s, milestone); }
+  if (turning) { queue(s, evolutions); return log(s, { ...turning, memory: true }); }
   if (s.career && !s.work.retired && s.age >= 70) {
     s.work.retired = true; queue(s, evolutions);
     return log(s, { kind: 'milestone', title: '정년 은퇴', body: '정규 일을 마치고 연금 생활을 시작했다. 연금은 쌓아 온 명성에 따라 달라진다.', effects: { joy: 6, vitality: 3 } });
@@ -332,6 +349,10 @@ function applyActions(s, a, origin) {
   }
   if (a.flag) s.flags[a.flag] = true;
   if (a.unflag) delete s.flags[a.unflag];
+  if (a.loan) takeLoan(s, Math.min(a.loan, LOAN_LIMIT));
+  if (a.prison) { s.prison = Math.max(s.prison || 0, a.prison); if (s.career === 'syndicate') { s.career = null; s.careerRank = 0; } }
+  if (a.career === 'syndicate') s.flags['syndicate-region'] = currentRegion(s);
+  if (a.losePokemon) loseMember(s, a.losePokemon);
   relocate(s, a);
   if (a.relationship) resolveRelationship(s, a.relationship);
   if (a.join) {
@@ -352,6 +373,23 @@ function applyActions(s, a, origin) {
     if (a.equipment === 'z') s.game.crystals = [...ALL_TYPES];
   }
   if (a.follow) plantSeeds(s, a.follow, origin);
+}
+
+// A companion leaves for good (ran away, was stolen, died of illness). Never the first partner or a legendary;
+// 'box' takes from the box first, 'party' from the party, 'random' from both. Records the loss as a party entry.
+function loseMember(s, how) {
+  const pools = how === 'box' ? [s.box, s.party] : how === 'party' ? [s.party, s.box] : [[...s.party, ...s.box]];
+  for (const pool of pools) {
+    const candidates = pool.filter(m => !m.locked && m.origin !== 'partner');
+    if (!candidates.length) continue;
+    const member = pick(s, candidates);
+    s.party = s.party.filter(m => m !== member); s.box = s.box.filter(m => m !== member);
+    if (s.partyPlan) s.partyPlan = { ...s.partyPlan, pinned: s.partyPlan.pinned.filter(uid => uid !== member.uid) };
+    s.flags.lost = (s.flags.lost || 0) + 1;
+    queue(s, [{ kind: 'party', automatic: true, title: '떠난 동료', effects: { bond: -3 }, body: `${poke(member.id, '이', '가')} 더는 곁에 없다. ${member.joined}세부터 ${s.age - member.joined}년을 함께한 몬스터볼이 비어 있다.` }]);
+    return member;
+  }
+  return null;
 }
 
 function runBattle(s, choice, origin) {
@@ -429,6 +467,13 @@ export function choose(input, index) {
 }
 
 export function acknowledge(input) { return { ...input, encounter: null }; }
+
+/** Plays forward until the next player decision, special encounter or the end (at most `limit` records). */
+export function fastForward(input, limit = 60) {
+  let s = input;
+  for (let i = 0; i < limit && !s.ended && !s.pending && !s.encounter; i++) s = advance(s);
+  return s;
+}
 export function toggleMemory(input, id) {
   return { ...input, memories: input.memories.includes(id) ? input.memories.filter(x => x !== id) : [...input.memories, id] };
 }

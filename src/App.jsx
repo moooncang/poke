@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, BarChart3, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Trophy, Volume2, VolumeX, X } from 'lucide-react';
 import { SEASONS } from './data/world.js';
-import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal, renamePokemon } from './engine.js';
+import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal, renamePokemon, fastForward } from './engine.js';
+import { shareSummary } from './ui/share.js';
 import { SimulationReport } from './ui/Report.jsx';
 import { LEGACY_KEY, parseLegacy, recordLife, chooseHeir, unlockedPerks } from './sim/legacy.js';
 import { TrainerHud } from './ui/Hud.jsx';
@@ -58,6 +59,24 @@ function download(life, asText = false) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+// Extra save slots (the main save stays under SAVE_KEY so older links and tests keep working).
+export const SLOT_COUNT = 3;
+const slotKey = n => n === 1 ? SAVE_KEY : `${SAVE_KEY}.slot${n}`;
+function readSlots() {
+  return Array.from({ length: SLOT_COUNT }, (_, i) => {
+    try { const raw = localStorage.getItem(slotKey(i + 1)); const s = raw && JSON.parse(raw); return s && typeof s.name === 'string' ? { name: s.name, age: s.age, ended: Boolean(s.ended), seed: s.seed } : null; } catch { return null; }
+  });
+}
+
+// What changed since the last player decision, for the HUD badges.
+function deltasSince(life, snapshot) {
+  if (!snapshot) return {};
+  const out = {};
+  for (const key of ['joy', 'vitality', 'courage', 'wisdom', 'bond']) if (life.stats[key] !== snapshot.stats[key]) out[key] = life.stats[key] - snapshot.stats[key];
+  for (const key of ['money', 'reputation', 'infamy']) if ((life[key] || 0) !== (snapshot[key] || 0)) out[key] = (life[key] || 0) - (snapshot[key] || 0);
+  return out;
+}
+
 function rememberPrevious(life) {
   try { localStorage.setItem(`${SAVE_KEY}.previous`, JSON.stringify(life)); } catch { /* manual export remains available */ }
 }
@@ -80,6 +99,8 @@ export default function App() {
   const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', useHeir: true, perks: [], rules: [], town: 'random', starter: '' });
   const [legacy, setLegacy] = useState(loadLegacy);
   const [hiddenDecision, setHiddenDecision] = useState(null);
+  const [slots, setSlots] = useState(readSlots);
+  const [snapshot, setSnapshot] = useState(null);
   const fileRef = useRef(null);
 
   const decisionHidden = Boolean(life.pending && hiddenDecision === life.pending);
@@ -107,6 +128,23 @@ export default function App() {
     return () => document.removeEventListener('visibilitychange', pause);
   }, []);
   useEffect(() => { if (life.ended) setRunning(false); }, [life.ended]);
+  // Keyboard: 1–8 pick a choice, Space pauses/resumes, N advances one record, F fast-forwards to the next decision.
+  useEffect(() => {
+    const onKey = e => {
+      if (e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|SELECT|TEXTAREA)$/.test(e.target?.tagName)) return;
+      if (pendingEntry && !decisionHidden && !activeEncounter && !modal && !detail && /^[1-8]$/.test(e.key)) {
+        const i = Number(e.key) - 1, c = pendingEntry.choices[i];
+        if (c && (c.cost || 0) <= life.money) { e.preventDefault(); decide(i); }
+        return;
+      }
+      if (modal || detail || activeEncounter) return;
+      if (e.key === ' ') { e.preventDefault(); if (!life.ended) setRunning(r => !r); }
+      else if (e.key === 'n' || e.key === 'N') { if (!life.pending && !life.ended) { setRunning(false); setLife(advance); } }
+      else if (e.key === 'f' || e.key === 'F') { if (!life.pending && !life.ended) skip(); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
 
   const setPref = (key, value) => setPrefs(p => ({ ...p, [key]: value }));
   const toggleSound = () => { if (!prefs.sound) playChime(); setPref('sound', !prefs.sound); };
@@ -115,7 +153,20 @@ export default function App() {
   const party = { onMode: mode => setLife(s => setPartyMode(s, mode)), onPin: uid => setLife(s => togglePin(s, uid)),
     onMove: (uid, swap) => setLife(s => movePokemon(s, uid, swap)), onLead: uid => setLife(s => setLead(s, uid)) };
   const keep = id => setLife(s => toggleMemory(s, id));
-  const decide = i => { setLife(s => choose(s, i)); setRunning(true); };
+  const decide = i => { setSnapshot({ stats: { ...life.stats }, money: life.money, reputation: life.reputation, infamy: life.infamy || 0 }); setLife(s => choose(s, i)); setRunning(true); };
+  const skip = () => { setRunning(false); setLife(s => fastForward(s)); };
+  const saveSlot = n => { try { localStorage.setItem(slotKey(n), JSON.stringify(life)); setSlots(readSlots()); setNotice(`슬롯 ${n}에 저장했습니다.`); } catch { setNotice('이 브라우저에서는 슬롯 저장을 사용할 수 없습니다.'); } };
+  const loadSlot = n => {
+    try {
+      const saved = parseSave(localStorage.getItem(slotKey(n)) || '');
+      if (!saved) { setNotice(`슬롯 ${n}을 읽지 못했습니다.`); return; }
+      rememberPrevious(life); setLife(saved); setHiddenDecision(null); setSnapshot(null); setModal(null); setTab('story'); setRunning(false); setNotice(`슬롯 ${n}을 불러왔습니다.`);
+    } catch { setNotice('슬롯을 불러오지 못했습니다.'); }
+  };
+  const share = async () => {
+    const text = shareSummary(life);
+    try { await navigator.clipboard.writeText(text); setNotice('요약을 복사했습니다.'); } catch { download(life, true); }
+  };
   const hideDecision = () => { setHiddenDecision(life.pending); setRunning(false); };
   const replayEvent = (data, age) => { setRunning(false); setReplay({ ...data, age }); };
   const openModal = key => { setRunning(false); setModal(key); };
@@ -130,7 +181,7 @@ export default function App() {
     setLife(createLife({ name: form.name || '하루', gender: form.gender, seed: form.seed || crypto.randomUUID(), goal: form.goal, heritage, perks, rules: form.rules,
       town: perks.includes('town-pass') ? form.town : 'random', starter: perks.includes('starter-pick') && !heritage && form.starter ? Number(form.starter) : null }));
     if (heritage) setLegacy(l => ({ ...l, heir: null }));
-    setHiddenDecision(null); setModal('birth'); setReplay(null); setTab('story'); setShown(8); setFilter('all'); setRunning(true); setNotice('');
+    setHiddenDecision(null); setSnapshot(null); setModal('birth'); setReplay(null); setTab('story'); setShown(8); setFilter('all'); setRunning(true); setNotice('');
   }
 
   async function importStory(event) {
@@ -175,7 +226,7 @@ export default function App() {
           <span className="nav-life-id">LIFE № {String(life.seed).replace(/[^0-9a-z]/gi, '').slice(-6).toUpperCase() || '000001'}</span>
         </nav>
         <div className="main-grid"><LifeSidebar life={life} onPokemon={setDetail} side="trainer"/><main>
-          <TrainerHud life={life} onParty={() => openModal('party')} onGoal={changeGoal}/>
+          <TrainerHud life={life} onParty={() => openModal('party')} onGoal={changeGoal} deltas={deltasSince(life, snapshot)} onSkip={skip}/>
           {tab === 'story' && <>
             <section className="chapter-header">
               <div><span className="eyebrow">CHAPTER {String(chapterOf(life.age)).padStart(2, '0')}</span><h2>{stageOf(life.age)}<span>{life.age}세</span></h2>
@@ -226,9 +277,9 @@ export default function App() {
       onClose={() => { if (replay) setReplay(null); else { setLife(acknowledge); setRunning(true); } }}/>}
     {modal === 'new' && !activeEncounter && <NewLifeModal life={life} legacy={legacy} form={form} setForm={setForm} onSubmit={begin} onClose={() => setModal(null)} onDownload={() => download(life)}/>}
     {modal === 'settings' && !activeEncounter && <SettingsModal life={life} prefs={prefs} notice={notice} onGender={setGender} onSound={toggleSound} setPref={setPref}
-      onDownload={() => download(life)} onImport={importStory} fileRef={fileRef} onClose={() => setModal(null)}/>}
+      onDownload={() => download(life)} onImport={importStory} fileRef={fileRef} onClose={() => setModal(null)} slots={slots} onSaveSlot={saveSlot} onLoadSlot={loadSlot} onShare={share}/>}
     {detail && !activeEncounter && <PokemonModal life={life} id={detail} onClose={() => setDetail(null)}/>}
-    {modal === 'ending' && !activeEncounter && <EndingModal life={life} legacy={legacy} onChooseHeir={life.ended ? uid => setLegacy(l => chooseHeir(l, life, uid)) : null} onDownload={() => download(life, true)} onNew={() => setModal('new')} onClose={() => setModal(null)}/>}
+    {modal === 'ending' && !activeEncounter && <EndingModal life={life} legacy={legacy} onShare={share} onChooseHeir={life.ended ? uid => setLegacy(l => chooseHeir(l, life, uid)) : null} onDownload={() => download(life, true)} onNew={() => setModal('new')} onClose={() => setModal(null)}/>}
     {modal === 'about' && !activeEncounter && <AboutModal onClose={() => setModal(null)}/>}
   </>;
 }

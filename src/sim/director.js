@@ -19,7 +19,7 @@ import { STORYLETS } from '../data/storylets.js';
 import { MORE_LIFE } from '../data/more-life.js';
 import { MORE_WORK } from '../data/more-work.js';
 import { MORE_PLACES } from '../data/more-places.js';
-import { careerReview, CAREER_REVIEWS } from '../data/progression.js';
+import { careerReview, CAREER_REVIEWS, PROMOTION_REVIEW } from '../data/progression.js';
 import { LIFE_STORYLETS } from '../data/life-events.js';
 import { CHALLENGE_EVENTS, academyExam } from '../data/challenges.js';
 import { BRANCH_EVENTS } from '../data/quests.js';
@@ -134,7 +134,7 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, PROMOTION_REVIEW, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
@@ -142,6 +142,9 @@ const CATEGORY_WEIGHT = {
   league: s => Object.keys(s.flags).some(k=>k.startsWith('league-')&&k.endsWith('-licensed')) ? 7 : s.career==='traveler' ? 3 : 1,
   contest: s => 0.7 + (s.flags['contest-registered'] ? 0.6 : 0),
   frontier: () => 0.9,
+  prison: () => 5,
+  dark: s => (s.career === 'syndicate' ? 3.5 : 0.6) + (s.infamy || 0) / 60 + (hasCondition(s, 'syndicate') ? 0.8 : 0),
+  misfortune: s => 0.8 + (s.money <= 0 ? 0.4 : 0) + ((s.debt || 0) > 0 ? 0.4 : 0) + (s.stats.vitality < 40 ? 0.4 : 0) + (regionState(s).safety < 40 ? 0.4 : 0),
   childhood: () => 3,
   career: () => 3,
   stage: () => 1.8,
@@ -176,7 +179,10 @@ export const AUTO_CATEGORIES = ['local', 'pokemon', 'stage', 'family', 'opportun
  */
 export function directEvent(s, { auto = false } = {}) {
   const groups = {};
-  const open = ALL_STORYLETS.filter(st => available(s, st)
+  // Behind bars only prison events happen (and nothing is settled alone).
+  const jailed = (s.prison || 0) > 0;
+  if (jailed && auto) return null;
+  const open = ALL_STORYLETS.filter(st => available(s, st) && (!jailed || st.category === 'prison')
     && (!auto || AUTO_CATEGORIES.includes(st.category) && !(typeof st.urgent === 'function' ? st.urgent(s) : st.urgent)));
   if (auto) {
     if (!open.length) return null;

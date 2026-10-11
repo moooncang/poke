@@ -13,7 +13,7 @@ import { trainerCard, medalsOf } from '../sim/legacy.js';
 
 const ORIGINS = { partner: '첫 파트너', wild: '야생에서 만남', adopted: '입양', starter: '첫 동료', legend: '전설의 만남', egg: '알에서 부화', gift: '선물', rescued: '구조' };
 const FILTERS = { all: '전체 기록', choices: '선택과 결과', echoes: '선택의 여파', party: '포켓몬', people: '인연', saved: '저장한 추억' };
-export function EndingModal({ life, legacy, onChooseHeir, onDownload, onNew, onClose }) {
+export function EndingModal({ life, legacy, onChooseHeir, onDownload, onNew, onClose, onShare }) {
   const [tab, setTab] = useState('cards');
   const [filter, setFilter] = useState('all');
   const [decade, setDecade] = useState('all');
@@ -64,7 +64,7 @@ export function EndingModal({ life, legacy, onChooseHeir, onDownload, onNew, onC
         <h3>타고난 재능</h3><p>{talentLabel(life)}{life.flags[`talent-${life.talent.field}-trained`]?' · 연습 과정 수료':''}</p><h3>출생과 마지막 경력</h3><p>{life.family} · {life.background.wealth}</p><p>{CAREERS[life.career]?.name || '자율 활동'} · 경력 {life.careerRank || 0}단계 · {life.work.years}년차{life.work.retired ? ' · 은퇴' : ''}</p>
         <h3>머물렀던 마을</h3><div className="archive-route">{life.visited.map((id, i) => { const t = TOWNS.find(t => t.id === id); return <span key={id}><small>{String(i + 1).padStart(2,'0')}</small>{t?.region} · {t?.name}</span>; })}</div>
       </section>}
-      <footer className="archive-footer"><button className="primary-button" onClick={onDownload}><Download size={16}/> 전체 기록 내려받기</button><button className="text-button" onClick={onNew}><RotateCcw size={14}/> 새 삶 시작</button></footer>
+      <footer className="archive-footer"><button className="primary-button" onClick={onDownload}><Download size={16}/> 전체 기록 내려받기</button>{onShare && <button className="secondary-button" onClick={onShare}>요약 복사</button>}<button className="text-button" onClick={onNew}><RotateCcw size={14}/> 새 삶 시작</button></footer>
     </div>
   </Modal>;
 }

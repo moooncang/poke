@@ -62,7 +62,7 @@ export function activityRecord(state, town) {
 // Small slices of life (childhood memories, workplace moments) used between decisions. Each is shown once.
 export function vignetteRecord(state, town, roll) {
   const work = state.career && !state.work?.retired
-    ? WORK_EVENTS[state.career].map(([title, body, effects], i) => ({ id: `work-${state.career}-${i}`, title, body, effects }))
+    ? (WORK_EVENTS[state.career] || []).map(([title, body, effects], i) => ({ id: `work-${state.career}-${i}`, title, body, effects }))
     : [];
   const fits = e => state.age >= e.min && state.age <= e.max && (!e.when || e.when(state));
   const pool = [...EVENTS.filter(fits), ...ALL_VIGNETTES.filter(fits), ...work].filter(e => !state.used.includes(e.id));

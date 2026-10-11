@@ -1,4 +1,9 @@
 import { TALENT_FIELDS, TALENT_TIERS } from '../sim/talent.js';
+import { CAREERS } from './world.js';
+
+// What each talent path actually means for school and work, so the choice is not a mystery.
+const PATH_EDUCATION = { research: ['study', '독학·연구 학습'], care: ['community', '지역 활동 학습'], battle: ['apprentice', '견습'], craft: ['apprentice', '견습'] };
+export const talentCareer = field => CAREERS[TALENT_FIELDS[field].career];
 
 const SCENES = {
  battle:[['늦게 읽힌 교체 신호','파트너의 신호를 늦게 읽어 연습전에서 졌다. 관장이 동작을 나누어 배우는 훈련을 제안한다.'],['꾸준한 연습 상대','동네 트레이너들이 함께 복기할 팀원을 찾는다. 한 번의 번뜩임보다 꾸준한 출석을 중요하게 본다.'],['예선에서 눈에 띈 전술','상대의 교체를 읽은 한 수가 코치의 눈에 들어왔다. 유망주 합동 캠프 초청장이 왔다.'],['체육관의 특별 스파링','관장이 정식 선수들의 전술 분석을 맡기려 한다. 읽을 수 있는 것과 직접 이기는 것은 다르다.'],['챔피언 코치의 제안','낯선 전술을 한 번 보고 재현한 장면이 퍼졌다. 챔피언 육성팀이 공개 검증전을 제안한다.']],
@@ -12,10 +17,11 @@ const lessons=s=>s.flags[`talent-${s.talent.field}-trained`]||s.seeds.some(x=>x.
 export function talentPathChoice(s, career=false) {
  const {field,level}=s.talent,f=TALENT_FIELDS[field];
  const advanced=level>=4, promising=level===3;
- return opt(`${f.name} · ${advanced?'특별 추천 과정':promising?'유망주 실습':'맞춤 기초 멘토링'}${career?'으로 진로 탐색':''}`,
+ const [education, educationLabel]=PATH_EDUCATION[field], job=talentCareer(field);
+ return opt(`${f.name} · ${advanced?'특별 추천 과정':promising?'유망주 실습':'맞춤 기초 멘토링'}${career?' (진로는 아직 정하지 않음)':''}`,
   `${f.name}에 맞춘 ${advanced?'추천 평가':promising?'현장 실습':'기초 과정'}를 시작했다. 타고난 분야와 다른 진로도 계속 선택할 수 있다.`,{
-  description:`${level}/5 ${TALENT_TIERS[level]} 전용 · ${advanced?'능력 검증 판정':'기초 경험 쌓기'} · 후속 지도`,
-  effects:{[f.stat]:advanced?5:3},education:field==='research'?'study':field==='care'?'community':'apprentice',...lessons(s),
+  description:`${level}/5 ${TALENT_TIERS[level]} 전용 · 학습 방식 ${educationLabel} · ${job.short} 계열 준비 · 직업은 바뀌지 않음 · ${advanced?'능력 검증 판정':'기초 경험 쌓기'} · 후속 지도`,
+  effects:{[f.stat]:advanced?5:3},education,...lessons(s),
   ...(advanced?{challenge:{stat:f.stat,talent:field,difficulty:12,failure:{outcome:'추천만으로 평가를 통과하지는 못했다. 현재 학습과 진로는 유지하고 기초 경험을 보완한다.',effects:{[f.stat]:1}}}}:{}),
  });
 }
@@ -23,9 +29,9 @@ export const TALENT_EVENTS=Object.entries(SCENES).flatMap(([field,rows])=>rows.m
  const level=i+1,f=TALENT_FIELDS[field];
  return {id:`talent-${field}-tier-${level}`,category:field==='care'?'pokemon':'opportunity',min:12,max:90,weight:()=>3,
   when:s=>s.talent.field===field&&s.talent.level===level,
-  build:s=>({kind:'choice',title,body:`${body} 타고난 분야: ${f.name} · ${level}/5 ${TALENT_TIERS[level]}.`,choices:[
+  build:s=>({kind:'choice',title,body:`${body} 타고난 분야: ${f.name} · ${level}/5 ${TALENT_TIERS[level]} · 관련 직업: ${talentCareer(field).name}.`,choices:[
    opt(level>=4?'재능을 공개 검증하는 무대에 선다':level===3?'추천받은 실습에 도전한다':'차근차근 기초 과정을 밟는다',
-    '과제를 마치고 다음 지도를 약속받았다.',{description:`${f.name} 판정 · 후속 지도 개방`,effects:{[f.stat]:4,reputation:level>=4?3:1},...lessons(s),challenge:{stat:f.stat,talent:field,difficulty:level>=4?18:level===3?8:-10,failure:{outcome:'첫 시도는 뜻대로 되지 않았다. 지도자가 기초 과정을 통해 다시 배우자고 제안했다.',effects:{[f.stat]:1},...lessons(s)}}}),
+    '과제를 마치고 다음 지도를 약속받았다.',{description:`${f.name} 판정 · ${talentCareer(field).short} 계열 경험 · 후속 지도 개방 · 직업은 바뀌지 않음`,effects:{[f.stat]:4,reputation:level>=4?3:1},...lessons(s),challenge:{stat:f.stat,talent:field,difficulty:level>=4?18:level===3?8:-10,failure:{outcome:'첫 시도는 뜻대로 되지 않았다. 지도자가 기초 과정을 통해 다시 배우자고 제안했다.',effects:{[f.stat]:1},...lessons(s)}}}),
    opt('경쟁 대신 다른 사람을 돕는 데 쓴다','자신의 속도로 지역 활동에 참여했다. 실력보다 도움받은 이들의 반응을 기록했다.',{description:'지역 활동 분기 · 유대 +3 · 후속 소식',effects:{bond:3},follow:[{id:'talent-community',delay:[2,4],data:seed(s)}]}),
    opt('다른 분야를 탐색한다','타고난 분야가 평생의 직업을 정하지는 않는다고 생각했다. 지금의 생활을 유지하며 다른 관심사를 살펴본다.',{description:'재능과 다른 방향 탐색 · 행복 +3',effects:{joy:3}}),
   ]})};

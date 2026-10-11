@@ -117,3 +117,32 @@ test('a new life can take challenge rules', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).rules)).toEqual(['poor']);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).money)).toBe(0);
 });
+
+test('the character card shows job, place and standing; keyboard shortcuts pick choices and skip ahead', async ({ page }) => {
+  const state = atDecision('standing', 30);
+  await load(page, state);
+  await page.goto('/');
+  const card = page.getByRole('region', { name: '인물 카드' });
+  await expect(card.locator('.cc-name')).toHaveText(state.name);
+  await expect(card.locator('.cc-place')).toContainText('·');
+  await page.keyboard.press('1');
+  await expect(page.getByRole('dialog', { name: '행동 선택' })).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).pending)).toBe(null);
+  await page.keyboard.press(' ');
+  await page.keyboard.press('f');
+  await expect.poll(() => page.evaluate(() => { const s = JSON.parse(localStorage.getItem('pokelife.story.v1')); return Boolean(s.pending || s.encounter || s.ended); }), { timeout: 15000 }).toBe(true);
+});
+
+test('save slots keep separate lives', async ({ page }) => {
+  const state = atDecision('slots', 25);
+  await load(page, state);
+  await page.goto('/');
+  await page.getByRole('button', { name: '잠깐 숨기고 화면 보기' }).click();
+  await page.getByRole('button', { name: '설정' }).click();
+  const dialog = page.getByRole('dialog', { name: '게임 설정' });
+  await dialog.locator('.slot').nth(1).getByRole('button', { name: '여기에 저장' }).click();
+  await expect(dialog.locator('.slot').nth(1)).toHaveAttribute('data-filled', 'true');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1.slot2')).seed)).toBe(state.seed);
+  await dialog.locator('.slot').nth(1).getByRole('button', { name: '불러오기' }).click();
+  await expect(page.getByRole('dialog', { name: '게임 설정' })).toHaveCount(0);
+});

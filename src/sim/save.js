@@ -1,6 +1,6 @@
 import { createTalent, TALENT_FIELDS } from './talent.js';
 // Save parsing: validates untrusted JSON; v1 → world simulation v2 → innate talents v3 → goal, party plan, heritage v4
-// → yearly history, perks, challenge rules and a chosen starter v5.
+// → yearly history, perks, challenge rules and a chosen starter v5 → infamy, debt and prison v6.
 import { TOWNS, CAREERS, NPCS } from '../data/world.js';
 import { CONSEQUENCES } from '../data/consequences.js';
 import { STAT_LABELS, EFFECT_LABELS, GENDERS } from './labels.js';
@@ -15,11 +15,12 @@ import { validHistoryRow, HISTORY_LIMIT } from './history.js';
 import { PERKS, RULES, PERK_SLOTS } from './perks.js';
 import { NICKNAME_LIMIT, MEMBER_EVOLUTIONS, MEMBER_RIBBONS } from './party.js';
 import { CONTEST_CATEGORIES, CONTEST_RANKS } from './contest.js';
+import { LOAN_LIMIT, PRISON_MAX } from './standing.js';
 import { REGIONS } from '../data/regions.js';
 
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 const ENCOUNTER_TYPES = ['partner', 'npc', 'legendary', 'shiny', 'evolution'];
-const ORIGINS = ['partner', 'wild', 'adopted', 'starter', 'legend', 'egg', 'gift', 'rescued'];
+const ORIGINS = ['partner', 'wild', 'adopted', 'starter', 'legend', 'egg', 'gift', 'rescued', 'stolen'];
 
 const isObject = v => Boolean(v) && typeof v === 'object' && !Array.isArray(v);
 const int = (n, min, max) => Number.isInteger(n) && n >= min && n <= max;
@@ -46,6 +47,8 @@ function validActions(a) {
       && (a.battle.levels === undefined || Array.isArray(a.battle.opponents) && list(a.battle.levels,12,n => int(n,1,100)) && a.battle.levels.length === a.battle.opponents.length)
       && (a.battle.flags === undefined || Array.isArray(a.battle.opponents) && list(a.battle.flags,12,f => f === null || text(f, 60)) && a.battle.flags.length === a.battle.opponents.length))
     && (a.simulation === undefined || ['capture', 'gym', 'raid'].includes(a.simulation))
+    && (a.loan === undefined || num(a.loan, 1, LOAN_LIMIT)) && (a.prison === undefined || int(a.prison, 1, PRISON_MAX))
+    && (a.losePokemon === undefined || ['random', 'box', 'party'].includes(a.losePokemon))
     && (a.contest === undefined || isObject(a.contest) && Object.hasOwn(CONTEST_CATEGORIES, a.contest.category) && int(a.contest.rank, 0, CONTEST_RANKS.length - 1))
     && (a.after === undefined || isObject(a.after) && Object.values(a.after).every(validActions));
 }
@@ -83,6 +86,7 @@ function validState(s) {
     && list(s.perks, PERK_SLOTS, id => Object.hasOwn(PERKS, id)) && new Set(s.perks).size === s.perks.length
     && list(s.rules, Object.keys(RULES).length, id => Object.hasOwn(RULES, id)) && new Set(s.rules).size === s.rules.length
     && (s.starter === null || speciesId(s.starter) && !isLegendary(s.starter))
+    && num(s.infamy, 0, 100) && num(s.debt, 0, 1e7) && int(s.prison, 0, PRISON_MAX)
     && isObject(s.talent) && Object.hasOwn(TALENT_FIELDS, s.talent.field) && int(s.talent.level, 1, 5)
     && text(s.name, 12) && text(s.seed, 40) && typeof s.family === 'string' && typeof s.trait === 'string' && Object.hasOwn(GENDERS, s.gender)
     && int(s.age, 0, 105) && Number.isInteger(s.rng) && typeof s.ended === 'boolean' && !(s.ended && s.age < 60) && int(s.season, 0, 3)
@@ -150,6 +154,8 @@ export function parseSave(raw) {
     if (s.version === 3) { s.goal = 'free'; s.partyPlan = { mode: 'auto', pinned: [] }; s.heritage = null; s.version = 4; }
     // v5: yearly history starts empty for an old life; no perks, no challenge rules, no chosen starter.
     if (s.version === 4) { s.history = []; s.perks = []; s.rules = []; s.starter = null; s.version = 5; }
+    // v6: infamy, debt and prison. An old life has none of them.
+    if (s.version === 5) { s.infamy = 0; s.debt = 0; s.prison = 0; s.version = 6; }
     s.gender ??= 'unspecified';
     return s.version === SAVE_VERSION && validState(s) ? s : null;
   } catch {

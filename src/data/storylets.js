@@ -214,13 +214,13 @@ export const STORYLETS = [
   { id: 'career-shift', category: 'opportunity', once: false, cooldown: 6, min: 24, max: 60,
     weight: s => 1 + Math.max(0, 45 - s.work.satisfaction) / 12 + (s.flags['job-hunting'] ? 2 : 0),
     when: s => working(s) && (s.work.satisfaction < 45 || s.flags['job-hunting'] || s.work.years >= 12),
-    build: s => { const options = shuffled(s, Object.entries(CAREERS).filter(([id]) => id !== s.career));
+    build: s => { const options = shuffled(s, Object.entries(CAREERS).filter(([id, c]) => id !== s.career && !c.hidden));
       return choice('일을 바꿀 기회', `${josa(CAREERS[s.career].name, '으로', '로')} ${s.work.years}년. ${s.work.satisfaction < 45 ? '일에서 보람을 느끼지 못한 지 오래다.' : '다른 일을 해 볼 기회가 찾아왔다.'}`, [
         ...options.slice(0, 2).map(([id, c]) => opt(`${josa(c.short, '으로', '로')} 전직`, `${c.description} · 기본 연 수입 ${c.income}P`, `${c.name}의 길을 새로 시작했다.`, { career: id, unflag: 'job-hunting', effects: { courage: 5 } })),
         opt('지금 일을 계속한다', '직업 만족 +10', '익숙한 자리에서 새로운 목표를 세웠다.', { tone: 'caring', unflag: 'job-hunting', work: { satisfaction: 10 }, effects: { wisdom: 3 } }),
       ]); } },
   { id: 'job-offer', category: 'opportunity', once: false, cooldown: 3, min: 17, max: 50, weight: () => 1.8, when: s => !s.career,
-    build: s => { const ranked = shuffled(s, Object.entries(CAREERS));
+    build: s => { const ranked = shuffled(s, Object.entries(CAREERS).filter(([, c]) => !c.hidden));
       return choice('일자리 제안', `${town(s).name}에서 사람을 구한다는 공고가 눈에 띄었다. 명성 ${s.reputation}의 지원자를 반기는 곳도 있다.`, [
         ...ranked.slice(0, 2).map(([id, c]) => opt(`${josa(c.short, '으로', '로')} 일한다`, `기본 연 수입 ${c.income}P · ${c.description}`, `${josa(c.name, '으로', '로')} 일하기 시작했다.`, { career: id, effects: { courage: 3 } })),
         opt('아직은 자유롭게 지낸다', '여유 · 행복 +3', '조금 더 내 속도로 살아 보기로 했다.', { tone: 'easygoing', effects: { joy: 3 } }),

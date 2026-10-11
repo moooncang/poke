@@ -272,3 +272,50 @@ ul.card-catalog > li[data-kind][data-collected] > b, small
 ## 10. 엔딩 카드 종류 추가
 
 `data-kind`: `ribbons` · `frontier` · `named` · `ace` · `graph` · `rules`. 전체 목록과 이름은 `CARD_KINDS`(`src/sim/achievements.js`).
+
+---
+
+# 3부 — 인물 카드 · 상태 배지 · 저장 슬롯 · 그늘의 길
+
+작업: Claude · 기준 `a5e8f26`(Codex 콘솔 디자인 반영). 규칙은 1·2부와 같습니다. 이 부분의 최소 스타일은 `life.css` 끝 `/* ── Character card, standing badges, save slots (Claude) … */` 블록입니다.
+
+## 11. 인물 카드 — `src/ui/CharacterCard.jsx`
+
+왼쪽 사이드바 맨 위, 기존 TRAINER LICENSE 패널 위에 놓입니다(라이선스 패널은 출생 환경·성향·육성·소지금만 남김). "지금 나는 누구이고 어디서 무엇을 하는가"를 한눈에.
+
+```
+section.character-card[data-mood="normal|debt|outlaw|wanted|prison"][data-career="traveler|…|syndicate|none"]
+├─ header.cc-head > img.cc-portrait, .cc-identity > span.cc-epithet(칭호), h2.cc-name, span.cc-age
+├─ ul.cc-conditions > li.cc-condition         복역 중·수배 중·조직 직함·빚 (있을 때만)
+└─ dl.cc-facts
+     dt 하는 일 / dd.cc-job > b(직함) · 직업명 · n년차 · 만족
+     dt 사는 곳 / dd.cc-place (· n년째, small 고향)
+     dt 세상의 평가 / dd.cc-standing > span.cc-reputation[data-value], span.cc-infamy[data-value]
+     dt 배지 · 타이틀 / dt 가족 / dt 삶의 목표 / dt 가족 형편
+```
+
+- 직함은 `careerTitle(life)`(직업별 등급명: 신인 트레이너→거장, 말단 조직원→두목 등, `CAREER_RANKS` in `data/world.js`).
+- 칭호는 `epithet(life)`(그늘의 길이면 "수배 중인 무법자", "〈조직〉의 두목" 등).
+- `data-mood`로 카드 분위기를 바꾸세요(빚=금색, 조직·수배=로즈, 복역=회색이 지금의 최소 표현).
+
+## 12. HUD 추가분 — `src/ui/Hud.jsx`
+
+- `small.hud-delta[data-sign="up|down"]`: 마지막 플레이어 결정 이후 변한 값(능력치·소지금·명성·악명). 결정 직후 잠깐 강조하는 연출을 권합니다.
+- `small.hud-debt`, `span.hud-infamy[data-value]`: 빚과 악명(0이면 표시 안 함).
+- `div.hud-status > span.hud-badge[data-kind="prison|wanted|debt|outlaw"]`, `button.hud-skip`("다음 선택까지", 단축키 F).
+
+## 13. 설정 — 저장 슬롯과 단축키 (`SettingsModal`)
+
+```
+.settings-slots > ul.slot-list > li.slot[data-filled][data-current] > span.slot-label, span.slot-detail, span.slot-actions > button × 2
+.settings-keys > p > kbd × 4
+```
+"요약 복사" 버튼(`onShare`)은 설정과 엔딩 footer에 있습니다. 복사 실패 시 텍스트 파일을 내려받습니다.
+
+## 14. 사건 기록의 새 종류
+
+`article.story-row.kind-milestone`에 체포·출소·파산이 들어옵니다(제목 '체포'/'출소'/'파산'). `.story-row.kind-party`에는 '떠난 동료'가 추가됩니다. 분류 라벨: 불운(`misfortune`), 그늘의 길(`dark`), 감옥(`prison`)은 리포트의 사건 종류 표에 나옵니다.
+
+## 15. 엔딩 카드 종류 추가
+
+`data-kind`: `shadow`(그늘의 길) · `hardship`(잃은 것들). 메달 그룹 `dark`(그늘의 길) 9종.
