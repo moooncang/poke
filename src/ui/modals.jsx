@@ -1,3 +1,4 @@
+import { talentLabel, talentBonus, TALENT_FIELDS } from '../sim/talent.js';
 import { ArrowRight, BookOpen, Download, Heart, Lock, RotateCcw, Sprout } from 'lucide-react';
 import { GENDERS, STAT_LABELS, successChance, townOf, toneOf } from '../engine.js';
 import { TOWNS } from '../data/world.js';
@@ -25,6 +26,7 @@ export function BirthModal({ life, onGender, onStart }) {
       <dt>주거 형태</dt><dd>{life.background.home}</dd>
       <dt>주변 환경</dt><dd>{life.background.environment}</dd>
       <dt>소꿉친구</dt><dd>{life.cast.friend.name}</dd>
+      <dt>타고난 재능</dt><dd>{talentLabel(life)}</dd>
       <dt>타고난 성향</dt><dd>{life.trait}</dd>
       <dt>시작 소지금</dt><dd>{life.money.toLocaleString()} P</dd>
     </dl>
@@ -38,6 +40,8 @@ function ChoiceDetail({ life, choice }) {
   return <>
     {choice.challenge ? <div className="chance-preview">
       <strong>성공 확률 {successChance(life, choice)}% · {STAT_LABELS[choice.challenge.stat]} {life.stats[choice.challenge.stat]}</strong>
+      {choice.challenge.talent && <small>재능 적용 분야: {TALENT_FIELDS[choice.challenge.talent].name}</small>}
+      {talentBonus(life, choice)>0 && <small>재능·숙련 보정 +{talentBonus(life, choice)}%p 반영 · 최종 상한 95%</small>}
       <small>성공: {formatText(choice.outcome, life)}</small><EffectChips effects={choice.effects} world={choice.world}/>
       <small>실패: {formatText(choice.challenge.failure.outcome, life)}</small><EffectChips effects={choice.challenge.failure.effects} world={choice.challenge.failure.world}/>
       {choice.cost > 0 && <small>성공 여부와 관계없이 {choice.cost}P 사용</small>}

@@ -1,4 +1,5 @@
-// Save parsing: validates untrusted JSON and migrates version 1 saves (pre world-simulation) to version 2.
+import { createTalent, TALENT_FIELDS } from './talent.js';
+// Save parsing: validates untrusted JSON; v1 → world simulation v2 → innate talents v3.
 import { TOWNS, CAREERS, NPCS } from '../data/world.js';
 import { CONSEQUENCES } from '../data/consequences.js';
 import { STAT_LABELS, EFFECT_LABELS, GENDERS } from './labels.js';
@@ -9,7 +10,7 @@ import { hashSeed } from './random.js';
 import { DISPOSITIONS, isLegendary, PARTY_LIMIT } from './party.js';
 import { REGIONS } from '../data/regions.js';
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 const ENCOUNTER_TYPES = ['partner', 'npc', 'legendary', 'shiny', 'evolution'];
 const ORIGINS = ['partner', 'wild', 'adopted', 'starter', 'legend', 'egg', 'gift', 'rescued'];
 
@@ -39,7 +40,7 @@ function validActions(a) {
     && (a.after === undefined || isObject(a.after) && Object.values(a.after).every(validActions));
 }
 const validChoice = c => validActions(c) && text(c.label, 200) && text(c.description, 300) && text(c.outcome)
-  && (!c.challenge || c.challenge.stat in STAT_LABELS && Number.isFinite(c.challenge.difficulty) && text(c.challenge.failure?.outcome) && validActions(c.challenge.failure));
+  && (!c.challenge || (c.challenge.talent === undefined || Object.hasOwn(TALENT_FIELDS, c.challenge.talent)) && c.challenge.stat in STAT_LABELS && Number.isFinite(c.challenge.difficulty) && text(c.challenge.failure?.outcome) && validActions(c.challenge.failure));
 const validEncounter = e => isObject(e) && ENCOUNTER_TYPES.includes(e.type) && text(e.title) && text(e.body)
   && (e.type === 'npc' ? Boolean(NPCS[e.npc]) : speciesId(e.pokemonId));
 const validEvent = e => isObject(e) && text(e.title) && text(e.body, 2000) && shift(e.effects, EFFECT_LABELS)
@@ -58,7 +59,8 @@ const validCast = c => isObject(c) && ['friend', 'rival', 'family'].every(id => 
   && Object.values(c).every(p => isObject(p) && text(p.name, 30) && (p.path === undefined || p.path in PATHS) && (p.affinity === undefined || num(p.affinity, 0, 100)));
 
 function validState(s) {
-  return text(s.name, 12) && text(s.seed, 40) && typeof s.family === 'string' && typeof s.trait === 'string' && Object.hasOwn(GENDERS, s.gender)
+  return isObject(s.talent) && Object.hasOwn(TALENT_FIELDS, s.talent.field) && int(s.talent.level, 1, 5)
+    && text(s.name, 12) && text(s.seed, 40) && typeof s.family === 'string' && typeof s.trait === 'string' && Object.hasOwn(GENDERS, s.gender)
     && int(s.age, 0, 105) && Number.isInteger(s.rng) && typeof s.ended === 'boolean' && !(s.ended && s.age < 60) && int(s.season, 0, 3)
     && townId(s.town) && townId(s.hometown) && int(s.lifespan, 60, 106)
     && isObject(s.stats) && Object.keys(STAT_LABELS).every(k => num(s.stats[k], 0, 100))
@@ -110,7 +112,7 @@ function migrateV1(old) {
   if (s.age >= 12) Object.assign(s.cast.rival, { met: true, path: 'trainer', power: Math.min(80, 15 + s.age) });
   if (s.age >= 12) s.cast.friend.path = s.age >= 20 ? 'worker' : 'student';
   s.seeds = []; s.queue = []; s.cooldowns = {};
-  s.version = SAVE_VERSION;
+  s.version = 2;
   return s;
 }
 
@@ -119,6 +121,7 @@ export function parseSave(raw) {
     let s = JSON.parse(raw);
     if (!isObject(s)) return null;
     if (s.version === 1) s = migrateV1(s);
+    if (s.version === 2) { s.talent = createTalent(s.seed); s.version = SAVE_VERSION; }
     s.gender ??= 'unspecified';
     return s.version === SAVE_VERSION && validState(s) ? s : null;
   } catch {

@@ -1,3 +1,4 @@
+import { TALENT_FIELDS, TALENT_TIERS, TALENT_BONUS } from '../sim/talent.js';
 import { breedingPairs } from '../sim/breeding.js';
 import {LEAGUE_REGIONS,championFlag} from '../data/league-sagas.js';
 import { Lock } from 'lucide-react';
@@ -65,6 +66,12 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
       </dl>
       <div className="money-display">소지금 <b>{life.money.toLocaleString()} P</b></div>
       {life.ledger && <small className="ledger">작년 수입 {life.ledger.income.toLocaleString()}P · 지출 {life.ledger.expense.toLocaleString()}P</small>}
+    </section>
+    <section className="dex-panel talent-panel"><h3>타고난 재능 <small>{life.talent.level} / 5</small></h3>
+      <b>{TALENT_FIELDS[life.talent.field].name} · {TALENT_TIERS[life.talent.level]}</b>
+      <div className="talent-rating" aria-label={`재능 ${life.talent.level}단계`}>{[1,2,3,4,5].map(n=><span key={n} className={n<=life.talent.level?'lit':''}/>)}</div>
+      <p>관련 판정 +{TALENT_BONUS[life.talent.level]}%p{life.flags[`talent-${life.talent.field}-trained`]?' · 연습 숙련 +3%p':''}</p>
+      <small>재능 분야가 표시된 도전에 적용됩니다. 관련 직업의 파티 육성에도 반영되며, 다른 진로를 선택할 수 있습니다.</small>
     </section>
     <section className="dex-panel"><h3>트레이너 상태</h3>
       {Object.entries(STATS).map(([key, label]) => <Meter key={key} label={label} value={life.stats[key]}/>)}

@@ -20,6 +20,7 @@ PAGES_BASE_PATH=/poke/ npm run build
 | 경로 | 역할 |
 |---|---|
 | `src/engine.js` | 공개 API: `createLife`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`. 연간 진행(`advanceYear`)과 선택 적용(`applyActions`) |
+| `src/sim/talent.js` · `src/data/talent-events.js` | 5단계 재능·20개 사건·판정 보정. 저장 v3. [규칙](docs/CHANGES-talents.md) |
 | `src/sim/random.js` | 결정적 난수(`random`, `pick`, `chance`, `between`, `weighted`) |
 | `src/sim/world.js` | 지방별 경기·치안·생태, 지방 상황(`CONDITIONS`), `tickWorld` |
 | `src/sim/people.js` | 소꿉친구·라이벌·형제·가족(`cast`)의 삶, `tickPeople` |
@@ -95,8 +96,9 @@ table('stage', [
 |---|---|
 | `label`, `description`, `outcome` | 필수 문구 |
 | `effects` | `joy·vitality·courage·wisdom·bond·money·reputation` 증감 |
+| `challenge.talent` | 재능 적용 분야 battle/research/care/craft. 생략하면 재능 보정 없음. 스탯 판정의 5–95% 상한 유지 |
 | `cost` | 이 금액이 없으면 고를 수 없음. 판정 없는 선택지는 `effects.money`에 `-cost`를 직접 넣어야 하고, 판정 선택지는 성공·실패와 관계없이 자동으로 지불 |
-| `challenge` | `{ stat, difficulty, failure: { outcome, effects, ...다른 필드 } }`. 성공률 `25 + 스탯×0.7 − 난이도`, 5~95% |
+| `challenge` | `{ stat, difficulty, failure: { outcome, effects, ...다른 필드 } }`. 성공률 `25 + 스탯×0.7 − 난이도 + 해당 분야 재능·숙련 보정`, 5~95% |
 | `world` | 현재 지방의 `economy·safety·ecology` 증감 |
 | `cast` | `{ friend: { affinity: 10, path: 'worker' } }`처럼 인물 상태 변경 |
 | `follow` | `[{ id, delay: [최소, 최대], p, data }]` 몇 년 뒤의 여파. `id`는 `src/data/consequences.js`의 키 |
