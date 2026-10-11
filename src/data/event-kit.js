@@ -22,6 +22,16 @@ export const working = s => Boolean(s.career) && !s.work.retired;
 export const check = (stat, difficulty, outcome, effects = {}, more = {}) => ({ challenge: { stat, difficulty, failure: { outcome, effects, ...more } } });
 /** A delayed consequence. */
 export const later = (id, delay, p = 1, data = {}) => ({ id, delay, p, data });
+/**
+ * A delayed automatic record written inline, without adding to consequences.js. Text may use the {friend}… tokens;
+ * they are filled when the record arrives.
+ */
+export const echoLater = (delay, title, body, effects = {}, p = 1) => later('pack-echo', delay, p, { title, body, effects });
+/**
+ * A delayed decision written inline. `rows` use the same option format as table rows; `extra` must be a plain
+ * object (not a function) because it is stored in the save until the decision arrives.
+ */
+export const choiceLater = (delay, title, body, rows, p = 1) => later('pack-choice', delay, p, { title, body, rows });
 
 // {friend}, {rival}, {sibling}, {spouse}, {region}, {villain}, optionally with a particle: {friend|이|가}.
 // {partner|이|가} becomes a species token (the plain {partner} is left for the UI).
@@ -49,7 +59,7 @@ function describe(choice) {
   return parts.slice(0, 5).join(' · ') || '큰 변화 없음';
 }
 
-function option(s, [label, tone, effects, outcome, extra = {}]) {
+export function option(s, [label, tone, effects, outcome, extra = {}]) {
   const more = typeof extra === 'function' ? extra(s) : extra;
   const choice = { label: fill(s, label), tone, effects: { ...effects }, outcome: fill(s, outcome), ...more };
   if (!choice.challenge && (choice.effects.money || 0) < 0 && choice.cost === undefined) choice.cost = -choice.effects.money;
