@@ -11,6 +11,7 @@ export const CATEGORY_LABELS = {
   league: '리그', contest: '콘테스트', frontier: '배틀 시설', childhood: '유년', career: '경력', stage: '인생 단계', family: '가족',
   pokemon: '포켓몬', work: '일', cast: '인연', world: '세계', opportunity: '기회', romance: '연애', challenge: '도전', route: '장기 경로',
   regional: '지방 이야기', local: '마을', field: '필드', legend: '전설', special: '특별한 만남', plan: '활동 계획', echo: '선택의 여파', milestone: '고정 사건',
+  misfortune: '불운', dark: '그늘의 길', prison: '감옥',
 };
 const CATEGORY_OF = new Map(ALL_STORYLETS.map(st => [st.id, st.category]));
 const baseId = id => String(id || '').split('@')[0];
