@@ -22,6 +22,7 @@
 
 - **Claude — 시뮬레이션 v2:** [구조·세계·인연·선택의 여파·자동 파티 변경 기록](docs/CHANGES-v2.md)
 - **Codex — 2026-10-11 UI:** [청록색 대시보드 변경·파일 위치·검수 기록](docs/CHANGES-ui-console.md). 최신 Claude 병합분 위에서 트레이너/기록/파티의 3열 화면, 분홍색 라이선스·결정 헤더, 모바일 배치와 어두운 테마를 적용했습니다. 엔진과 저장 규칙은 유지했습니다.
+- **GPT 디자인 작업용:** [DESIGN-HANDOFF.md](docs/DESIGN-HANDOFF.md)(구조·규칙) · [DESIGN-BRIEF-icons-ui.md](docs/DESIGN-BRIEF-icons-ui.md)(도트 아이콘 약 150장 목록과 화면별 향상 지침).
 - 다음 작업자는 [AGENTS.md](AGENTS.md)와 위 변경 기록을 먼저 확인하고, 작업 뒤 이 목록과 상세 기록을 갱신해 주세요.
 
 ## 현재 플레이 방식
