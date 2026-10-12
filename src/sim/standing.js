@@ -4,6 +4,7 @@ import { CAREERS, CAREER_RANKS, TOWNS } from '../data/world.js';
 import { REGIONS } from '../data/regions.js';
 import { clamp, random, chance } from './random.js';
 import { currentRegion } from './world.js';
+import { diff } from './difficulty.js';
 
 export const DEBT_INTEREST = 0.08;
 export const DEBT_REPAY_SHARE = 0.3;
@@ -60,21 +61,21 @@ export function tickStanding(s) {
     return records;
   }
   if (s.debt > 0) {
-    s.debt = Math.round(s.debt * (1 + DEBT_INTEREST));
+    s.debt = Math.round(s.debt * (1 + diff(s, 'interest')));
     const repay = Math.min(s.debt, Math.floor(Math.max(0, s.money) * DEBT_REPAY_SHARE));
     if (repay > 0) { s.money -= repay; s.debt -= repay; }
-    if (s.debt >= BANKRUPTCY_DEBT) {
+    if (s.debt >= diff(s, 'bankruptcy')) {
       const sold = [...s.box].sort((a, b) => a.affection - b.affection).slice(0, Math.ceil(s.box.length / 2));
       s.box = s.box.filter(m => !sold.includes(m));
       if (s.partyPlan) s.partyPlan = { ...s.partyPlan, pinned: s.partyPlan.pinned.filter(uid => !sold.some(m => m.uid === uid)) };
       s.money = 0; s.debt = 0; s.flags.bankrupt = true;
       s.reputation = clamp(s.reputation - 15, 0, 100); s.stats.joy = clamp(s.stats.joy - 12, 0, 100);
-      records.push({ kind: 'milestone', title: '파산', effects: {}, body: `빚이 ${BANKRUPTCY_DEBT.toLocaleString()}P를 넘어 파산을 신청했다. 남은 돈은 모두 압류됐고${sold.length ? ` PC 박스의 포켓몬 ${sold.length}마리는 다른 트레이너에게 넘어갔다` : ' 가진 것이 없어 더 가져갈 것도 없었다'}. 빚은 사라졌지만 평판도 함께 무너졌다.` });
+      records.push({ kind: 'milestone', title: '파산', effects: {}, body: `빚이 ${diff(s, 'bankruptcy').toLocaleString()}P를 넘어 파산을 신청했다. 남은 돈은 모두 압류됐고${sold.length ? ` PC 박스의 포켓몬 ${sold.length}마리는 다른 트레이너에게 넘어갔다` : ' 가진 것이 없어 더 가져갈 것도 없었다'}. 빚은 사라졌지만 평판도 함께 무너졌다.` });
     }
   }
   if (s.infamy > 0 && !isOutlaw(s)) s.infamy -= 1;
   if (isOutlaw(s) && !s.work.retired) { s.infamy = clamp(s.infamy + 2, 0, 100); s.reputation = clamp(s.reputation - 1, 0, 100); }
-  if (isWanted(s) && chance(s, s.infamy / ARREST_DIVISOR)) {
+  if (isWanted(s) && chance(s, s.infamy / ARREST_DIVISOR * diff(s, 'arrest'))) {
     const years = clamp(Math.round(1 + s.infamy / 25 + random(s) * 2), 1, PRISON_MAX);
     s.prison = years; s.flags.arrested = (s.flags.arrested || 0) + 1;
     if (isOutlaw(s)) { s.career = null; s.careerRank = 0; }

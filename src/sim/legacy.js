@@ -87,7 +87,7 @@ export function summarizeLife(s) {
     partner: partner ? { id: partner.id, shiny: partner.shiny, level: xpLevel(partner), years: s.age - partner.joined, ...(partner.nickname ? { nickname: partner.nickname } : {}) } : null,
     party: s.party.map(m => ({ id: m.id, shiny: m.shiny, level: xpLevel(m) })),
     cards: endingCards(s).map(c => ({ id: c.id, kind: c.kind, rarity: c.rarity, title: c.title })),
-    rules: cleanRules(s.rules), perks: [...(s.perks || [])],
+    rules: cleanRules(s.rules), perks: [...(s.perks || [])], difficulty: s.difficulty || 'normal',
     peakMoney: Math.max(s.money, ...(s.history || []).map(r => r.money)), firstTitleAge: high?.firstTitleAge ?? null,
     peakInfamy: Math.max(s.infamy || 0, ...(s.history || []).map(r => r.infamy ?? 0)),
     decisions: s.log.filter(e => e.resolution).length,

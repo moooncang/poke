@@ -146,3 +146,15 @@ test('save slots keep separate lives', async ({ page }) => {
   await dialog.locator('.slot').nth(1).getByRole('button', { name: '불러오기' }).click();
   await expect(page.getByRole('dialog', { name: '게임 설정' })).toHaveCount(0);
 });
+
+test('a new life can be started on legend difficulty', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: '이 삶 시작하기' }).click();
+  await page.getByRole('button', { name: '새로운 삶' }).click();
+  const form = page.getByRole('dialog', { name: '새로운 삶 시작하기' });
+  await form.getByRole('radio', { name: '레전드' }).check();
+  await expect(form.locator('.difficulty-picker')).toHaveAttribute('data-difficulty', 'legend');
+  await form.getByRole('button', { name: /게임 시작/ }).click();
+  await expect(page.getByRole('dialog', { name: '출생 배정 결과' }).locator('.birth-difficulty')).toContainText('레전드');
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('pokelife.story.v1')).difficulty)).toBe('legend');
+});

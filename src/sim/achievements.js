@@ -13,6 +13,7 @@ import { frontierSymbols, frontierGold, facilityStreaks, REGION_FACILITIES, faci
 import { historyHighlights } from './history.js';
 import { RULES, hasRule } from './perks.js';
 import { infamyOf, isOutlaw, isWanted, careerTitle, syndicateName, debtOf } from './standing.js';
+import { difficultyOf, difficultyRank } from './difficulty.js';
 
 export const RARITIES = { common: '일반', rare: '레어', epic: '에픽', legendary: '레전드' };
 
@@ -136,6 +137,13 @@ export const MEDALS = [
   { id: 'debt-free', group: 'dark', name: '빚을 갚은 날', detail: '빚 3,000P 이상을 지고도 모두 갚았다.', test: s => debtOf(s) === 0 && (s.history || []).some(r => (r.debt ?? 0) >= 3000) },
   { id: 'lost-companion', group: 'dark', name: '빈 몬스터볼', detail: '동료를 영영 잃었다.', test: s => (s.flags.lost || 0) >= 1 },
   { id: 'survivor', group: 'dark', name: '그래도 살아남다', detail: '빚·복역·동료 상실 중 둘 이상을 겪고 80세를 넘겼다.', test: s => s.age >= 80 && [Boolean(s.flags.bankrupt) || (s.history || []).some(r => (r.debt ?? 0) > 0), Boolean(s.flags.arrested), (s.flags.lost || 0) >= 1].filter(Boolean).length >= 2 },
+  // 난이도
+  { id: 'hard-life', group: 'challenge', name: '어려움 완주', detail: '어려움 이상으로 삶을 끝까지 살았다.', test: s => finished(s) && difficultyRank(s) >= 2 },
+  { id: 'legend-life', group: 'challenge', name: '레전드 생존', detail: '레전드 난이도로 삶을 끝까지 살았다.', test: s => finished(s) && difficultyOf(s) === 'legend' },
+  { id: 'legend-80', group: 'challenge', name: '레전드 장수', detail: '레전드 난이도로 80세를 넘겼다.', test: s => difficultyOf(s) === 'legend' && s.age >= 80 },
+  { id: 'hard-champion', group: 'challenge', name: '가혹한 정상', detail: '어려움 이상에서 리그 정상에 올랐다.', test: s => difficultyRank(s) >= 2 && championships(s) >= 1 },
+  { id: 'legend-champion', group: 'challenge', name: '전설 위의 전설', detail: '레전드 난이도로 리그 정상에 올랐다.', test: s => difficultyOf(s) === 'legend' && championships(s) >= 1 },
+  { id: 'legend-rich', group: 'challenge', name: '맨땅의 금고', detail: '레전드 난이도로 10,000P를 모았다.', test: s => difficultyOf(s) === 'legend' && (s.money >= 10000 || (s.history || []).some(r => r.money >= 10000)) },
   // 도전 규칙
   ...Object.entries(RULES).map(([id, rule]) => ({ id: `rule-${id}`, group: 'challenge', name: `${rule.name} 완주`, detail: `‘${rule.name}’ 규칙으로 삶을 끝까지 살았다.`, test: s => finished(s) && hasRule(s, id) })),
   { id: 'rule-solo-champion', group: 'challenge', name: '단짝 챔피언', detail: '‘단짝 여행’ 규칙으로 리그 정상에 올랐다.', test: s => hasRule(s, 'solo') && championships(s) >= 1 },
@@ -186,7 +194,7 @@ export function trainerCard(s) {
     badges: badgeCount(s), champions: titlesOf(s).map(r => r.id), seen: s.seen.length, owned: ownedSpecies(s).length,
     wins: s.game.wins, reputation: s.reputation, money: s.money, age: s.age, generation: s.heritage?.generation || 1,
     ribbons: ribbonCount(s), symbols: frontierSymbols(s), facility: facilityStreaks(s), rules: [...(s.rules || [])],
-    infamy: infamyOf(s), title: careerTitle(s), career: s.career };
+    infamy: infamyOf(s), title: careerTitle(s), career: s.career, difficulty: difficultyOf(s) };
 }
 
 // ── Ending cards ──

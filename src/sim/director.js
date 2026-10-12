@@ -5,6 +5,7 @@ import { CAREER_SAGAS } from '../data/career-sagas.js';
 import { LEAGUE_SAGAS, LEAGUE_TRAVEL } from '../data/league-sagas.js';
 import { goalWeight } from './goals.js';
 import { hasPerk } from './perks.js';
+import { diff } from './difficulty.js';
 import { LEGACY_EVENTS } from '../data/legacy-events.js';
 import { CONTEST_EVENTS } from '../data/contests.js';
 import { FRONTIER_EVENTS } from '../data/frontier.js';
@@ -145,8 +146,8 @@ const CATEGORY_WEIGHT = {
   contest: s => 0.7 + (s.flags['contest-registered'] ? 0.6 : 0),
   frontier: () => 0.9,
   prison: () => 5,
-  dark: s => (s.career === 'syndicate' ? 3.5 : 2.5) + (s.infamy || 0) / 40 + (hasCondition(s, 'syndicate') ? 0.8 : 0),
-  misfortune: s => 3 + (s.money <= 0 ? 0.8 : 0) + ((s.debt || 0) > 0 ? 0.8 : 0) + (s.stats.vitality < 40 ? 0.8 : 0) + (regionState(s).safety < 40 ? 0.8 : 0),
+  dark: s => ((s.career === 'syndicate' ? 3.5 : 2.5) + (s.infamy || 0) / 40 + (hasCondition(s, 'syndicate') ? 0.8 : 0)) * diff(s, 'dark'),
+  misfortune: s => (3 + (s.money <= 0 ? 0.8 : 0) + ((s.debt || 0) > 0 ? 0.8 : 0) + (s.stats.vitality < 40 ? 0.8 : 0) + (regionState(s).safety < 40 ? 0.8 : 0)) * diff(s, 'misfortune'),
   childhood: () => 3,
   career: () => 3,
   stage: () => 1.8,

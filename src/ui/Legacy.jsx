@@ -9,6 +9,7 @@ import {
   MEDALS, MEDAL_GROUPS, STARS, RARITIES, DEX_TOTAL, INHERITANCE_CAP, INHERITANCE_SHARE, CARD_KINDS, PERK_UNLOCKS,
 } from '../sim/legacy.js';
 import { PERKS, RULES } from '../sim/perks.js';
+import { DIFFICULTIES } from '../sim/difficulty.js';
 import { sprite } from './assets.js';
 import { formatText, pokemonName } from './format.js';
 
@@ -104,7 +105,7 @@ export function LegacyHall({ legacy, life }) {
     {legacy.lives.length ? <ol className="legacy-lives">{legacy.lives.map(l => <li key={l.key} className="legacy-life" data-generation={l.generation}>
       <TrainerCardView card={l.card} compact/>
       <div className="legacy-life-detail">
-        <p>{townName(l.hometown)}에서 태어나 {l.age}세까지 · {GOALS[l.goal]?.name} · {CAREERS[l.career]?.name || '자율 활동'}{l.ancestor ? ` · ${l.ancestor}의 후손` : ''}</p>
+        <p>{townName(l.hometown)}에서 태어나 {l.age}세까지 · {GOALS[l.goal]?.name} · {CAREERS[l.career]?.name || '자율 활동'}{l.ancestor ? ` · ${l.ancestor}의 후손` : ''}{l.difficulty && l.difficulty !== 'normal' ? <> · <span className="legacy-difficulty" data-difficulty={l.difficulty}>{DIFFICULTIES[l.difficulty]?.name}</span></> : ''}</p>
         {l.partner && <p className="legacy-partner"><img className="pixel" src={sprite(l.partner.id, l.partner.shiny)} alt=""/> 첫 파트너 {pokemonName(l.partner.id)} · Lv.{l.partner.level} · {l.partner.years}년</p>}
         <span className="legacy-party">{l.party.map((m, i) => <img key={i} className="pixel" src={sprite(m.id, m.shiny)} alt={`${pokemonName(m.id)} Lv.${m.level}`}/>)}</span>
         <small>메달 {l.medals.length}개 · 엔딩 카드 {l.cards.length}장{l.rules?.length ? ` · 규칙: ${l.rules.map(id => RULES[id]?.name).join(', ')}` : ''}</small>

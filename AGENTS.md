@@ -19,11 +19,12 @@ PAGES_BASE_PATH=/poke/ npm run build
 
 | 경로 | 역할 |
 |---|---|
-| `src/engine.js` | 공개 API: `createLife({ goal, heritage, perks, rules, starter })`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`, `setGoal`, `setPartyMode`, `togglePin`, `movePokemon`, `setLead`, `renamePokemon`. 연간 진행(`advanceYear`), 선택 해결(`resolveChoice`), 스스로 정한 일(`AUTO_SHARE`) |
+| `src/engine.js` | 공개 API: `createLife({ goal, heritage, perks, rules, starter, difficulty })`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`, `setGoal`, `setPartyMode`, `togglePin`, `movePokemon`, `setLead`, `renamePokemon`. 연간 진행(`advanceYear`), 선택 해결(`resolveChoice`), 스스로 정한 일(`AUTO_SHARE`) |
 | `src/sim/history.js` · `analytics.js` | 연간 기록(`s.history`)과 리포트용 분석(결정·판정·배틀·연대기·동료 이야기). analytics는 읽기 전용 |
 | `src/sim/contest.js` · `src/data/contests.js` | 콘테스트 5부문 × 4랭크, 리본(`ribbon-<부문>-<랭크>` 플래그와 개체 `ribbons`) |
 | `src/data/frontier.js` | 호연 배틀프런티어 7시설(심볼)과 지방 배틀 시설 8곳(연승 단계). 배틀 종류 `facility` |
 | `src/sim/perks.js` · `src/sim/achievements.js` | 가문 혜택·도전 규칙 / 메달·트레이너 카드·엔딩 카드·지방 도감 |
+| `src/sim/difficulty.js` | 난이도 4단계(쉬움·보통·어려움·레전드)의 배수표. 시뮬레이션은 `diff(s, key)`로만 읽음. [수치](docs/CHANGES-difficulty.md) |
 | `src/sim/standing.js` | 사회적 위치: 명성·악명 등급, 직업 등급명(`careerTitle`), 빚·이자·파산, 수배·체포·복역, 조직(`syndicate`) 직업. 연간 처리 `tickStanding` |
 | `src/data/misfortune.js` · `villain-route.js` | 불운 팩, 어두운 길 팩(유혹·조직 생활·탈출·감옥·악명의 그림자) |
 | `src/data/town-stories.js` · `type-companions.js` · `villain-arcs.js` · `hobbies.js` · `life-chapters.js` · `vignettes-extra.js` | 이벤트 팩: 마을 120, 타입·종 67, 악당 조직 45, 취미·축제 75, 삶의 장 75, 일상 220. 검증은 `node scripts/check-pack.mjs <파일> <EXPORT> [vignettes]` |

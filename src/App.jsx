@@ -97,7 +97,7 @@ export default function App() {
   const [filter, setFilter] = useState('all');
   const [shown, setShown] = useState(8);
   const [saveStatus, setSaveStatus] = useState('saved');
-  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', useHeir: true, perks: [], rules: [], town: 'random', starter: '' });
+  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', difficulty: 'normal', useHeir: true, perks: [], rules: [], town: 'random', starter: '' });
   const [legacy, setLegacy] = useState(loadLegacy);
   const [hiddenDecision, setHiddenDecision] = useState(null);
   const [slots, setSlots] = useState(readSlots);
@@ -179,7 +179,7 @@ export default function App() {
     const heritage = form.useHeir && legacy.heir ? legacy.heir : null;
     // Perks are only offered once unlocked (see NewLifeModal); town and starter choices need their perk.
     const perks = form.perks.filter(id => unlockedPerks(legacy).includes(id));
-    setLife(createLife({ name: form.name || '하루', gender: form.gender, seed: form.seed || crypto.randomUUID(), goal: form.goal, heritage, perks, rules: form.rules,
+    setLife(createLife({ name: form.name || '하루', gender: form.gender, seed: form.seed || crypto.randomUUID(), goal: form.goal, difficulty: form.difficulty, heritage, perks, rules: form.rules,
       town: perks.includes('town-pass') ? form.town : 'random', starter: perks.includes('starter-pick') && !heritage && form.starter ? Number(form.starter) : null }));
     if (heritage) setLegacy(l => ({ ...l, heir: null }));
     setHiddenDecision(null); setSnapshot(null); setModal('birth'); setReplay(null); setTab('story'); setShown(8); setFilter('all'); setRunning(true); setNotice('');

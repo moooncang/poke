@@ -2,6 +2,7 @@
 import { TYPES, TYPE_CHART } from '../data/battle-data.js';
 import { random, between, clamp } from './random.js';
 import { hasRule, RULE_TRAINER_POWER } from './perks.js';
+import { diff } from './difficulty.js';
 
 export const MEGA = {"3": 10033, "6": 10034, "9": 10036, "65": 10037, "94": 10038, "115": 10039, "127": 10040, "130": 10041, "142": 10042, "150": 10043, "181": 10045, "212": 10046, "214": 10047, "229": 10048, "248": 10049, "257": 10050, "282": 10051, "303": 10052, "306": 10053, "308": 10054, "310": 10055, "354": 10056, "359": 10057, "445": 10058, "448": 10059, "460": 10060, "380": 10062, "381": 10063, "260": 10064, "254": 10065, "302": 10066, "334": 10067, "475": 10068, "531": 10069, "319": 10070, "80": 10071, "208": 10072, "18": 10073, "362": 10074, "719": 10075, "376": 10076, "384": 10079, "323": 10087, "428": 10088, "373": 10089, "15": 10090};
 export const GMAX_FORMS = {"3": 10195, "6": 10196, "9": 10197, "12": 10198, "25": 10199, "52": 10200, "68": 10201, "94": 10202, "99": 10203, "131": 10204, "133": 10205, "143": 10206, "569": 10207, "809": 10208, "812": 10209, "815": 10210, "818": 10211, "823": 10212, "826": 10213, "834": 10214, "839": 10215, "841": 10216, "842": 10217, "844": 10218, "849": 10219, "851": 10220, "858": 10221, "861": 10222, "869": 10223, "879": 10224, "884": 10225, "892": 10226};
@@ -39,7 +40,7 @@ function bestAttack(attackerId, defenderTypes) {
 // Trained opponents (gym, league, rival, villain, raid) use their best type and a practised moveset.
 export const TRAINER_POWER = 1.35;
 const incomingMultiplier = (kind, foeTypes, defend, s = null) => kind === 'wild' ? typeMultiplier(foeTypes[0], defend)
-  : Math.max(...foeTypes.map(t => typeMultiplier(t, defend))) * TRAINER_POWER * (s && hasRule(s, 'hard') ? RULE_TRAINER_POWER : 1);
+  : Math.max(...foeTypes.map(t => typeMultiplier(t, defend))) * TRAINER_POWER * (s && hasRule(s, 'hard') ? RULE_TRAINER_POWER : 1) * (s ? diff(s, 'power') : 1);
 
 // The trainer picks the lead whose level and matchup look best against this opponent.
 // The member in the first slot (the player's chosen lead) goes first unless another matchup is clearly better.
@@ -79,7 +80,8 @@ function opponentLevel(s, kind, lead, regionId) {
  */
 export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false, level: specifiedLevel, reward = true }) {
   const g = s.game, lead = chooseLead(s.party, opponentId, kind);
-  const level = specifiedLevel ?? opponentLevel(s, kind, lead, regionId);
+  // Trained opponents scale with the life's difficulty; wild Pokémon stay as they are.
+  const level = Math.min(100, Math.round((specifiedLevel ?? opponentLevel(s, kind, lead, regionId)) * (kind === 'wild' ? 1 : diff(s, 'level'))));
   const foeTypes = typesOf(opponentId), attack = bestAttack(lead.id, foeTypes);
   const transformation = transformationFor(s, lead, kind, regionId);
   if (transformation === 'tera') g.teraType = attack.type;
@@ -96,7 +98,7 @@ export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false
     if (foeHp <= 0) { result = 'win'; break; }
     if (allowCapture && g.balls > 0 && foeHp / maxHp < 0.5) {
       g.balls -= 1;
-      if (random(s) < 0.15 + 0.7 * (1 - foeHp / maxHp)) { result = 'caught'; captured = opponentId; break; }
+      if (random(s) < 0.15 + 0.7 * (1 - foeHp / maxHp) + diff(s, 'capture')) { result = 'caught'; captured = opponentId; break; }
     }
     const defend = transformation === 'tera' ? [g.teraType] : typesOf(lead.id);
     // Wild Pokémon attack with their main type. Trainers' Pokémon pick their best type against the lead and hit harder.

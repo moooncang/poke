@@ -1,6 +1,6 @@
 import { createTalent, TALENT_FIELDS } from './talent.js';
 // Save parsing: validates untrusted JSON; v1 → world simulation v2 → innate talents v3 → goal, party plan, heritage v4
-// → yearly history, perks, challenge rules and a chosen starter v5 → infamy, debt and prison v6.
+// → yearly history, perks, challenge rules and a chosen starter v5 → infamy, debt and prison v6 → difficulty v7.
 import { TOWNS, CAREERS, NPCS } from '../data/world.js';
 import { CONSEQUENCES } from '../data/consequences.js';
 import { STAT_LABELS, EFFECT_LABELS, GENDERS } from './labels.js';
@@ -16,9 +16,10 @@ import { PERKS, RULES, PERK_SLOTS } from './perks.js';
 import { NICKNAME_LIMIT, MEMBER_EVOLUTIONS, MEMBER_RIBBONS } from './party.js';
 import { CONTEST_CATEGORIES, CONTEST_RANKS } from './contest.js';
 import { LOAN_LIMIT, PRISON_MAX } from './standing.js';
+import { DIFFICULTIES } from './difficulty.js';
 import { REGIONS } from '../data/regions.js';
 
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 const ENCOUNTER_TYPES = ['partner', 'npc', 'legendary', 'shiny', 'evolution'];
 const ORIGINS = ['partner', 'wild', 'adopted', 'starter', 'legend', 'egg', 'gift', 'rescued', 'stolen'];
 
@@ -86,7 +87,7 @@ function validState(s) {
     && list(s.perks, PERK_SLOTS, id => Object.hasOwn(PERKS, id)) && new Set(s.perks).size === s.perks.length
     && list(s.rules, Object.keys(RULES).length, id => Object.hasOwn(RULES, id)) && new Set(s.rules).size === s.rules.length
     && (s.starter === null || speciesId(s.starter) && !isLegendary(s.starter))
-    && num(s.infamy, 0, 100) && num(s.debt, 0, 1e7) && int(s.prison, 0, PRISON_MAX)
+    && num(s.infamy, 0, 100) && num(s.debt, 0, 1e7) && int(s.prison, 0, PRISON_MAX) && Object.hasOwn(DIFFICULTIES, s.difficulty)
     && isObject(s.talent) && Object.hasOwn(TALENT_FIELDS, s.talent.field) && int(s.talent.level, 1, 5)
     && text(s.name, 12) && text(s.seed, 40) && typeof s.family === 'string' && typeof s.trait === 'string' && Object.hasOwn(GENDERS, s.gender)
     && int(s.age, 0, 105) && Number.isInteger(s.rng) && typeof s.ended === 'boolean' && !(s.ended && s.age < 60) && int(s.season, 0, 3)
@@ -156,6 +157,8 @@ export function parseSave(raw) {
     if (s.version === 4) { s.history = []; s.perks = []; s.rules = []; s.starter = null; s.version = 5; }
     // v6: infamy, debt and prison. An old life has none of them.
     if (s.version === 5) { s.infamy = 0; s.debt = 0; s.prison = 0; s.version = 6; }
+    // v7: a difficulty setting. Old lives were played on the normal rules.
+    if (s.version === 6) { s.difficulty = 'normal'; s.version = 7; }
     s.gender ??= 'unspecified';
     return s.version === SAVE_VERSION && validState(s) ? s : null;
   } catch {

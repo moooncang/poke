@@ -1,9 +1,11 @@
 import { talentBonus } from '../sim/talent.js';
+import { diff } from '../sim/difficulty.js';
 // Percentages are evaluated before applying a choice's rewards.
 export function successChance(state, choice) {
   if (!choice.challenge) return 100;
   const {stat, difficulty = 0} = choice.challenge;
-  return Math.round(Math.max(5, Math.min(95, 25 + state.stats[stat] * 0.7 - difficulty + talentBonus(state, choice))));
+  // The life's difficulty setting shifts every check (easy +10, hard −8, legend −15) inside the 5–95% band.
+  return Math.round(Math.max(5, Math.min(95, 25 + state.stats[stat] * 0.7 - difficulty + talentBonus(state, choice) + diff(state, 'check'))));
 }
 
 export const academyExam = {

@@ -21,6 +21,7 @@ import { recordYear } from './sim/history.js';
 import { runContest } from './sim/contest.js';
 import { hasPerk, hasRule, cleanPerks, cleanRules, RULE_FRAIL_LIFESPAN, WANDER_EVERY } from './sim/perks.js';
 import { tickStanding, takeLoan, inPrison, LOAN_LIMIT } from './sim/standing.js';
+import { diff, DIFFICULTIES } from './sim/difficulty.js';
 import { LEGENDARY } from './data/species-rules.js';
 import { validHeritage } from './sim/legacy.js';
 import { autoBattle, battleSummary, freshGear, MEGA, GMAX, ALL_TYPES } from './sim/battle.js';
@@ -127,7 +128,7 @@ function log(state, event) {
  * `heritage` (optional) comes from the previous generation (sim/legacy.js heritageFor): the egg that hatches into
  * the first partner at 6, plus a small inheritance. An invalid heritage is ignored.
  */
-export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null, perks = [], rules = [], starter = null } = {}) {
+export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null, perks = [], rules = [], starter = null, difficulty = 'normal' } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0, season: 0,
     town: '', hometown: '', family: '', trait: '', career: null, careerRank: 0, education: null, money: 1800, reputation: 5,
     stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 },
@@ -145,12 +146,13 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   state.starter = Number.isInteger(starter) && starter >= 1 && starter <= 1025 && !LEGENDARY.has(starter) && !state.heritage ? starter : null;
   state.history = [];
   state.infamy = 0; state.debt = 0; state.prison = 0;
+  state.difficulty = Object.hasOwn(DIFFICULTIES, difficulty) ? difficulty : 'normal';
   state.gender = Object.hasOwn(GENDERS, gender) ? gender : hashSeed(`${seed}-gender`) % 2 ? 'female' : 'male';
   state.town = TOWNS.some(t => t.id === town) ? town : pick(state, TOWNS).id;
   state.lifespan = 64 + Math.floor(random(state) * 37);
   const background = pick(state, BACKGROUNDS);
   state.background = { ...background, environment: pick(state, ENVIRONMENTS) };
-  state.money = background.money; state.stats.wisdom += background.wisdom; state.stats.bond += background.bond;
+  state.money = Math.round(background.money * diff(state, 'money')); state.stats.wisdom += background.wisdom; state.stats.bond += background.bond;
   state.relationship = { name: pick(state, ['유진', '서윤', '지호', '도윤']), status: 'single', chapter: 0, trust: 20, children: 0 };
   state.hometown = state.town;
   state.visited.push(state.town);
@@ -165,6 +167,7 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   if (hasRule(state, 'poor')) state.money = 0;
   if (hasRule(state, 'frail')) state.lifespan = Math.min(state.lifespan, RULE_FRAIL_LIFESPAN);
   if (hasPerk(state, 'long-line')) state.lifespan += 4;
+  state.lifespan = clamp(state.lifespan + diff(state, 'lifespan'), 60, 105);
   if (hasPerk(state, 'renowned')) state.reputation += 10;
   if (hasPerk(state, 'ball-case')) state.game.balls += 12;
   log(state, { title: '출생 등록', kind: 'milestone', memory: true,
@@ -187,9 +190,10 @@ function yearlyEconomy(s) {
     if (s.work.cut > 0 && s.work.cut < 99) s.work.cut -= 1;
   } else if (s.work.retired) income = 100 + s.reputation * 2;
   else if (s.age >= 18) income = 80 * factor;
+  income *= diff(s, 'income');
   const married = s.relationship.status === 'married';
-  const expense = s.age >= 18 ? (130 + (married ? 70 : 0) + s.relationship.children * 110 - (s.flags.homeowner ? 70 : 0)) * (0.75 + economy / 200) : 0;
-  s.game.balls = Math.min(30, s.game.balls + 3);
+  const expense = s.age >= 18 ? (130 + (married ? 70 : 0) + s.relationship.children * 110 - (s.flags.homeowner ? 70 : 0)) * (0.75 + economy / 200) * diff(s, 'expense') : 0;
+  s.game.balls = Math.min(30, s.game.balls + diff(s, 'balls'));
   // Comfortable households spend part of their savings on living well.
   const leisure = Math.max(0, s.money - 4000) * 0.05;
   if (leisure > 0) apply(s, { joy: 1 });
@@ -208,9 +212,10 @@ function yearlyDrift(s) {
   const joyBase = 60 - ((s.debt || 0) > 0 ? 8 : 0) - (s.money <= 0 ? 6 : 0) - (inPrison(s) ? 15 : 0) - (s.stats.vitality < 40 ? 6 : 0)
     + (s.relationship.status === 'married' ? 3 : 0) + (s.party.length ? 2 : 0);
   const drift = { joy: [joyBase, 0.15], vitality: [vitalityBase, 0.1], courage: [40, 0.08], wisdom: [40, 0.08], bond: [40, 0.08] };
+  const pull = diff(s, 'drift');
   for (const [key, [base, rate]] of Object.entries(drift)) {
     const gap = s.stats[key] - base;
-    if (gap > 0 || key === 'vitality' || key === 'joy') s.stats[key] = clamp(Math.round(s.stats[key] - gap * rate), 0, 100);
+    if (gap > 0 || key === 'vitality' || key === 'joy') s.stats[key] = clamp(Math.round(s.stats[key] - gap * rate * pull), 0, 100);
   }
   if (s.reputation > 20) s.reputation -= 1;
 }
@@ -243,7 +248,7 @@ function advanceYear(input) {
   const s = structuredClone(input);
   s.age += 1;
   s.season = Math.floor(random(s) * 4);
-  if (s.age >= 105 || (s.age >= 60 && (s.age >= s.lifespan || random(s) < (100 - s.stats.vitality) / 3500))) return ending(s);
+  if (s.age >= 105 || (s.age >= 60 && (s.age >= s.lifespan || random(s) < (100 - s.stats.vitality) / 3500 * diff(s, 'death')))) return ending(s);
 
   yearlyEconomy(s);
   yearlyGrowth(s);

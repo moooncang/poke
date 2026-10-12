@@ -9,6 +9,7 @@ import { epithet } from '../sim/achievements.js';
 import { standingOf, careerTitle, infamyOf, isOutlaw, isWanted, inPrison, debtOf, syndicateName } from '../sim/standing.js';
 import { championships, badgeCount } from '../sim/battle.js';
 import { asset } from './assets.js';
+import { difficultyOf, difficultyName } from '../sim/difficulty.js';
 
 const RELATIONSHIP = { single: '독신', friends: '친구 사이', dating: '교제 중', engaged: '약혼', married: '기혼' };
 
@@ -24,7 +25,7 @@ export function CharacterCard({ life }) {
       <div className="cc-identity">
         <span className="cc-epithet">{epithet(life)}</span>
         <h2 className="cc-name">{life.name}</h2>
-        <span className="cc-age">{life.age}세 · {GENDERS[life.gender]}{life.heritage ? ` · ${life.heritage.generation}대째` : ''}</span>
+        <span className="cc-age">{life.age}세 · {GENDERS[life.gender]}{life.heritage ? ` · ${life.heritage.generation}대째` : ''} · <span className="cc-difficulty" data-difficulty={difficultyOf(life)}>{difficultyName(life)}</span></span>
       </div>
     </header>
     {standing.conditions.length > 0 && <ul className="cc-conditions" aria-label="현재 상태">

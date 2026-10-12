@@ -318,6 +318,10 @@ section.character-card[data-mood="normal|debt|outlaw|wanted|prison"][data-career
 
 `article.story-row.kind-milestone`에 체포·출소·파산이 들어옵니다(제목 '체포'/'출소'/'파산'). `.story-row.kind-party`에는 '떠난 동료'가 추가됩니다. 분류 라벨: 불운(`misfortune`), 그늘의 길(`dark`), 감옥(`prison`)은 리포트의 사건 종류 표에 나옵니다.
 
+## 15-1. 난이도
+
+`NewLifeModal`의 `fieldset.difficulty-picker[data-difficulty] > .difficulty-options[role=radiogroup] > label[data-difficulty][data-selected] > input[type=radio], b` + `small.goal-detail`. 출생 화면 `dd.birth-difficulty[data-difficulty]`, 인물 카드 `span.cc-difficulty[data-difficulty]`, 전당 `span.legacy-difficulty[data-difficulty]`. 값은 `easy|normal|hard|legend`. 수치 표는 [CHANGES-difficulty.md](CHANGES-difficulty.md).
+
 ## 15. 엔딩 카드 종류 추가
 
 `data-kind`: `shadow`(그늘의 길) · `hardship`(잃은 것들). 메달 그룹 `dark`(그늘의 길) 9종.

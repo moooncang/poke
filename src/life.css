@@ -744,3 +744,14 @@ body:has(.app-shell[data-speed="16"]) .hud-delta { animation: none; }
   .main-nav .nav-full-label { display: none; }
   .main-nav .nav-short-label { display: inline; }
 }
+
+/* ── Difficulty (Claude) — functional layout; design: docs/DESIGN-HANDOFF.md part 3 ── */
+.difficulty-picker { border: 1px solid var(--ui-line); border-radius: 8px; padding: 10px; margin: 10px 0; } .difficulty-picker legend { font-size: 12px; padding: 0 4px; } .difficulty-picker legend small { color: var(--ui-muted); }
+.difficulty-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.modal .difficulty-options label { display: flex; justify-content: center; padding: 8px 4px; border: 1px solid var(--ui-line); border-radius: 8px; font-size: 12px; cursor: pointer; }
+.difficulty-options label input { position: absolute; opacity: 0; width: 0; height: 0; }
+.difficulty-options label[data-selected="true"] { border-color: var(--ui-mint); }
+.difficulty-options label[data-difficulty="hard"][data-selected="true"] { border-color: var(--ui-rose); } .difficulty-options label[data-difficulty="legend"][data-selected="true"] { border-color: #f1cf7c; }
+.cc-difficulty[data-difficulty="easy"] { color: var(--ui-mint); } .cc-difficulty[data-difficulty="hard"] { color: var(--ui-rose); } .cc-difficulty[data-difficulty="legend"] { color: #f1cf7c; }
+.legacy-difficulty[data-difficulty="hard"] { color: var(--ui-rose); } .legacy-difficulty[data-difficulty="legend"] { color: #f1cf7c; }
+@media (max-width: 480px) { .difficulty-options { grid-template-columns: repeat(2, 1fr); } }
