@@ -38,7 +38,7 @@ export function CharacterCard({ life }) {
       <dt>세상의 평가</dt><dd className="cc-standing"><span className="cc-reputation" data-value={life.reputation}><PixelIcon name="reputation"/>{standing.reputation} <small>명성 {life.reputation}</small><meter min="0" max="100" value={life.reputation} aria-label={`명성 ${life.reputation}`}/></span>
         {standing.infamy && <span className="cc-infamy" data-value={infamyOf(life)}><PixelIcon name="infamy"/>{standing.infamy} <small>악명 {infamyOf(life)}</small><meter min="0" max="100" value={infamyOf(life)} aria-label={`악명 ${infamyOf(life)}`}/></span>}</dd>
       <dt>배지 · 타이틀</dt><dd><PixelIcon name="league-card"/> 배지 {badgeCount(life)} · 챔피언 {championships(life)}</dd>
-      <dt>가족</dt><dd>{RELATIONSHIP[rel.status]}{rel.status !== 'single' ? ` · ${rel.name}` : ''}{rel.children ? ` · 자녀 ${rel.children}` : ''}</dd>
+      <dt>가족</dt><dd>{RELATIONSHIP[rel.status]}{rel.status !== 'single' ? ` · ${rel.name}(${GENDERS[rel.gender] || '?'})` : ''}{rel.children ? ` · 자녀 ${rel.children}` : ''}</dd>
       <dt>삶의 목표</dt><dd><PixelIcon name={`goal-${goalOf(life)}`}/> {GOALS[goalOf(life)].name}</dd>
       <dt>가족 형편</dt><dd>{life.family} · {life.background.wealth}</dd>
     </dl>

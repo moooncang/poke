@@ -16,6 +16,7 @@ import { HOBBIES } from '../data/hobbies.js';
 import { LIFE_CHAPTERS } from '../data/life-chapters.js';
 import { MISFORTUNE } from '../data/misfortune.js';
 import { VILLAIN_ROUTE } from '../data/villain-route.js';
+import { NPC_TIES } from '../data/npc-ties.js';
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
@@ -88,8 +89,12 @@ const careerReviews = Object.keys(CAREER_REVIEWS).map(Number).filter(phase => ph
   build: s => careerReview(s, phase),
 }));
 
+// A courtship keeps moving: a first meeting comes every few years in the twenties, and while dating or engaged the
+// next chapter follows within two years (urgent), so a marriage lands in the twenties or thirties, not the sixties.
 const romance = { id: 'romance', category: 'romance', once: false, min: 19, when: romanceAvailable, build: relationshipEvent,
-  cooldown: s => ['friends', 'dating', 'engaged'].includes(s.relationship.status) ? 1 : 3 };
+  cooldown: s => ['friends', 'dating', 'engaged'].includes(s.relationship.status) ? 1 : 3,
+  urgent: s => (['dating', 'engaged', 'friends'].includes(s.relationship.status) && s.age - (s.cooldowns.romance ?? 0) >= 2)
+    || (s.relationship.status === 'single' && s.age >= 20 && s.age <= 34 && s.age - (s.cooldowns.romance ?? 0) >= 4) };
 
 // ── Special encounters ──
 const legendEncounter = {
@@ -137,7 +142,7 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...MISFORTUNE, ...VILLAIN_ROUTE, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, PROMOTION_REVIEW, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...MISFORTUNE, ...VILLAIN_ROUTE, ...NPC_TIES, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, PROMOTION_REVIEW, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
@@ -155,9 +160,11 @@ const CATEGORY_WEIGHT = {
   pokemon: () => 1.2,
   work: () => 1.6,
   cast: () => 2.4,
+  npc: s => (s.people || []).length ? 1.4 + Math.min(2, s.people.length) * 0.3 : 0,
   world: () => 3,
   opportunity: () => 1.6,
-  romance: s => ({ single: s.age < 40 ? 2 : 0.8, friends: 3, dating: 6, engaged: 8, married: 1.5 })[s.relationship.status] ?? 1,
+  // A courtship moves every few years, not once a decade: dating and engagement outweigh most other categories.
+  romance: s => ({ single: s.age < 40 ? 2.5 : 0.8, friends: 4, dating: 7, engaged: 9, married: 2 })[s.relationship.status] ?? 1,
   challenge: () => 1.3,
   route: () => 1.3,
   regional: s => 1 + (hasCondition(s, 'syndicate') ? 1.5 : 0) + (regionState(s).safety < 40 ? 0.7 : 0),

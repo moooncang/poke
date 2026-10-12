@@ -36,12 +36,14 @@ export function heirCandidates(s) {
 /**
  * What a new life receives from this one if the player hands down the egg of member `uid`: the egg, a small
  * inheritance, the lineage, and two people who may turn up later — the ancestor's own first partner (if it was not
- * legendary) and the name of the ancestor's rival.
+ * legendary), the name of the ancestor's rival, and the ancestor's closest legendary, which seeks out the heir.
  */
 export function heritageFor(s, uid) {
   const candidate = heirCandidates(s).find(c => c.uid === uid);
   if (!candidate) return null;
   const partner = members(s).find(m => m.origin === 'partner' && !m.locked);
+  // A legendary leaves no egg, but the closest one follows the bloodline: it finds the heir later (legacy-events).
+  const legend = [...members(s)].filter(m => m.locked).sort((a, b) => b.affection - a.affection || a.uid - b.uid)[0];
   return {
     egg: candidate.egg, parent: candidate.parent, shiny: candidate.shiny,
     ancestor: s.name, ancestorSeed: s.seed, hometown: s.hometown,
@@ -50,6 +52,7 @@ export function heritageFor(s, uid) {
     inheritance: Math.min(INHERITANCE_CAP, Math.floor(s.money * INHERITANCE_SHARE)),
     ...(partner ? { partner: { id: partner.id, level: xpLevel(partner), ...(partner.nickname ? { nickname: partner.nickname } : {}) } } : {}),
     ...(s.cast?.rival?.met ? { rival: s.cast.rival.name } : {}),
+    ...(legend ? { legend: { id: legend.id, level: xpLevel(legend), ...(legend.nickname ? { nickname: legend.nickname } : {}) } } : {}),
     titles: championships(s),
   };
 }
@@ -64,6 +67,7 @@ export function validHeritage(h) {
     && Array.isArray(h.lineage) && h.lineage.length <= 8 && h.lineage.every(name)
     && (h.partner === undefined || h.partner && int(h.partner.id, 1, 1025) && !LEGENDARY.has(h.partner.id) && int(h.partner.level, 1, 100) && (h.partner.nickname === undefined || name(h.partner.nickname)))
     && (h.rival === undefined || typeof h.rival === 'string' && h.rival.length > 0 && h.rival.length <= 30)
+    && (h.legend === undefined || h.legend && int(h.legend.id, 1, 1025) && int(h.legend.level, 1, 100) && (h.legend.nickname === undefined || name(h.legend.nickname)))
     && (h.titles === undefined || int(h.titles, 0, 9));
 }
 

@@ -1,7 +1,7 @@
 import { PixelIcon } from './PixelIcon.jsx';
 import { talentLabel, talentBonus, TALENT_FIELDS } from '../sim/talent.js';
 import { ArrowRight, BookOpen, Download, Heart, Lock, RotateCcw, Sprout } from 'lucide-react';
-import { GENDERS, STAT_LABELS, successChance, townOf, toneOf } from '../engine.js';
+import { GENDERS, STAT_LABELS, successChance, townOf, toneOf, ROMANCE } from '../engine.js';
 import { TOWNS } from '../data/world.js';
 import { DISPOSITIONS } from '../sim/party.js';
 import { POKEMON, sprite, artwork } from './assets.js';
@@ -131,13 +131,15 @@ export function NewLifeModal({ life, legacy, form, setForm, onSubmit, onClose, o
     <label>당신의 이름<input autoComplete="off" maxLength={12} placeholder="하루" value={form.name} onChange={update('name')}/></label>
     <label>플레이어 성별<select value={form.gender} onChange={update('gender')}><option value="random">무작위</option>{Object.entries(GENDERS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
     <label>삶의 목표<GoalSelect value={form.goal} onChange={goal => setForm(f => ({ ...f, goal }))}/><small className="goal-detail">{GOALS[form.goal]?.detail}</small></label>
+    <label className="romance-select">연애 상대<select value={form.romance} onChange={update('romance')} aria-label="연애 상대">{Object.entries(ROMANCE).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select>
+      <small className="goal-detail">{{ opposite: '이성만 만납니다. 성별이 미지정이면 무작위.', any: '성별과 상관없이 만납니다.', same: '동성만 만납니다. 성별이 미지정이면 무작위.' }[form.romance]}</small></label>
     <fieldset className="difficulty-picker" data-difficulty={form.difficulty}><legend>난이도 <small>삶이 시작되면 바꿀 수 없음</small></legend>
       <div className="difficulty-options" role="radiogroup" aria-label="난이도">{DIFFICULTY_ORDER.map(id => <label key={id} data-selected={form.difficulty === id} data-difficulty={id}>
         <input type="radio" name="difficulty" value={id} checked={form.difficulty === id} onChange={() => setForm(f => ({ ...f, difficulty: id }))}/><b>{DIFFICULTIES[id].name}</b></label>)}</div>
       <small className="goal-detail">{DIFFICULTIES[form.difficulty]?.detail}</small>{form.difficulty === 'legend' && <p className="difficulty-warning"><PixelIcon name="champion-crown"/> 살아남는 것 자체가 기록</p>}
     </fieldset>
     {heir && <label className="heir-toggle"><input type="checkbox" checked={form.useHeir} onChange={e => setForm(f => ({ ...f, useHeir: e.target.checked }))}/>
-      <span><b>{heir.ancestor}의 {pokemonName(heir.egg)} 알로 시작</b><small>{heir.generation}대째 · 6세에 부화해 첫 파트너가 됩니다 · 유산 {heir.inheritance.toLocaleString()}P</small></span></label>}
+      <span><b>{heir.ancestor}의 {pokemonName(heir.egg)} 알로 시작</b><small>{heir.generation}대째 · 6세에 부화해 첫 파트너가 됩니다 · 유산 {heir.inheritance.toLocaleString()}P{heir.legend ? ` · 전설 ${heir.legend.nickname || pokemonName(heir.legend.id)}이(가) 뒤따릅니다` : ''}</small></span></label>}
     <NewLifeOptions legacy={legacy} form={form} setForm={setForm} heirUsed={Boolean(heir && form.useHeir)}/>
     <div className="birth-random-note">출신 지방 · 가족 구성 · 경제적 형편 · 주거 환경 · 각 지방의 정세는 새 삶이 시작될 때 무작위로 배정됩니다.</div>
     <details><summary>시드 설정</summary>

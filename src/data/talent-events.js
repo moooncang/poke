@@ -1,4 +1,5 @@
 import { TALENT_FIELDS, TALENT_TIERS } from '../sim/talent.js';
+import { josa } from '../sim/text.js';
 import { CAREERS } from './world.js';
 
 // What each talent path actually means for school and work, so the choice is not a mystery.
@@ -18,10 +19,15 @@ export function talentPathChoice(s, career=false) {
  const {field,level}=s.talent,f=TALENT_FIELDS[field];
  const advanced=level>=4, promising=level===3;
  const [education, educationLabel]=PATH_EDUCATION[field], job=talentCareer(field);
- return opt(`${f.name} · ${advanced?'특별 추천 과정':promising?'유망주 실습':'맞춤 기초 멘토링'}${career?' (진로는 아직 정하지 않음)':''}`,
-  `${f.name}에 맞춘 ${advanced?'추천 평가':promising?'현장 실습':'기초 과정'}를 시작했다. 타고난 분야와 다른 진로도 계속 선택할 수 있다.`,{
-  description:`${level}/5 ${TALENT_TIERS[level]} 전용 · 학습 방식 ${educationLabel} · ${job.short} 계열 준비 · 직업은 바뀌지 않음 · ${advanced?'능력 검증 판정':'기초 경험 쌓기'} · 후속 지도`,
-  effects:{[f.stat]:advanced?5:3},education,...lessons(s),
+ // At the age-16 career review (`career`), the talent route is a real career choice: the related job opens at once,
+ // with the matching way of learning. Later (18·22) it is a learning path only, and the job stays as it is.
+ const jobId=TALENT_FIELDS[field].career;
+ return opt(`${f.name} · ${advanced?'특별 추천 과정':promising?'유망주 실습':'맞춤 기초 멘토링'}${career?` · ${job.short} 진로`:''}`,
+  career?`${f.name}에 맞춘 ${advanced?'추천 평가':promising?'현장 실습':'기초 과정'}를 시작하며 ${job.name} 활동에 들어갔다. 타고난 분야와 다른 진로도 뒤에 다시 고를 수 있다.`
+   :`${f.name}에 맞춘 ${advanced?'추천 평가':promising?'현장 실습':'기초 과정'}를 시작했다. 타고난 분야와 다른 진로도 계속 선택할 수 있다.`,{
+  description:career?`${level}/5 ${TALENT_TIERS[level]} 전용 · 직업 ${josa(job.name,'으로','로')} 시작 · 학습 방식 ${educationLabel} · ${advanced?'능력 검증 판정':'기초 경험 쌓기'} · 후속 지도`
+   :`${level}/5 ${TALENT_TIERS[level]} 전용 · 학습 방식 ${educationLabel} · ${job.short} 계열 준비 · 직업은 바뀌지 않음 · ${advanced?'능력 검증 판정':'기초 경험 쌓기'} · 후속 지도`,
+  effects:{[f.stat]:advanced?5:3},education,...(career&&jobId!==s.career?{career:jobId}:{}),...lessons(s),
   ...(advanced?{challenge:{stat:f.stat,talent:field,difficulty:12,failure:{outcome:'추천만으로 평가를 통과하지는 못했다. 현재 학습과 진로는 유지하고 기초 경험을 보완한다.',effects:{[f.stat]:1}}}}:{}),
  });
 }

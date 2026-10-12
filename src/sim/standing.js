@@ -12,6 +12,7 @@ export const BANKRUPTCY_DEBT = 8000;
 export const LOAN_LIMIT = 5000;
 export const WANTED_INFAMY = 60;
 export const ARREST_DIVISOR = 400;
+export const PAROLE_CHANCE = 0.45;
 export const PRISON_MAX = 8;
 
 export const reputationTier = r => r < 15 ? '무명' : r < 35 ? '동네에서 알려짐' : r < 60 ? '지방의 유명인' : r < 85 ? '전국구 트레이너' : '살아 있는 전설';
@@ -50,14 +51,17 @@ export function tickStanding(s) {
   s.infamy ||= 0; s.debt ||= 0; s.prison ||= 0;
   if (s.prison > 0) {
     s.prison -= 1;
+    // A model inmate (prison events set the flag) comes up for parole: about half the remaining years are cut.
+    const parole = s.prison > 0 && s.flags['route-model-inmate'] && chance(s, PAROLE_CHANCE);
+    if (parole) s.prison -= 1;
     s.infamy = clamp(s.infamy - 4, 0, 100);
     s.stats.joy = clamp(s.stats.joy - 3, 0, 100);
     s.stats.vitality = clamp(s.stats.vitality - 1, 0, 100);
     if (s.prison === 0) {
       // Time served clears the warrant; the name stays tarnished.
       s.infamy = Math.min(s.infamy, WANTED_INFAMY - 15);
-      records.push({ kind: 'milestone', title: '출소', effects: { joy: 6 }, body: '형기를 마치고 교도소 문을 나섰다. 파트너들이 센터에서 기다리고 있었다. 세상은 조금 달라져 있었고, 사람들의 눈길도 그랬다.' });
-    }
+      records.push({ kind: 'milestone', title: parole ? '가석방' : '출소', effects: { joy: 6 }, body: `${parole ? '모범수로 가석방 심사를 통과해 형기를 남기고' : '형기를 마치고'} 교도소 문을 나섰다. 파트너들이 센터에서 기다리고 있었다. 세상은 조금 달라져 있었고, 사람들의 눈길도 그랬다.${s.flags['syndicate-rank'] ? ' 옛 조직의 자리는 비어 있다고 들었다.' : ''}` });
+    } else if (parole) records.push({ kind: 'people', automatic: true, title: '가석방 심사', effects: {}, body: '모범수 기록 덕에 가석방 심사에서 형기가 1년 줄었다.' });
     return records;
   }
   if (s.debt > 0) {
@@ -76,9 +80,10 @@ export function tickStanding(s) {
   if (s.infamy > 0 && !isOutlaw(s)) s.infamy -= 1;
   if (isOutlaw(s) && !s.work.retired) { s.infamy = clamp(s.infamy + 2, 0, 100); s.reputation = clamp(s.reputation - 1, 0, 100); }
   if (isWanted(s) && chance(s, s.infamy / ARREST_DIVISOR * diff(s, 'arrest'))) {
-    const years = clamp(Math.round(1 + s.infamy / 25 + random(s) * 2), 1, PRISON_MAX);
+    const years = clamp(Math.round(1 + s.infamy / 35 + random(s) * 1.5), 1, PRISON_MAX);
     s.prison = years; s.flags.arrested = (s.flags.arrested || 0) + 1;
-    if (isOutlaw(s)) { s.career = null; s.careerRank = 0; }
+    // The organisation remembers the rank: rejoining after release (villain-route) starts from it, not from zero.
+    if (isOutlaw(s)) { if (s.careerRank) s.flags['syndicate-rank'] = s.careerRank; s.career = null; s.careerRank = 0; }
     s.reputation = clamp(s.reputation - 10, 0, 100);
     records.push({ kind: 'milestone', title: '체포', effects: { joy: -8 }, body: `수배 끝에 체포됐다. 재판에서 ${years}년 형을 받았다. 파트너들은 포켓몬센터에 맡겨졌고, 조직은 아무도 보내지 않았다.` });
   }

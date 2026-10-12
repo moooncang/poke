@@ -74,7 +74,8 @@ export function DexProgress({ ids, label }) {
 /** Lets the player pick which egg the next generation inherits. */
 export function HeirPicker({ life, heir, onChoose }) {
   const candidates = heirCandidates(life);
-  if (!candidates.length) return <p className="heir-empty">물려줄 수 있는 포켓몬이 없습니다. 전설의 포켓몬은 알을 남기지 않습니다.</p>;
+  const legend = [...life.party].filter(m => m.locked).sort((a, b) => b.affection - a.affection || a.uid - b.uid)[0];
+  if (!candidates.length) return <p className="heir-empty">물려줄 수 있는 포켓몬이 없습니다. 전설의 포켓몬은 알을 남기지 않습니다{legend ? `. 다만 ${pokemonName(legend.id)}은(는) 알 없이도 다음 세대를 찾아갑니다` : ''}.</p>;
   const chosen = heir?.ancestorSeed === life.seed ? heir.egg : null;
   return <div className="heir-picker">
     <p>다음 세대의 첫 파트너가 될 알을 고르세요. 진화 전 모습으로 태어나며, 색이 다른 부모의 알은 색이 다른 포켓몬이 됩니다. 소지금의 {Math.round(INHERITANCE_SHARE * 100)}%(최대 {INHERITANCE_CAP.toLocaleString()}P)가 유산으로 함께 전해집니다.</p>
@@ -84,6 +85,7 @@ export function HeirPicker({ life, heir, onChoose }) {
         <span><b>{pokemonName(c.egg)}의 알</b><small>부모 {pokemonName(c.parent)}{c.partner ? ' · 첫 파트너' : ''} · 친밀도 {c.affection}{c.shiny ? ' · 색이 다름' : ''}</small></span>
       </button>
     </li>)}</ul>
+    {legend && <p className="heir-legend"><Sparkles size={14} aria-hidden="true"/> 전설의 포켓몬 <b>{legend.nickname || pokemonName(legend.id)}</b>은(는) 알을 남기지 않지만, 어떤 알을 고르든 다음 세대를 스스로 찾아갑니다(14세 이후, 유대·용기 판정).</p>}
     {chosen && <p className="heir-chosen" role="status">{pokemonName(chosen)}의 알을 맡겼습니다. ‘새 삶 시작’에서 이 알로 다음 세대를 시작할 수 있습니다. <button className="text-button" onClick={() => onChoose(null)}>선택 취소</button></p>}
   </div>;
 }
@@ -99,7 +101,7 @@ export function LegacyHall({ legacy, life }) {
       [totals.seen, '누적 관측'], [totals.owned, '누적 동료 종'], [totals.shiny, '색이 다른 종'], [`${totals.medals}/${totals.medalTotal}`, '메달'], [totals.cards, '엔딩 카드'],
       [`${totals.perks}/${totals.perkTotal}`, '가문 혜택']]
       .map(([n, label]) => <li key={label}><b>{n}</b><span>{label}</span></li>)}</ul>
-    {legacy.heir && <p className="legacy-heir" role="status"><Egg size={15}/> {legacy.heir.ancestor}의 {pokemonName(legacy.heir.egg)} 알이 다음 세대를 기다립니다. ‘새로운 삶’에서 시작할 수 있습니다.</p>}
+    {legacy.heir && <p className="legacy-heir" role="status"><Egg size={15}/> {legacy.heir.ancestor}의 {pokemonName(legacy.heir.egg)} 알이 다음 세대를 기다립니다{legacy.heir.legend ? ` · 전설 ${legacy.heir.legend.nickname || pokemonName(legacy.heir.legend.id)}도 뒤따릅니다` : ''}. ‘새로운 삶’에서 시작할 수 있습니다.</p>}
 
     <h3>지난 삶</h3>
     {legacy.lives.length ? <ol className="legacy-lives">{legacy.lives.map(l => <li key={l.key} className="legacy-life" data-difficulty={l.difficulty || 'normal'} data-generation={l.generation}>

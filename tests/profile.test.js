@@ -4,7 +4,8 @@ import {createLife,parseSave} from '../src/engine.js';
 test('selected gender is saved without changing birth conditions or stats',()=>{
  const male=createLife({seed:'profile',gender:'male'}),female=createLife({seed:'profile',gender:'female'});
  assert.equal(male.gender,'male');assert.equal(female.gender,'female');
- assert.deepEqual({...male,gender:'female'},female);assert.deepEqual(parseSave(JSON.stringify(female)),female);
+ // The prospective partner follows the romance preference, so only that part may differ.
+ assert.deepEqual({...male,gender:'female',relationship:female.relationship,rng:female.rng},female);assert.deepEqual(parseSave(JSON.stringify(female)),female);
  assert.equal(createLife({seed:'profile'}).gender,createLife({seed:'profile'}).gender);
  assert.equal(createLife({gender:'unspecified'}).gender,'unspecified');
 });

@@ -49,6 +49,29 @@ export const LEGACY_EVENTS = [
             outcome: '선대가 살던 집 마당에 볕 잘 드는 자리를 마련해 주었다. 가끔 찾아가 이야기를 들려주기로 했다.' },
         ] };
     } },
+  // The ancestor's closest legendary (heritage.legend) seeks out the heir. It will not be caught: it must be won over,
+  // and it comes back once more if the first meeting fails. Joins as a legendary (locked in the party) at a level that
+  // follows the trainer (engine legendLevel), never below 30.
+  { id: 'heritage-legend', category: 'legend', min: 14, max: 70, once: false, cooldown: 4, weight: () => 8, urgent: s => s.age >= 18,
+    when: s => Boolean(s.heritage?.legend) && s.party.length > 0 && !s.flags['heritage-legend-done'] && !s.party.some(m => m.id === s.heritage.legend.id),
+    build: s => {
+      const l = s.heritage.legend, shown = l.nickname ? `${poke(l.id)} ${josa(l.nickname, '이', '가')}` : poke(l.id, '이', '가');
+      return { kind: 'choice', memory: true, title: '선대의 전설',
+        body: `${josa(s.heritage.ancestor, '과', '와')} 함께 다니던 전설의 포켓몬 ${shown} 하늘 저편에서 내려왔다. 선대와 같은 피 냄새를 맡은 듯 당신 앞에 멈춰 섰다. 전설은 알을 남기지 않지만, 가문을 기억한다.`,
+        encounter: { type: 'legendary', pokemonId: l.id, title: '선대의 전설', subtitle: 'LEGEND OF THE LINE', body: '선대와 함께 다니던 전설의 포켓몬이 당신을 찾아왔다.' },
+        choices: [
+          { label: '선대의 이름을 부르며 손을 내민다', description: '유대 판정 · 성공하면 파티에 고정 합류', tone: 'caring', effects: { bond: 8, joy: 12, reputation: 8 },
+            join: l.id, joinOrigin: 'legend', ...(l.nickname ? { joinNickname: l.nickname } : {}), flag: 'heritage-legend-done',
+            outcome: `${shown} 당신의 손에 이마를 댔다. 선대의 전설이 다음 세대의 파티에 들어왔다.`,
+            challenge: { stat: 'bond', difficulty: 5, failure: { effects: { bond: 4 }, outcome: '전설은 오래 당신을 바라보다 하늘로 돌아갔다. 아직 때가 아니라는 듯이. 다시 찾아올 것 같다.' } } },
+          { label: '배틀로 자격을 증명한다', description: '용기 판정 · 성공하면 파티에 고정 합류', tone: 'bold', effects: { courage: 8, joy: 10, reputation: 10 },
+            join: l.id, joinOrigin: 'legend', ...(l.nickname ? { joinNickname: l.nickname } : {}), flag: 'heritage-legend-done',
+            outcome: '파트너가 전설의 일격을 버텨 냈다. 전설이 고개를 숙이고 당신 곁에 섰다.',
+            challenge: { stat: 'courage', difficulty: 12, failure: { effects: { courage: 4, vitality: -3 }, outcome: '파트너가 쓰러졌다. 전설은 다친 파트너를 한참 내려다보다 떠났다. 다음에는 다를 것이다.' } } },
+          { label: '선대의 곁에 두고 보내준다', description: '지혜 +6 · 다시 오지 않음', tone: 'pragmatic', effects: { wisdom: 6, joy: 4 }, flag: 'heritage-legend-done',
+            outcome: '전설은 선대의 것이었다. 당신은 당신의 길을 가기로 하고 하늘을 올려다보았다.' },
+        ] };
+    } },
   // The ancestor's rival had a family too.
   { id: 'heritage-rival-grandchild', category: 'cast', min: 12, max: 50, weight: () => 4,
     when: s => Boolean(s.heritage?.rival) && s.party.length > 0,

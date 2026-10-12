@@ -3,6 +3,7 @@ import { TYPES, TYPE_CHART } from '../data/battle-data.js';
 import { random, between, clamp } from './random.js';
 import { hasRule, RULE_TRAINER_POWER } from './perks.js';
 import { diff } from './difficulty.js';
+import { moveFor, effectiveness } from '../data/moves.js';
 
 export const MEGA = {"3": 10033, "6": 10034, "9": 10036, "65": 10037, "94": 10038, "115": 10039, "127": 10040, "130": 10041, "142": 10042, "150": 10043, "181": 10045, "212": 10046, "214": 10047, "229": 10048, "248": 10049, "257": 10050, "282": 10051, "303": 10052, "306": 10053, "308": 10054, "310": 10055, "354": 10056, "359": 10057, "445": 10058, "448": 10059, "460": 10060, "380": 10062, "381": 10063, "260": 10064, "254": 10065, "302": 10066, "334": 10067, "475": 10068, "531": 10069, "319": 10070, "80": 10071, "208": 10072, "18": 10073, "362": 10074, "719": 10075, "376": 10076, "384": 10079, "323": 10087, "428": 10088, "373": 10089, "15": 10090};
 export const GMAX_FORMS = {"3": 10195, "6": 10196, "9": 10197, "12": 10198, "25": 10199, "52": 10200, "68": 10201, "94": 10202, "99": 10203, "131": 10204, "133": 10205, "143": 10206, "569": 10207, "809": 10208, "812": 10209, "815": 10210, "818": 10211, "823": 10212, "826": 10213, "834": 10214, "839": 10215, "841": 10216, "842": 10217, "844": 10218, "849": 10219, "851": 10220, "858": 10221, "861": 10222, "869": 10223, "879": 10224, "884": 10225, "892": 10226};
@@ -33,7 +34,7 @@ export const championships = s => Object.keys(s.flags || {}).filter(k => /^leagu
 function bestAttack(attackerId, defenderTypes) {
   const own = typesOf(attackerId);
   return [...new Set([...own, '노말'])]
-    .map(type => ({ type, power: (type === '노말' ? 30 : 42) / 35 * (own.includes(type) ? 1.5 : 1) * typeMultiplier(type, defenderTypes) }))
+    .map(type => ({ type, multiplier: typeMultiplier(type, defenderTypes), power: (type === '노말' ? 30 : 42) / 35 * (own.includes(type) ? 1.5 : 1) * typeMultiplier(type, defenderTypes) }))
     .sort((a, b) => b.power - a.power)[0];
 }
 
@@ -82,7 +83,7 @@ export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false
   const g = s.game, lead = chooseLead(s.party, opponentId, kind);
   // Trained opponents scale with the life's difficulty; wild Pokémon stay as they are.
   const level = Math.min(100, Math.round((specifiedLevel ?? opponentLevel(s, kind, lead, regionId)) * (kind === 'wild' ? 1 : diff(s, 'level'))));
-  const foeTypes = typesOf(opponentId), attack = bestAttack(lead.id, foeTypes);
+  const foeTypes = typesOf(opponentId), attack = bestAttack(lead.id, foeTypes), swapped = lead !== s.party[0];
   const transformation = transformationFor(s, lead, kind, regionId);
   if (transformation === 'tera') g.teraType = attack.type;
   const ownLevel = xpLevel(lead), giant = ['dynamax', 'gmax'].includes(transformation);
@@ -119,15 +120,23 @@ export function autoBattle(s, { kind, opponentId, regionId, allowCapture = false
     if (kind === 'raid' && GMAX_FORMS[opponentId] && !g.gmax.includes(opponentId)) g.gmax.push(opponentId);
   } else lead.xp = (lead.xp || 0) + 15;
   if (result === 'caught') g.catches += 1;
-  return { result, lead, transformation, captured, level, reward };
+  // The matchup the narration shows: the lead's best move type and how it landed, and how hard the foe's type hit back.
+  const incoming = incomingMultiplier(kind, foeTypes, typesOf(lead.id), s) / (kind === 'wild' ? 1 : TRAINER_POWER * (hasRule(s, 'hard') ? RULE_TRAINER_POWER : 1) * diff(s, 'power'));
+  return { result, lead, transformation, captured, level, reward, ownLevel, swapped, foeTypes,
+    attack: { type: attack.type, multiplier: attack.multiplier, move: moveFor(attack.type, ownLevel) }, incoming };
 }
 
-export function battleSummary({ result, lead, transformation, level, reward }, name = id => `#${id}`) {
-  const opening = `${name(lead.id)} 선두로 내보냈다(상대 Lv.${level}). ${transformation ? `${MECHANICS[transformation].name}를 사용했다. ` : ''}`;
-  return opening + {
+export function battleSummary({ result, lead, transformation, level, reward, ownLevel, swapped, attack, incoming, foeTypes }, name = id => `#${id}`) {
+  const parts = [`${name(lead.id)} ${swapped ? '상성을 보고 선두로 바꿨다' : '선두로 내보냈다'}(Lv.${ownLevel ?? '?'} vs 상대 Lv.${level}).`];
+  if (transformation) parts.push(`${MECHANICS[transformation].name}를 사용했다.`);
+  if (attack) parts.push(`${attack.move}(${attack.type}) · ${effectiveness(attack.multiplier)}.`);
+  if (incoming >= 2) parts.push(`상대 ${foeTypes[0]} 기술에는 약해 크게 흔들렸다.`);
+  else if (incoming !== undefined && incoming < 1) parts.push(`상대 ${foeTypes[0]} 기술은 잘 통하지 않았다.`);
+  return `${parts.join(' ')} ` + {
     win: reward === false ? '이번 대전에서 승리해 경험치를 얻었다. 상금은 연전 전체를 통과해야 지급된다.' : '배틀에서 승리했다. 경험치와 보상을 받았다.',
     lose: '배틀에서 패배했다. 파트너는 센터에서 회복했다.',
     caught: '포획에 성공했다.',
     escape: '승부가 나지 않아 안전하게 물러났다.',
   }[result];
 }
+

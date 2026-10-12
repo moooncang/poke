@@ -12,7 +12,7 @@ import { successChance } from './data/challenges.js';
 import { TOWNS, CAREERS, NPCS, TRAITS } from './data/world.js';
 import { REGIONS } from './data/regions.js';
 import { hashSeed, random, pick, chance, between, clamp, weighted } from './sim/random.js';
-import { STAT_LABELS, GENDERS } from './sim/labels.js';
+import { STAT_LABELS, GENDERS, ROMANCE } from './sim/labels.js';
 import { createWorld, tickWorld, shiftRegion, currentRegion, economyFactor, regionState } from './sim/world.js';
 import { createCast, tickPeople, changeCast } from './sim/people.js';
 import { addPokemon, reorganize, evolveMembers, growParty, trainParty, partnerOf, PARTY_LIMIT } from './sim/party.js';
@@ -24,14 +24,14 @@ import { tickStanding, takeLoan, inPrison, LOAN_LIMIT } from './sim/standing.js'
 import { diff, DIFFICULTIES } from './sim/difficulty.js';
 import { LEGENDARY } from './data/species-rules.js';
 import { validHeritage } from './sim/legacy.js';
-import { autoBattle, battleSummary, freshGear, MEGA, GMAX, ALL_TYPES } from './sim/battle.js';
+import { autoBattle, battleSummary, freshGear, MEGA, GMAX, ALL_TYPES, xpLevel, badgeCount } from './sim/battle.js';
 import { plantSeeds, resolveEchoes, takeDueChoice } from './sim/consequences.js';
 import { directEvent } from './sim/director.js';
 import { poke, josa } from './sim/text.js';
 import { GOALS as GOAL_TABLE } from './sim/goals.js';
 const GOALS_LIST = Object.keys(GOAL_TABLE);
 
-export { STAT_LABELS, GENDERS, successChance, partnerOf, PARTY_LIMIT, hashSeed };
+export { STAT_LABELS, GENDERS, ROMANCE, successChance, partnerOf, PARTY_LIMIT, hashSeed };
 export { setPartyMode, togglePin, movePokemon, setLead, renamePokemon, PARTY_MODES } from './sim/party.js';
 export { setGoal, GOALS } from './sim/goals.js';
 import { SAVE_VERSION } from './sim/save.js';
@@ -128,7 +128,7 @@ function log(state, event) {
  * `heritage` (optional) comes from the previous generation (sim/legacy.js heritageFor): the egg that hatches into
  * the first partner at 6, plus a small inheritance. An invalid heritage is ignored.
  */
-export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null, perks = [], rules = [], starter = null, difficulty = 'normal' } = {}) {
+export function createLife({ name = '하루', seed = String(Date.now()), town = 'random', gender = 'random', goal = 'free', heritage = null, perks = [], rules = [], starter = null, difficulty = 'normal', romance = 'opposite' } = {}) {
   const state = { version: VERSION, name: name.trim().slice(0, 12) || '하루', seed: String(seed).slice(0, 40), rng: hashSeed(seed), age: 0, season: 0,
     town: '', hometown: '', family: '', trait: '', career: null, careerRank: 0, education: null, money: 1800, reputation: 5,
     stats: { joy: 72, vitality: 85, courage: 32, wisdom: 18, bond: 0 },
@@ -153,7 +153,8 @@ export function createLife({ name = '하루', seed = String(Date.now()), town = 
   const background = pick(state, BACKGROUNDS);
   state.background = { ...background, environment: pick(state, ENVIRONMENTS) };
   state.money = Math.round(background.money * diff(state, 'money')); state.stats.wisdom += background.wisdom; state.stats.bond += background.bond;
-  state.relationship = { name: pick(state, ['유진', '서윤', '지호', '도윤']), status: 'single', chapter: 0, trust: 20, children: 0 };
+  state.romance = Object.hasOwn(ROMANCE, romance) ? romance : 'opposite';
+  state.relationship = { ...romancePartner(state), status: 'single', chapter: 0, trust: 20, children: 0 };
   state.hometown = state.town;
   state.visited.push(state.town);
   state.family = background.family;
@@ -355,13 +356,20 @@ function applyActions(s, a, origin) {
   if (a.flag) s.flags[a.flag] = true;
   if (a.unflag) delete s.flags[a.unflag];
   if (a.loan) takeLoan(s, Math.min(a.loan, LOAN_LIMIT));
-  if (a.prison) { s.prison = Math.max(s.prison || 0, a.prison); if (s.career === 'syndicate') { s.career = null; s.careerRank = 0; } }
-  if (a.career === 'syndicate') s.flags['syndicate-region'] = currentRegion(s);
+  if (a.prison) { s.prison = Math.max(s.prison || 0, a.prison); if (s.career === 'syndicate') { if (s.careerRank) s.flags['syndicate-rank'] = s.careerRank; s.career = null; s.careerRank = 0; } }
+  if (a.career === 'syndicate') {
+    s.flags['syndicate-region'] = currentRegion(s);
+    // Back in the organisation after prison: the old rank returns in full if the contact was kept, otherwise half of it.
+    const old = s.flags['syndicate-rank'];
+    if (Number.isInteger(old) && old > 0) { s.careerRank = Math.min(5, s.flags['route-old-contact'] ? old : Math.floor(old / 2)); delete s.flags['syndicate-rank']; }
+  }
   if (a.losePokemon) loseMember(s, a.losePokemon);
   relocate(s, a);
   if (a.relationship) resolveRelationship(s, a.relationship);
   if (a.join) {
-    const joined = addPokemon(s, a.join, { origin: a.joinOrigin || 'adopted', affection: a.joinOrigin === 'legend' ? 55 : a.joinLevel ? 70 : 40, xp: a.joinLevel ? (a.joinLevel - 5) * 25 : 0 });
+    // A legendary arrives as strong as the trainer who met it (at least Lv.30), never as a hatchling.
+    const level = a.joinLevel ?? (a.joinOrigin === 'legend' ? legendLevel(s) : null);
+    const joined = addPokemon(s, a.join, { origin: a.joinOrigin || 'adopted', affection: a.joinOrigin === 'legend' ? 55 : a.joinLevel ? 70 : 40, xp: level ? (level - 5) * 25 : 0 });
     if (a.joinNickname) joined.member.nickname = a.joinNickname;
     queue(s, [joined.record]);
   }
@@ -379,6 +387,25 @@ function applyActions(s, a, origin) {
   }
   if (a.follow) plantSeeds(s, a.follow, origin);
 }
+
+// Names for the person the life may date, by gender. The pick follows `s.romance` and the player's own gender.
+export const PARTNER_NAMES = { female: ['유진', '서윤', '하은', '지안', '수아', '채원'], male: ['지호', '도윤', '시우', '준서', '현우', '태윤'] };
+export function romancePartner(s) {
+  const own = s.gender === 'male' || s.gender === 'female' ? s.gender : null, other = own === 'male' ? 'female' : own === 'female' ? 'male' : null;
+  const gender = s.romance === 'same' && own ? own : s.romance === 'opposite' && other ? other : pick(s, ['female', 'male']);
+  return { name: pick(s, PARTNER_NAMES[gender]), gender };
+}
+/** Changes the player's gender. Before any romance has begun, the prospective partner is re-drawn to match `s.romance`. */
+export function setGender(state, gender) {
+  if (!Object.hasOwn(GENDERS, gender) || state.gender === gender) return state;
+  const s = structuredClone(state);
+  s.gender = gender;
+  if (s.relationship.status === 'single' && s.relationship.chapter === 0) s.relationship = { ...s.relationship, ...romancePartner(s) };
+  return s;
+}
+
+/** Level of a legendary that joins now: the partner's level, the badge count and age all pull it up; 30–80. */
+export const legendLevel = s => clamp(Math.round(Math.max(xpLevel(partnerOf(s) || { xp: 0 }), 20 + badgeCount(s) * 3 + s.age * 0.4)), 30, 80);
 
 // A companion leaves for good (ran away, was stolen, died of illness). Never the first partner or a legendary;
 // 'box' takes from the box first, 'party' from the party, 'random' from both. Records the loss as a party entry.

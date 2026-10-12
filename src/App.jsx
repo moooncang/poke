@@ -2,7 +2,7 @@ import { PixelIcon } from './ui/PixelIcon.jsx';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, BarChart3, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Trophy, Volume2, VolumeX, X } from 'lucide-react';
 import { SEASONS } from './data/world.js';
-import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal, renamePokemon, fastForward } from './engine.js';
+import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal, renamePokemon, fastForward, setGender as changeGender } from './engine.js';
 import { shareSummary } from './ui/share.js';
 import { SimulationReport } from './ui/Report.jsx';
 import { LEGACY_KEY, parseLegacy, recordLife, chooseHeir, unlockedPerks } from './sim/legacy.js';
@@ -96,7 +96,7 @@ export default function App() {
   const [filter, setFilter] = useState('all');
   const [shown, setShown] = useState(8);
   const [saveStatus, setSaveStatus] = useState('saved');
-  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', difficulty: 'normal', useHeir: true, perks: [], rules: [], town: 'random', starter: '' });
+  const [form, setForm] = useState({ name: '', seed: '', gender: 'random', goal: 'free', difficulty: 'normal', romance: 'opposite', useHeir: true, perks: [], rules: [], town: 'random', starter: '' });
   const [legacy, setLegacy] = useState(loadLegacy);
   const [hiddenDecision, setHiddenDecision] = useState(null);
   const [slots, setSlots] = useState(readSlots);
@@ -148,7 +148,7 @@ export default function App() {
 
   const setPref = (key, value) => setPrefs(p => ({ ...p, [key]: value }));
   const toggleSound = () => { if (!prefs.sound) playChime(); setPref('sound', !prefs.sound); };
-  const setGender = gender => setLife(s => ({ ...s, gender }));
+  const setGender = gender => setLife(s => changeGender(s, gender));
   const changeGoal = goal => setLife(s => setGoal(s, goal));
   const party = { onMode: mode => setLife(s => setPartyMode(s, mode)), onPin: uid => setLife(s => togglePin(s, uid)),
     onMove: (uid, swap) => setLife(s => movePokemon(s, uid, swap)), onLead: uid => setLife(s => setLead(s, uid)) };
@@ -178,7 +178,7 @@ export default function App() {
     const heritage = form.useHeir && legacy.heir ? legacy.heir : null;
     // Perks are only offered once unlocked (see NewLifeModal); town and starter choices need their perk.
     const perks = form.perks.filter(id => unlockedPerks(legacy).includes(id));
-    setLife(createLife({ name: form.name || '하루', gender: form.gender, seed: form.seed || crypto.randomUUID(), goal: form.goal, difficulty: form.difficulty, heritage, perks, rules: form.rules,
+    setLife(createLife({ name: form.name || '하루', gender: form.gender, seed: form.seed || crypto.randomUUID(), goal: form.goal, difficulty: form.difficulty, romance: form.romance, heritage, perks, rules: form.rules,
       town: perks.includes('town-pass') ? form.town : 'random', starter: perks.includes('starter-pick') && !heritage && form.starter ? Number(form.starter) : null }));
     if (heritage) setLegacy(l => ({ ...l, heir: null }));
     setHiddenDecision(null); setSnapshot(null); setModal('birth'); setReplay(null); setTab('story'); setShown(8); setFilter('all'); setRunning(true); setNotice('');

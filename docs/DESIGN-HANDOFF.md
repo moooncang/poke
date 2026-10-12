@@ -322,6 +322,16 @@ section.character-card[data-mood="normal|debt|outlaw|wanted|prison"][data-career
 
 `NewLifeModal`의 `fieldset.difficulty-picker[data-difficulty] > .difficulty-options[role=radiogroup] > label[data-difficulty][data-selected] > input[type=radio], b` + `small.goal-detail`. 출생 화면 `dd.birth-difficulty[data-difficulty]`, 인물 카드 `span.cc-difficulty[data-difficulty]`, 전당 `span.legacy-difficulty[data-difficulty]`. 값은 `easy|normal|hard|legend`. 수치 표는 [CHANGES-difficulty.md](CHANGES-difficulty.md).
 
+## 15-2. 평가 반영분 (`docs/CHANGES-feedback.md`)
+
+- 새 삶 화면 `label.romance-select`: "연애 상대" `select`(이성·상관없음·동성) + `small.goal-detail` 설명. 난이도 피커 바로 위.
+- 인물 카드 `.cc-facts` 가족 줄: `교제 중 · 유진(여성)` 형식. 성별 표기는 괄호 안 짧은 텍스트.
+- 가문의 전당 `HeirPicker`: 전설이 있으면 `p.heir-legend`(아이콘 + 한 줄). `p.heir-empty` 문장에도 전설 안내가 붙을 수 있음.
+- `p.legacy-heir`: "… 알이 다음 세대를 기다립니다 · 전설 ○○도 뒤따릅니다".
+- 새 삶 화면 `label.heir-toggle small`: 유산 뒤에 "· 전설 ○○이(가) 뒤따릅니다".
+- 배틀 기록(`.choice-result p`)이 길어짐: 선두·레벨·기술(타입)·효과·상대 타입 반응·결과. 줄바꿈 없이 한 문단. 기술 이름을 강조하고 싶다면 텍스트 파싱 대신 엔진 결과(`attack.move`, `attack.multiplier`, `incoming`)를 별도 필드로 달라고 요청.
+- 기록 제목 "가석방" · "가석방 심사"가 새로 생김. 기존 "출소"와 같은 종류(`milestone` / `people`).
+
 ## 15. 엔딩 카드 종류 추가
 
 `data-kind`: `shadow`(그늘의 길) · `hardship`(잃은 것들). 메달 그룹 `dark`(그늘의 길) 9종.

@@ -135,7 +135,7 @@ test('an inherited egg hatches into the first partner, and the lineage continues
 
 test('heritage events build valid choices only for inheriting lives', () => {
   // Every optional part of a heritage (the ancestor's partner and rival) is present, so every event can open.
-  const heritage = { partner: { id: 25, level: 60 }, rival: '그린', ...heritageFor(finished, heirCandidates(finished)[0].uid) };
+  const heritage = { partner: { id: 25, level: 60 }, rival: '그린', legend: { id: 144, level: 50 }, ...heritageFor(finished, heirCandidates(finished)[0].uid) };
   const base = play(createLife({ seed: 'heritage-events', heritage }), { until: x => x.age >= 20 && !x.pending && !x.encounter && !x.scheduledEvent });
   base.relationship.children = 1;
   base.town = TOWNS.find(t => t.id !== heritage.hometown).id;
@@ -143,6 +143,8 @@ test('heritage events build valid choices only for inheriting lives', () => {
   for (const st of LEGACY_EVENTS) {
     assert.equal(Boolean(st.when(none)), false, st.id);
     const s = structuredClone(base); s.age = Math.max(st.min, Math.min(st.max, s.age));
+    // The legend may already have found the heir while playing to 20 (it is urgent from 18): reopen the meeting.
+    if (st.id === 'heritage-legend') { const id = s.heritage.legend.id; delete s.flags['heritage-legend-done']; s.party = s.party.filter(m => m.id !== id); s.box = s.box.filter(m => m.id !== id); }
     assert.ok(st.when(s), st.id);
     const event = st.build(s);
     assert.ok(event.choices.some(c => !c.cost));

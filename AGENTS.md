@@ -1,7 +1,7 @@
 # AGENTS.md — Pokélife 작업 안내
 
 이 저장소는 여러 AI 에이전트(Claude, GPT 등)와 사람이 함께 작업합니다. 코드를 고치기 전에 이 문서를 읽어 주세요.
-최근 구조 변경 내역은 [docs/CHANGES-v2.md](docs/CHANGES-v2.md)에 있습니다. 삶의 목표·파티 직접 관리·전 지방 리그·다회차 기록은 [docs/CHANGES-legacy-league.md](docs/CHANGES-legacy-league.md), 시뮬레이션 리포트·콘테스트·배틀 시설·가문 혜택·도전 규칙·이벤트 팩 6개·스스로 정한 일은 [docs/CHANGES-depth.md](docs/CHANGES-depth.md), 그 화면들의 디자인 인계는 [docs/DESIGN-HANDOFF.md](docs/DESIGN-HANDOFF.md)에 있습니다.
+최근 구조 변경 내역은 [docs/CHANGES-v2.md](docs/CHANGES-v2.md)에 있습니다. 삶의 목표·파티 직접 관리·전 지방 리그·다회차 기록은 [docs/CHANGES-legacy-league.md](docs/CHANGES-legacy-league.md), 시뮬레이션 리포트·콘테스트·배틀 시설·가문 혜택·도전 규칙·이벤트 팩 6개·스스로 정한 일은 [docs/CHANGES-depth.md](docs/CHANGES-depth.md), 그 화면들의 디자인 인계는 [docs/DESIGN-HANDOFF.md](docs/DESIGN-HANDOFF.md)에, 플레이어 평가 반영(전설 상속·연애 상대·유명 트레이너·감옥·기술 문장)은 [docs/CHANGES-feedback.md](docs/CHANGES-feedback.md)에 있습니다.
 
 ## 실행
 
@@ -19,17 +19,19 @@ PAGES_BASE_PATH=/poke/ npm run build
 
 | 경로 | 역할 |
 |---|---|
-| `src/engine.js` | 공개 API: `createLife({ goal, heritage, perks, rules, starter, difficulty })`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`, `setGoal`, `setPartyMode`, `togglePin`, `movePokemon`, `setLead`, `renamePokemon`. 연간 진행(`advanceYear`), 선택 해결(`resolveChoice`), 스스로 정한 일(`AUTO_SHARE`) |
+| `src/engine.js` | 공개 API: `createLife({ goal, heritage, perks, rules, starter, difficulty, romance })`, `setGender`, `advance`, `choose`, `autoChoice`, `acknowledge`, `toggleMemory`, `parseSave`, `setGoal`, `setPartyMode`, `togglePin`, `movePokemon`, `setLead`, `renamePokemon`. 연간 진행(`advanceYear`), 선택 해결(`resolveChoice`), 스스로 정한 일(`AUTO_SHARE`) |
 | `src/sim/history.js` · `analytics.js` | 연간 기록(`s.history`)과 리포트용 분석(결정·판정·배틀·연대기·동료 이야기). analytics는 읽기 전용 |
 | `src/sim/contest.js` · `src/data/contests.js` | 콘테스트 5부문 × 4랭크, 리본(`ribbon-<부문>-<랭크>` 플래그와 개체 `ribbons`) |
 | `src/data/frontier.js` | 호연 배틀프런티어 7시설(심볼)과 지방 배틀 시설 8곳(연승 단계). 배틀 종류 `facility` |
 | `src/sim/perks.js` · `src/sim/achievements.js` | 가문 혜택·도전 규칙 / 메달·트레이너 카드·엔딩 카드·지방 도감 |
 | `src/sim/difficulty.js` | 난이도 4단계(쉬움·보통·어려움·레전드)의 배수표. 시뮬레이션은 `diff(s, key)`로만 읽음. [수치](docs/CHANGES-difficulty.md) |
 | `src/sim/standing.js` | 사회적 위치: 명성·악명 등급, 직업 등급명(`careerTitle`), 빚·이자·파산, 수배·체포·복역, 조직(`syndicate`) 직업. 연간 처리 `tickStanding` |
-| `src/data/misfortune.js` · `villain-route.js` | 불운 팩, 어두운 길 팩(유혹·조직 생활·탈출·감옥·악명의 그림자) |
+| `src/data/misfortune.js` · `villain-route.js` | 불운 팩, 어두운 길 팩(유혹·조직 생활·탈출·감옥·악명의 그림자). 체포 때 조직 등급은 `flags['syndicate-rank']`에 남고, 모범수는 가석방(`PAROLE_CHANCE`) |
+| `src/data/npc-ties.js` | 만난 유명 트레이너(`s.people`: 성호·오박사·관동 관장·레드)가 다시 엮이는 사건 17개. 성호 계열로 열쇠돌(메가진화) 입수. [기록](docs/CHANGES-feedback.md) |
+| `src/data/moves.js` | 18타입 × 레벨 3단계 대표 기술 이름. 배틀 기록 문장용(`battleSummary`), 별도 기술 시스템은 아님 |
 | `src/data/town-stories.js` · `type-companions.js` · `villain-arcs.js` · `hobbies.js` · `life-chapters.js` · `vignettes-extra.js` | 이벤트 팩: 마을 120, 타입·종 67, 악당 조직 45, 취미·축제 75, 삶의 장 75, 일상 220. 검증은 `node scripts/check-pack.mjs <파일> <EXPORT> [vignettes]` |
 | `src/sim/goals.js` | 삶의 목표(`GOALS`, 8종)와 사건 분류 가중치·자동 결정·육성 보정. 조직 가입·악명 선택은 `outlaw` 목표가 아니면 자동 결정이 거의 고르지 않음 |
-| `src/sim/legacy.js` | 다회차 기록(`pokelife.legacy.v1`): 엔딩 카드, 메달, 트레이너 카드, 누적 도감, 다음 세대 알(`heritageFor`). 모두 순수 함수 |
+| `src/sim/legacy.js` | 다회차 기록(`pokelife.legacy.v1`): 엔딩 카드, 메달, 트레이너 카드, 누적 도감, 다음 세대 알(`heritageFor`). 전설은 알 대신 `heritage.legend`로 따라와 `legacy-events.js`의 `heritage-legend`로 합류. 모두 순수 함수 |
 | `src/sim/talent.js` · `src/data/talent-events.js` | 5단계 재능·20개 사건·판정 보정. 저장 v3. [규칙](docs/CHANGES-talents.md) |
 | `src/sim/random.js` | 결정적 난수(`random`, `pick`, `chance`, `between`, `weighted`) |
 | `src/sim/world.js` | 지방별 경기·치안·생태, 지방 상황(`CONDITIONS`), `tickWorld` |
@@ -66,7 +68,9 @@ CSS는 `src/main.jsx`에서 `styles.css` → `game.css` → `life.css` 순서로
 5. **포켓몬 추가는 `addPokemon`으로만.** 파티가 6마리를 넘으면 자동 재편성이 일어나고, 전설의 포켓몬(`locked`)은 언제나 파티에 남습니다. `s.party.push`를 직접 쓰지 마세요. 플레이어가 고정한 포켓몬(`partyPlan.pinned`)은 자동 재편성이 빼지 않고, 직접 편성 모드에서는 재편성 자체가 일어나지 않습니다. 파티를 옮기는 코드를 새로 쓰면 고정 목록에서 빠진 uid를 지워 주세요(`validState`가 없는 uid를 거부합니다).
 6. **새 상태 필드를 추가하면** `src/sim/save.js`의 `validState`에 검증을 추가하세요. 기존 저장에 없는 필드라면 `SAVE_VERSION`을 올리고 변환 함수(`migrateV1` 참고)를 추가해야 합니다. 그러지 않으면 기존 사용자의 저장 파일이 거부됩니다.
 7. **새 선택지 필드를 추가하면** `save.js`의 `validActions`도 함께 고치세요.
-8. **한국어 문장.** 이름 뒤 조사는 `josa(이름, '이', '가')`를 쓰고, 포켓몬 이름은 `poke(id, '을', '를')` 토큰으로 넣습니다(UI가 실제 이름으로 바꿉니다). 본문에는 `{town}`, `{partner}` 토큰도 쓸 수 있습니다.
+8. **연애 상대.** `s.romance`(이성·상관없음·동성)와 `s.relationship.gender`는 출생 때 정해집니다. 상대 이름은 `PARTNER_NAMES`(engine.js)에서 성별에 맞게 뽑습니다. 상대를 가리키는 문장에서 성별을 단정하지 마세요(`{spouse}` 토큰만 사용).
+9. **전설의 합류 레벨.** `join`에 `joinLevel`이 없고 `joinOrigin: 'legend'`면 `legendLevel(s)`(30~80)로 들어옵니다. 전설을 Lv.5로 넣지 마세요.
+10. **한국어 문장.** 이름 뒤 조사는 `josa(이름, '이', '가')`를 쓰고, 포켓몬 이름은 `poke(id, '을', '를')` 토큰으로 넣습니다(UI가 실제 이름으로 바꿉니다). 본문에는 `{town}`, `{partner}` 토큰도 쓸 수 있습니다.
 
 ## 사건(storylet) 추가하기
 

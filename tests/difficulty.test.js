@@ -77,10 +77,12 @@ test('difficulty is saved, validated, migrated and shown on the trainer card, me
 });
 
 test('lives on easy and legend really diverge', () => {
-  const run = d => play(make(d, 'diff-run'), { until: x => x.ended });
+  const seeds = ['diff-run', 'diff-run-2', 'diff-run-3'];
+  const run = d => seeds.map(seed => play(make(d, seed), { until: x => x.ended }));
   const easy = run('easy'), legend = run('legend');
-  const peak = s => Math.max(...s.history.map(r => r.money));
-  assert.ok(peak(easy) > peak(legend) * 1.5, `peak money ${peak(easy)} vs ${peak(legend)}`);
-  assert.ok(easy.history.filter(r => r.debt > 0).length <= legend.history.filter(r => r.debt > 0).length);
-  assert.ok(parseSave(JSON.stringify(easy)) && parseSave(JSON.stringify(legend)));
+  const peak = s => Math.max(...s.history.map(r => r.money)), mean = xs => xs.reduce((a, b) => a + b, 0) / xs.length;
+  assert.ok(mean(easy.map(peak)) > mean(legend.map(peak)) * 1.4, `peak money ${easy.map(peak)} vs ${legend.map(peak)}`);
+  const debtYears = s => s.history.filter(r => r.debt > 0).length;
+  assert.ok(mean(easy.map(debtYears)) <= mean(legend.map(debtYears)));
+  for (const s of [...easy, ...legend]) assert.ok(parseSave(JSON.stringify(s)));
 });

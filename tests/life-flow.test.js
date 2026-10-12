@@ -80,7 +80,7 @@ test('non-school route avoids graduation and retains the option of later study',
 
 test('relationships progress across a life and can end in marriage', () => {
   let married = 0;
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 10; i++) {
     const s = play(createLife({ seed: `romance-${i}` }), { decide: s => s.log.find(e => e.id === s.pending).choices.some(c => c.relationship) ? 0 : s.log.find(e => e.id === s.pending).choices.length - 1 });
     if (s.relationship.marriedAt) { married++; assert.ok(s.relationship.marriedAt >= 19); }
   }

@@ -17,9 +17,10 @@ import { NICKNAME_LIMIT, MEMBER_EVOLUTIONS, MEMBER_RIBBONS } from './party.js';
 import { CONTEST_CATEGORIES, CONTEST_RANKS } from './contest.js';
 import { LOAN_LIMIT, PRISON_MAX } from './standing.js';
 import { DIFFICULTIES } from './difficulty.js';
+import { ROMANCE } from './labels.js';
 import { REGIONS } from '../data/regions.js';
 
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 8;
 const ENCOUNTER_TYPES = ['partner', 'npc', 'legendary', 'shiny', 'evolution'];
 const ORIGINS = ['partner', 'wild', 'adopted', 'starter', 'legend', 'egg', 'gift', 'rescued', 'stolen'];
 
@@ -98,7 +99,8 @@ function validState(s) {
     && isObject(s.disposition) && Object.entries(s.disposition).every(([k, v]) => k in DISPOSITIONS && int(v, 0, 1e5))
     && isObject(s.work) && int(s.work.years, 0, 120) && num(s.work.satisfaction, 0, 100) && int(s.work.cut, 0, 99)
     && isObject(s.flags) && isObject(s.cooldowns) && isObject(s.background) && typeof s.background.environment === 'string'
-    && isObject(s.relationship) && typeof s.relationship.name === 'string' && int(s.relationship.chapter, 0, 18)
+    && isObject(s.relationship) && typeof s.relationship.name === 'string' && ['male', 'female'].includes(s.relationship.gender) && int(s.relationship.chapter, 0, 18)
+    && Object.hasOwn(ROMANCE, s.romance)
     && list(s.log, 1500, e => validEntry(s, e)) && s.log.length > 0 && new Set(s.log.map(e => e.id)).size === s.log.length
     && list(s.memories, 1500, id => s.log.some(e => e.id === id)) && list(s.seen, 1025, speciesId) && list(s.visited, 40, townId)
     && list(s.used, 2000, id => typeof id === 'string') && list(s.party, PARTY_LIMIT, m => validMember(s, m)) && list(s.box, 400, m => validMember(s, m))
@@ -120,7 +122,7 @@ function migrateV1(old) {
   s.season ??= 0;
   s.lifespan ??= Math.max(s.age + 1, 64 + hashSeed(`${s.seed}lifespan`) % 37);
   s.background ??= { id: 'legacy', family: s.family, wealth: '기존 기록', home: '기존 거주지', environment: TOWNS.find(t => t.id === s.town)?.environment || '' };
-  s.relationship ??= { name: '유진', status: 'single', chapter: 0, trust: 20, children: 0 };
+  s.relationship ??= { name: '유진', gender: 'female', status: 'single', chapter: 0, trust: 20, children: 0 };
   const g = isObject(s.game) ? s.game : {};
   s.game = { ...freshGear(), ...Object.fromEntries(Object.entries(g).filter(([k]) => k in freshGear())) };
   if (!ALL_TYPES.includes(s.game.teraType)) s.game.teraType = '노말';
@@ -159,6 +161,12 @@ export function parseSave(raw) {
     if (s.version === 5) { s.infamy = 0; s.debt = 0; s.prison = 0; s.version = 6; }
     // v7: a difficulty setting. Old lives were played on the normal rules.
     if (s.version === 6) { s.difficulty = 'normal'; s.version = 7; }
+    // v8: a romance preference and the partner's gender. Old partners keep their name; the gender follows it.
+    if (s.version === 7) {
+      s.romance = 'opposite';
+      if (s.relationship) s.relationship.gender ??= ['지호', '도윤'].includes(s.relationship.name) ? 'male' : 'female';
+      s.version = 8;
+    }
     s.gender ??= 'unspecified';
     return s.version === SAVE_VERSION && validState(s) ? s : null;
   } catch {

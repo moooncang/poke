@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { TALENT_FIELDS } from '../src/sim/talent.js';
 import assert from 'node:assert/strict';
 import { createLife, parseSave, choose, advance, fastForward, diminished, VERSION } from '../src/engine.js';
 import { addPokemon } from '../src/sim/party.js';
@@ -145,11 +146,15 @@ test('promotion reviews open every few working years and raise the rank on succe
 
 test('talent paths say which career they prepare and that the job itself does not change', () => {
   const s = settled(16, 'talent-path');
-  const choice = talentPathChoice(s, true);
-  assert.match(choice.description, /계열 준비/);
-  assert.match(choice.description, /직업은 바뀌지 않음/);
-  assert.match(choice.label, /진로는 아직 정하지 않음/);
-  assert.equal(choice.career, undefined);
+  const later = talentPathChoice(s);
+  assert.match(later.description, /계열 준비/);
+  assert.match(later.description, /직업은 바뀌지 않음/);
+  assert.equal(later.career, undefined);
+  // At the age-16 review the same route opens the related career (player feedback: the special route had no job).
+  const at16 = talentPathChoice(s, true);
+  assert.match(at16.description, /직업 .*(으로|로) 시작/);
+  assert.match(at16.label, /진로$/);
+  assert.equal(at16.career, TALENT_FIELDS[s.talent.field].career);
 });
 
 test('the character card summary reflects job, place and conditions', () => {

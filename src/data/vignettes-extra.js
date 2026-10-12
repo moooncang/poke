@@ -228,7 +228,7 @@ const rows = [
   ['vx-ties-friend-book', 25, 100, '돌아온 책', '{friend|이|가} 십 년 전에 빌려 간 책을 돌려주었다. 책갈피가 그때 그 자리에 꽂혀 있었다.', { joy: 1, wisdom: 1 }, friendNear],
   ['vx-ties-friend-twins', 8, 30, '같은 옷', '{friend|과|와} 같은 날 똑같은 옷을 입고 나왔다. 서로 한참을 웃었다.', { joy: 2 }, s => s.cast.friend.affinity >= 50],
   ['vx-ties-friend-worry', 16, 100, '짧은 안부', '{friend|이|가} 요즘 힘들어 보인다는 이야기를 들었다. 짧은 안부 문자를 보냈다.', { wisdom: 1, bond: 1 }, s => friendNear(s) && s.cast.friend.affinity < 45],
-  ['vx-ties-friend-invite', 20, 100, '청첩장', '{friend|이|가} 결혼한다며 청첩장을 보내왔다. 사진 속 얼굴이 낯설면서도 반가웠다.', { joy: 2 }, s => friendNear(s) && Boolean(s.cast.friend.married)],
+  ['vx-ties-friend-invite', 20, 50, '청첩장', '{friend|이|가} 결혼한다며 청첩장을 보내왔다. 사진 속 얼굴이 낯설면서도 반가웠다.', { joy: 2 }, s => friendNear(s) && Boolean(s.cast.friend.wedding)],
 
   // 인연 — 라이벌
   ['vx-ties-rival-poster', 14, 100, '대회 포스터', '거리 게시판에 {rival}의 대회 포스터가 붙어 있었다. 괜히 한참을 쳐다봤다.', { courage: 2 }, s => rivalMet(s) && ['trainer', 'elite', 'gymleader'].includes(s.cast.rival.path)],
