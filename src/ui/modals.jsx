@@ -84,7 +84,7 @@ export function DecisionModal({ life, entry, onChoose, onHide }) {
       <button className="secondary-button decision-hide" onClick={onHide}>잠깐 숨기고 화면 보기</button>
       <span className="eyebrow">{entry.echo ? '지난 선택의 여파' : '새로운 사건'} · 선택 후 진행</span>
       <h2>{formatText(entry.title, life, entry)}</h2>
-      <p>{formatText(entry.body, life, entry)}</p>
+      <details className="decision-context"><summary><span>{formatText(entry.body, life, entry)}</span><small>상황 자세히</small></summary><p>{formatText(entry.body, life, entry)}</p></details>
       <div className="decision-options">{entry.choices.map((c, i) =>
         <button key={`${entry.id}-${i}`} disabled={(c.cost || 0) > life.money} onClick={() => onChoose(i)}>
           <span className="decision-number" title={`단축키 ${i + 1}`}>{i + 1}</span>
@@ -134,7 +134,7 @@ export function NewLifeModal({ life, legacy, form, setForm, onSubmit, onClose, o
     <fieldset className="difficulty-picker" data-difficulty={form.difficulty}><legend>난이도 <small>삶이 시작되면 바꿀 수 없음</small></legend>
       <div className="difficulty-options" role="radiogroup" aria-label="난이도">{DIFFICULTY_ORDER.map(id => <label key={id} data-selected={form.difficulty === id} data-difficulty={id}>
         <input type="radio" name="difficulty" value={id} checked={form.difficulty === id} onChange={() => setForm(f => ({ ...f, difficulty: id }))}/><b>{DIFFICULTIES[id].name}</b></label>)}</div>
-      <small className="goal-detail">{DIFFICULTIES[form.difficulty]?.detail}</small>
+      <small className="goal-detail">{DIFFICULTIES[form.difficulty]?.detail}</small>{form.difficulty === 'legend' && <p className="difficulty-warning"><PixelIcon name="champion-crown"/> 살아남는 것 자체가 기록</p>}
     </fieldset>
     {heir && <label className="heir-toggle"><input type="checkbox" checked={form.useHeir} onChange={e => setForm(f => ({ ...f, useHeir: e.target.checked }))}/>
       <span><b>{heir.ancestor}의 {pokemonName(heir.egg)} 알로 시작</b><small>{heir.generation}대째 · 6세에 부화해 첫 파트너가 됩니다 · 유산 {heir.inheritance.toLocaleString()}P</small></span></label>}

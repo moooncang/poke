@@ -82,7 +82,6 @@ function rememberPrevious(life) {
   try { localStorage.setItem(`${SAVE_KEY}.previous`, JSON.stringify(life)); } catch { /* manual export remains available */ }
 }
 
-const chapterOf = age => age < 6 ? 1 : age < 16 ? 2 : age < 30 ? 3 : age < 55 ? 4 : age < 70 ? 5 : 6;
 
 export default function App() {
   const [boot] = useState(initial);
@@ -221,21 +220,17 @@ export default function App() {
         </div>
         {notice && <div className="notice" role="status"><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><X size={16}/></button></div>}
         <nav className="main-nav" aria-label="주 메뉴">
-          {NAV.map(({ id, label }) => <button key={id} className={tab === id ? 'active' : ''} aria-label={label} onClick={() => selectTab(id)} aria-current={tab === id ? 'page' : undefined}>
+          {NAV.map(({ id, label }) => <button key={id} data-tab={id} className={tab === id ? 'active' : ''} aria-label={label} onClick={() => selectTab(id)} aria-current={tab === id ? 'page' : undefined}>
             <PixelIcon name={({ story: 'league-card', pokemon: 'ball', map: 'goal-free', report: 'event-news', legacy: 'hall-of-fame', memories: 'event-echo' })[id]} size={24}/><span className="nav-full-label">{label}</span><span className="nav-short-label">{({story: '게임', pokemon: '도감', memories: '기록', map: '여행', report: '리포트', legacy: '전당'})[id]}</span>{id === 'pokemon' && <small>{life.seen.length}</small>}{id === 'memories' && <small>{life.memories.length}</small>}
           </button>)}
           <span className="nav-life-id">LIFE № {String(life.seed).replace(/[^0-9a-z]/gi, '').slice(-6).toUpperCase() || '000001'}</span>
         </nav>
+        <div className="mobile-secondary-nav"><button onClick={() => selectTab('memories')} aria-current={tab === 'memories' ? 'page' : undefined}>저장한 기록 {life.memories.length}</button><button onClick={() => selectTab('map')} aria-current={tab === 'map' ? 'page' : undefined}>여행 기록</button></div>
         <div className="main-grid"><LifeSidebar life={life} onPokemon={setDetail} side="trainer"/><main>
           <TrainerHud life={life} onParty={() => openModal('party')} onGoal={changeGoal} deltas={deltasSince(life, snapshot)} onSkip={skip}/>
           {tab === 'story' && <>
-            <section className="chapter-header">
-              <div><span className="eyebrow">CHAPTER {String(chapterOf(life.age)).padStart(2, '0')}</span><h2>{stageOf(life.age)}<span>{life.age}세</span></h2>
-                <p>{life.ended ? '생애가 종료되었습니다.' : life.pending ? '결정 대기 중입니다.' : life.age < 6 ? '6세에 첫 파트너를 만납니다.' : `지금은 ${SEASONS[life.season]}. ${town.name}에서 활동 중입니다.`}</p></div>
-              <div className="chapter-stamp"><Sprout size={26}/><span>TRAINER LOG</span></div>
-            </section>
             <section className="playback" aria-label="인생 진행">
-              <div className="playback-label"><span className={`live-dot ${running ? 'playing' : ''}`}/><span>{status}</span></div>
+              <div className="playback-label"><b>{stageOf(life.age)} · {life.age}세</b><span className="playback-place">{SEASONS[life.season]} · {town.name}</span><span className={`live-dot ${running ? 'playing' : ''}`}/><span>{status}</span></div>
               <div className="playback-actions">
                 <div className="speed-options" aria-label="진행 배속">{SPEEDS.map(n => <button key={n} className={prefs.speed === n ? 'active' : ''} onClick={() => setPref('speed', n)} aria-pressed={prefs.speed === n}>{n}×</button>)}</div>
                 <button className={`autoplay-button ${running ? 'active' : ''}`} onClick={() => { setTab('story'); setRunning(!running); }} disabled={life.ended || Boolean(life.pending && !prefs.autoDecisions)} aria-label={running ? '자동 진행 멈추기' : '자동 진행 시작'}>
@@ -244,10 +239,11 @@ export default function App() {
               </div>
             </section>
             <div className="auto-choice-row"><label><input type="checkbox" checked={prefs.autoDecisions} onChange={e => setPref('autoDecisions', e.target.checked)}/> 자동 결정 (캐릭터가 스스로 선택)</label><span>기록 1개 = {(3.6 / prefs.speed).toFixed(2)}초 · 기록 4~7개마다 선택</span></div>
+            {life.age < 6 && <p className="first-partner-guide"><PixelIcon name="ball"/>6세에 첫 파트너를 만납니다 · Space로 멈춤</p>}
             <LifeScene life={life} running={running && !overlay}/>
             <div className="journal-title"><span><Feather size={15}/> 사건 기록 <small>{life.log.length}개 사건</small></span>
               <label><select aria-label="이야기 필터" value={filter} onChange={e => { setFilter(e.target.value); setShown(8); }}><option value="all">전체 사건</option><option value="special">주요 사건</option></select><ChevronDown size={12}/></label></div>
-            <div className="timeline" aria-live="polite" aria-relevant="additions">{logs.slice(0, shown).map((entry, index) => <Fragment key={entry.id}>{(index === 0 || logs[index - 1].age !== entry.age) && <div className="story-year-divider">{entry.age}세의 기록</div>}<StoryCard entry={entry} life={life} onMemory={keep} onReplay={replayEvent}/></Fragment>)}</div>
+            <div className="timeline" aria-live="polite" aria-relevant="additions">{logs.slice(0, shown).map((entry, index) => <Fragment key={entry.id}>{(index === 0 || logs[index - 1].age !== entry.age) && <div className="story-year-divider">{entry.age}세의 기록</div>}<StoryCard entry={entry} life={life} onMemory={keep} onReplay={replayEvent} current={entry.id === life.log.at(-1)?.id} fast={prefs.speed === 16 && running}/></Fragment>)}</div>
             {logs.length > shown && <button className="load-more" onClick={() => setShown(shown + 12)}>이전 기록 더 보기 <ChevronDown size={15}/></button>}
             {life.ended && <button className="ending-banner" onClick={() => openModal('ending')}><Sparkles size={25}/><span><b>한 사람의 삶, 한 권의 플레이 기록</b><small>배틀·탐험·선택 기록을 확인합니다.</small></span><ArrowUpRight size={22}/></button>}
           </>}

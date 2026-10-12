@@ -1,7 +1,7 @@
+import { PixelIcon } from './PixelIcon.jsx';
 import { useState } from 'react';
 import { Heart, Search } from 'lucide-react';
 import { POKEMON, sprite } from './assets.js';
-import { PokeBall } from './common.jsx';
 
 export function Dex({ life, onPokemon }) {
   const [query, setQuery] = useState('');
@@ -14,6 +14,6 @@ export function Dex({ life, onPokemon }) {
       <small>No. {String(p.id).padStart(4, '0')}</small><img src={sprite(p.id)} className="pixel" alt=""/><h3>{p.name}</h3><span>{p.types.join(' · ')}</span>
       {status(p.id) && <span className="dex-companion"><Heart size={10}/> {status(p.id)}</span>}
     </button>)}</div>
-    : <div className="empty-state"><PokeBall/><h3>{query ? '아직 그 친구를 만나지 못했어요' : '첫 만남은 언제 찾아올까요?'}</h3><p>{query ? '다른 이름으로 찾아보세요.' : '이야기를 이어가면 만난 포켓몬이 이곳에 기록됩니다.'}</p></div>}
+    : <div className="empty-state"><PixelIcon name="ball-empty" size={32}/><h3>{query ? '아직 그 친구를 만나지 못했어요' : '아직 만난 포켓몬이 없습니다'}</h3><p>{query ? '다른 이름으로 찾아보세요.' : '이야기를 이어가면 만난 포켓몬이 이곳에 기록됩니다.'}</p></div>}
   </section>;
 }

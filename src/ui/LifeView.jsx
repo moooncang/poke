@@ -61,23 +61,22 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
       <div className="money-display">소지금 <b>{life.money.toLocaleString()} P</b></div>
       {life.ledger && <small className="ledger">작년 수입 {life.ledger.income.toLocaleString()}P · 지출 {life.ledger.expense.toLocaleString()}P{life.debt > 0 ? ` · 빚 ${Math.round(life.debt).toLocaleString()}P` : ''}</small>}
     </section>
-    <section className="dex-panel talent-panel"><h3>타고난 재능 <small>{life.talent.level} / 5</small></h3>
+    <details className="dex-panel sidebar-fold talent-panel"><summary>타고난 재능 <small>{life.talent.level} / 5</small></summary>
       <b>{TALENT_FIELDS[life.talent.field].name} · {TALENT_TIERS[life.talent.level]}</b>
       <div className="talent-rating" aria-label={`재능 ${life.talent.level}단계`}>{[1,2,3,4,5].map(n=><span key={n} className={n<=life.talent.level?'lit':''}/>)}</div>
       <p>관련 판정 +{TALENT_BONUS[life.talent.level]}%p{life.flags[`talent-${life.talent.field}-trained`]?' · 연습 숙련 +3%p':''}</p>
-      <small>재능 분야가 표시된 도전에 적용됩니다. 관련 직업의 파티 육성에도 반영되며, 다른 진로를 선택할 수 있습니다.</small>
-    </section>
-    <section className="dex-panel"><h3>트레이너 상태</h3>
+      <details className="panel-help"><summary>규칙 안내</summary><p>재능 분야가 표시된 도전에 적용됩니다. 관련 직업의 파티 육성에도 반영되며, 다른 진로를 선택할 수 있습니다.</p></details></details>
+    <details className="dex-panel sidebar-fold"><summary>트레이너 상태</summary>
       {Object.entries(STATS).map(([key, label]) => <Meter key={key} label={label} value={life.stats[key]}/>)}
-    </section>
-    <section className="dex-panel cast-panel"><h3>인연</h3>
+    </details>
+    <details className="dex-panel sidebar-fold cast-panel"><summary>인연</summary>
       {cast.map(([id, person]) => <div className="cast-row" key={id}>
         {id === 'rival' && <img className="pixel" src={asset('assets/trainers/rival.png')} alt=""/>}
         <span><b>{person.name}</b> <small>{person.role} · {PATHS[person.path] || ''}{id === 'family' && person.path !== 'gone' ? ` · 건강 ${person.health}` : ''}</small></span>
         {person.affinity !== undefined && <meter min="0" max="100" value={person.affinity} aria-label={`${person.name} 관계`}/>}
       </div>)}
       <p>{rel.status === 'single' ? RELATIONSHIP.single : `${rel.name} · ${RELATIONSHIP[rel.status]} · 신뢰 ${rel.trust}`}<br/>자녀 {rel.children}명{rel.marriedAt ? ` · ${rel.marriedAt}세에 결혼` : ''}</p>
-    </section>
+    </details>
     </> : <>
     <section className="dex-panel"><h3>포켓몬 파티 <small>{life.party.length}/{PARTY_LIMIT}</small></h3>
       {life.party.length ? life.party.map(member => <PartyMember key={member.uid} member={member} onPokemon={onPokemon}/>) : <p>6세에 첫 파트너를 만납니다.</p>}
@@ -86,9 +85,8 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
           <button key={member.uid} onClick={() => onPokemon(member.id)} title={`${pokemonName(member.id)} Lv.${xpLevel(member)}`}><img className="pixel" src={sprite(member.id, member.shiny)} alt={pokemonName(member.id)}/></button>)}</div>
           : <p>아직 맡긴 포켓몬이 없다.</p>}
       </details>
-      <small>6마리를 넘으면 성향에 따라 스스로 파티를 다시 짠다. 상단의 파티 버튼에서 좋아하는 포켓몬을 고정하거나 직접 편성할 수 있다. 전설의 포켓몬은 언제나 파티에 둔다.</small>
-    </section>
-    <section className="dex-panel world-panel"><h3>{region.name}지방 정세</h3>
+      <details className="panel-help"><summary>규칙 안내</summary><p>6마리를 넘으면 성향에 따라 스스로 파티를 다시 짠다. 상단의 파티 버튼에서 좋아하는 포켓몬을 고정하거나 직접 편성할 수 있다. 전설의 포켓몬은 언제나 파티에 둔다.</p></details></section>
+    <details className="dex-panel sidebar-fold world-panel"><summary>{region.name}지방 정세</summary>
       {Object.entries(WORLD_KEYS).map(([key, label]) => <Meter key={key} label={label} value={state[key]} detail={levelLabel(state[key])}/>)}
       <ul className="condition-list">
         {conditions.length === 0 && <li className="quiet">특별한 사건 없이 평온하다.</li>}
@@ -97,27 +95,23 @@ export function LifeSidebar({ life, onPokemon, side = 'trainer' }) {
             {c.region === town.map ? '● ' : ''}{REGIONS.find(r => r.id === c.region).name} · {conditionName(c.id, c.region)} <small>~{c.until}세</small>
           </li>)}
       </ul>
-      <small>세계는 매년 스스로 변한다. 경기는 수입을, 치안과 생태는 찾아오는 사건을 바꾼다.</small>
-    </section>
-    <section className="dex-panel league-progress"><h3>리그 도전 · 명예의 전당</h3>
+      <details className="panel-help"><summary>규칙 안내</summary><p>세계는 매년 스스로 변한다. 경기는 수입을, 치안과 생태는 찾아오는 사건을 바꾼다.</p></details></details>
+    <details className="dex-panel sidebar-fold league-progress"><summary>리그 도전 · 명예의 전당</summary>
       <p>지역 인증 8개 → 예선 → 상위 4관문 → 최종전</p>
       {LEAGUE_REGIONS.filter(r=>r.id===town.map||life.flags[`league-${r.id}-licensed`]||life.flags[championFlag(r)]).map(r=>{
         const root=`league-${r.id}`,cleared=r.elites.filter((_,i)=>life.flags[`${root}-elite-${i}`]).length;
         const status=life.flags[championFlag(r)]?(r.id==='paldea'?'챔피언 랭크':'명예의 전당 등록'):life.flags[`${root}-withdrawn`]?'도전 종료':cleared?`상위 관문 ${cleared}/4 통과`:life.flags[`${root}-qualified`]?'본선 진출':life.flags[`${root}-licensed`]?'인증 순회 중':'도전자 등록 전';
         return <div className="league-progress-row" key={r.id}><b>{r.name}{life.flags[championFlag(r)]?' ★':''}</b><span>{status}</span><small>지역 배지 {life.game.badges[r.id]||0}/8 · 최종 상대 {r.champion}</small></div>;
       })}
-      <small>초대 조건: 명성 15 이상 트레이너 또는 현재 지방 배지 2개. 파트너가 있어야 도전할 수 있습니다.</small>
-    </section>
-    <section className="dex-panel nursery-panel"><h3>키우미집 · 알 돌봄</h3>
+      <details className="panel-help"><summary>규칙 안내</summary><p>초대 조건: 명성 15 이상 트레이너 또는 현재 지방 배지 2개. 파트너가 있어야 도전할 수 있습니다.</p></details></details>
+    <details className="dex-panel sidebar-fold nursery-panel"><summary>키우미집 · 알 돌봄</summary>
       <p>교배 가능한 조합 {breedingPairs(life).length}쌍 · 알 출신 동료 {[...life.party,...life.box].filter(p=>p.origin==='egg').length}마리</p>
       {life.seeds.filter(seed=>seed.id.startsWith('nursery-')).map((seed,i)=><p key={`${seed.id}-${i}`}>● {{'nursery-egg':'알 발견 기다리는 중','nursery-hatch':'부화 준비 중','nursery-first-steps':'어린 동료 성장 중','nursery-generation':'두 세대의 소식 기다리는 중','nursery-letter':'새 가족의 편지 기다리는 중'}[seed.id]}</p>)}
-      <small>16세 이후 조건에 맞으면 사건으로 시작합니다. 파티·박스의 알그룹과 개체 성별을 확인합니다. 알 돌봄 → 부화 → 성장 기록으로 이어집니다.</small>
-    </section>
-    <section className="dex-panel"><h3>장비와 리그</h3>
+      <details className="panel-help"><summary>규칙 안내</summary><p>16세 이후 조건에 맞으면 사건으로 시작합니다. 파티·박스의 알그룹과 개체 성별을 확인합니다. 알 돌봄 → 부화 → 성장 기록으로 이어집니다.</p></details></details>
+    <details className="dex-panel sidebar-fold"><summary>장비와 리그</summary>
       {Object.entries(MECHANICS).map(([id, m]) => <p key={id}>{life.game.gear.includes(id) ? '●' : '○'} {m.name}</p>)}
       <p>획득 배지 {badgeCount(life)}개 · 배틀 승리 {life.game.wins}회 · 몬스터볼 {life.game.balls}개</p>
-      <small>배틀과 장비 해금은 사건의 선택 결과로 진행된다.</small>
-    </section>
+      <details className="panel-help"><summary>규칙 안내</summary><p>배틀과 장비 해금은 사건의 선택 결과로 진행된다.</p></details></details>
     </>}
   </aside>;
 }
