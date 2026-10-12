@@ -102,7 +102,7 @@ export function LegacyHall({ legacy, life }) {
     {legacy.heir && <p className="legacy-heir" role="status"><Egg size={15}/> {legacy.heir.ancestor}의 {pokemonName(legacy.heir.egg)} 알이 다음 세대를 기다립니다. ‘새로운 삶’에서 시작할 수 있습니다.</p>}
 
     <h3>지난 삶</h3>
-    {legacy.lives.length ? <ol className="legacy-lives">{legacy.lives.map(l => <li key={l.key} className="legacy-life" data-generation={l.generation}>
+    {legacy.lives.length ? <ol className="legacy-lives">{legacy.lives.map(l => <li key={l.key} className="legacy-life" data-difficulty={l.difficulty || 'normal'} data-generation={l.generation}>
       <TrainerCardView card={l.card} compact/>
       <div className="legacy-life-detail">
         <p>{townName(l.hometown)}에서 태어나 {l.age}세까지 · {GOALS[l.goal]?.name} · {CAREERS[l.career]?.name || '자율 활동'}{l.ancestor ? ` · ${l.ancestor}의 후손` : ''}{l.difficulty && l.difficulty !== 'normal' ? <> · <span className="legacy-difficulty" data-difficulty={l.difficulty}>{DIFFICULTIES[l.difficulty]?.name}</span></> : ''}</p>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Bookmark, Play } from 'lucide-react';
 import { PixelIcon } from './PixelIcon.jsx';
 import { TOWNS, NPCS, SEASONS } from '../data/world.js';
@@ -31,19 +32,26 @@ function EncounterTicket({ special, onReplay, age }) {
   </button>;
 }
 
-export function StoryCard({ entry, life, onMemory, onReplay, compact = false }) {
+export function StoryCard({ entry, life, onMemory, onReplay, compact = false, current = false, fast = false, expandedView = false }) {
+  const [expanded, setExpanded] = useState(false);
   const special = entry.encounter;
   const [Icon, title] = special ? ['star-on', '특별한 만남'] : KINDS[entry.kind] || KINDS.life;
   const text = value => formatText(value, life, entry);
   const saved = life.memories.includes(entry.id);
-  return <article className={`story-row kind-${entry.kind} ${special ? 'special-row' : ''} ${entry.choices && !entry.resolution ? 'choice-row' : ''}`}>
+  if (!expandedView && (fast || entry.auto || entry.kind === 'auto')) return <article className="story-row story-summary" data-current={current}>
+    <details onToggle={e => setExpanded(e.currentTarget.open)}>
+      <summary><PixelIcon name={Icon}/><span>{entry.age}세</span><b>{text(entry.title)}</b><small>자세히</small></summary>
+      {expanded && <StoryCard entry={entry} life={life} onMemory={onMemory} onReplay={onReplay} compact expandedView current={current}/>}
+    </details>
+  </article>;
+  return <article data-current={current} className={`story-row kind-${entry.kind} ${special ? 'special-row' : ''} ${entry.choices && !entry.resolution ? 'choice-row' : ''}`}>
     {!compact && <div className="story-age"><b>{entry.age}</b><span>살의 {SEASONS[entry.season]}</span></div>}
     <div className="timeline-dot"><PixelIcon name={Icon} size={24}/></div>
     <div className="story-card">
       <div className="story-card-top">
         <span className="story-category"><PixelIcon name={Icon}/>{title}</span>
         <div>
-          <span className="story-place">{TOWNS.find(t => t.id === entry.town)?.name}</span>
+          <span className="story-place">{entry.age}세 · {SEASONS[entry.season]} · {TOWNS.find(t => t.id === entry.town)?.name}</span>
           <button className={`bookmark-button ${saved ? 'saved' : ''}`} onClick={() => onMemory(entry.id)} aria-label={saved ? '저장 기록 해제' : '기록 저장'} aria-pressed={saved}><Bookmark size={15}/></button>
         </div>
       </div>
@@ -55,7 +63,9 @@ export function StoryCard({ entry, life, onMemory, onReplay, compact = false }) 
         <span><PixelIcon name="check"/> {text(entry.resolution.label)}</span>
         {entry.resolution.check && <strong className={`check-result ${entry.resolution.check.success ? 'success' : 'failure'}`}>
           {entry.resolution.check.success ? '성공' : '실패'} · 도전 당시 성공률 {entry.resolution.check.chance}%</strong>}
-        <p>{text(entry.resolution.text)}</p>
+        {text(entry.resolution.text).length > 140
+          ? <details className="result-details"><summary>{text(entry.resolution.text).split(/(?<=[.!?])\s/)[0]} <small>자세히</small></summary><p>{text(entry.resolution.text)}</p></details>
+          : <p>{text(entry.resolution.text)}</p>}
         {entry.resolution.lasting && <small className="lasting-note">이 선택은 몇 년 뒤의 삶에 다시 영향을 줄 수 있다.</small>}
       </div>}
       <EffectChips effects={entry.resolution?.effects || entry.effects}/>

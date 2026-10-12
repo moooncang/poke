@@ -1,3 +1,4 @@
+import { useState } from 'react';
 // Trainer console: presentation of existing summary values, goal control and party access.
 // Public class names and data states follow docs/DESIGN-HANDOFF.md.
 import { PixelIcon, conditionIcon } from './PixelIcon.jsx';
@@ -17,11 +18,12 @@ const level = value => value < 35 ? 'low' : value > 65 ? 'high' : 'mid';
  * `onSkip` (optional): fast-forward to the next decision.
  */
 export function TrainerHud({ life, onParty, onGoal, deltas = {}, onSkip }) {
+  const [expanded, setExpanded] = useState(false);
   const plan = partyPlan(life);
   const standing = standingOf(life);
   const delta = key => deltas[key] ? <small className="hud-delta" data-sign={deltas[key] > 0 ? 'up' : 'down'}>{deltas[key] > 0 ? '+' : ''}{key === 'money' ? `${deltas[key].toLocaleString()}P` : deltas[key]}</small> : null;
   const slots = Array.from({ length: PARTY_LIMIT }, (_, i) => life.party[i] || null);
-  return <section className="hud" aria-label="트레이너 요약">
+  return <section className="hud" data-expanded={expanded} aria-label="트레이너 요약">
     <div className="hud-identity">
       <span className="hud-avatar"><img className="pixel" src={asset(life.gender === 'female' ? 'assets/trainers/leaf.png' : 'assets/trainers/red.png')} alt=""/></span>
       <div className="hud-identity-text"><span className="hud-kicker">TRAINER STATUS</span><b className="hud-name">{life.name}</b>
@@ -33,6 +35,7 @@ export function TrainerHud({ life, onParty, onGoal, deltas = {}, onSkip }) {
       {life.ledger && <small className={life.ledger.income >= life.ledger.expense ? 'hud-ledger up' : 'hud-ledger down'}>
         {life.ledger.income - life.ledger.expense >= 0 ? '+' : ''}{(life.ledger.income - life.ledger.expense).toLocaleString()}P/년</small>}
     </div>
+    <button className="hud-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? '능력치 접기 −' : '능력치 · 목표 보기 +'}</button>
     <ul className="hud-stats" aria-label="능력치">
       {Object.entries(HUD_STATS).map(([key, label]) => <li key={key} className="hud-stat" data-stat={key} data-level={level(life.stats[key])}>
         <span title={label}><PixelIcon name={`stat-${key}`} size={24}/><span>{label}</span></span><b>{life.stats[key]}{delta(key)}</b><meter min="0" max="100" low="35" high="65" optimum="80" value={life.stats[key]} aria-label={`${label} ${life.stats[key]}`}/>
