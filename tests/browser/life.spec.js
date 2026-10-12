@@ -54,6 +54,9 @@ test('the trainer HUD keeps money and stats visible, and the party can be manage
   const hud = page.getByRole('region', { name: '트레이너 요약' });
   await expect(hud.getByText(`${state.money.toLocaleString()}P`)).toBeVisible();
   await expect(hud.locator('.hud-stat')).toHaveCount(5);
+  // On narrow screens the stats are collapsed behind the expand button (Codex UI 2차); open them first.
+  const expand = hud.getByRole('button', { name: /능력치 · 목표 보기/ });
+  if (await expand.isVisible()) await expand.click();
   await expect(hud.locator('.hud-stat[data-stat="vitality"] b')).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await hud.getByRole('button', { name: /파티 관리/ }).click();
