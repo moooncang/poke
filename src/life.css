@@ -755,3 +755,5 @@ body:has(.app-shell[data-speed="16"]) .hud-delta { animation: none; }
 .cc-difficulty[data-difficulty="easy"] { color: var(--ui-mint); } .cc-difficulty[data-difficulty="hard"] { color: var(--ui-rose); } .cc-difficulty[data-difficulty="legend"] { color: #f1cf7c; }
 .legacy-difficulty[data-difficulty="hard"] { color: var(--ui-rose); } .legacy-difficulty[data-difficulty="legend"] { color: #f1cf7c; }
 @media (max-width: 480px) { .difficulty-options { grid-template-columns: repeat(2, 1fr); } }
+/* Mobile: the fixed bottom tab bar (≤600px) must stay reachable while a decision is hidden — lift the dock above it. */
+@media (max-width:600px) { .decision-dock { bottom: calc(84px + env(safe-area-inset-bottom)); } body:has(.decision-dock) { padding-bottom: 230px; } }

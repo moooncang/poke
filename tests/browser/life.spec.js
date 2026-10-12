@@ -152,7 +152,8 @@ test('a new life can be started on legend difficulty', async ({ page }) => {
   await page.getByRole('button', { name: '이 삶 시작하기' }).click();
   await page.getByRole('button', { name: '새로운 삶' }).click();
   const form = page.getByRole('dialog', { name: '새로운 삶 시작하기' });
-  await form.getByRole('radio', { name: '레전드' }).check();
+  await form.locator('.difficulty-options label[data-difficulty="legend"]').click();
+  await expect(form.getByRole('radio', { name: '레전드' })).toBeChecked();
   await expect(form.locator('.difficulty-picker')).toHaveAttribute('data-difficulty', 'legend');
   await form.getByRole('button', { name: /게임 시작/ }).click();
   await expect(page.getByRole('dialog', { name: '출생 배정 결과' }).locator('.birth-difficulty')).toContainText('레전드');
