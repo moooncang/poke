@@ -39,3 +39,7 @@
 ## 교배 자료 추가 (2026-10-11)
 
 기존에 고정한 PokéAPI 커밋 `c80757193bd0889054e36f4209762360bdaa4b95`의 `pokemon_egg_groups.csv`, `pokemon_species.csv`에서 종 1–1025의 알그룹·성비·베이비 정보를 추출했습니다. `node scripts/build_breeding_rules.mjs`로 `src/data/breeding-rules.js`를 재생성합니다. 기존 PokéAPI 라이선스·상표 구분을 적용합니다. 교배 사건·대사·시간 단위·성별 배정 방식은 이 게임의 창작 규칙입니다.
+
+## 창작 UI 도트 아이콘 (2026-10-12)
+
+`public/assets/icons/`의 53종(16/24/32px, 159 PNG)은 Codex가 이 프로젝트용으로 직접 제작했습니다. 외부 아이콘·원작 배지·리본 그래픽을 복제하지 않았습니다. 목록과 도형 원본은 [`scripts/build_ui_icons.py`](../scripts/build_ui_icons.py)의 `ICONS`에 있습니다. `python scripts/build_ui_icons.py`로 재생성합니다(Pillow 필요, 런타임 의존성 없음). 통화/능력치/평판/상태/사건/목표/리그/직업/파티 표식 묶음을 포함합니다.

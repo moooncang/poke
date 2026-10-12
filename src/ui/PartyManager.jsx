@@ -1,11 +1,12 @@
 // Party management: line-up mode, pins, lead and moves between party and PC box.
 // All rules live in sim/party.js; this component only calls the engine functions passed in.
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Crown, Lock, Pin, PinOff, Repeat } from 'lucide-react';
+import { ArrowDown, ArrowUp, Pin, PinOff, Repeat } from 'lucide-react';
 import { PARTY_LIMIT, PARTY_MODES, partyPlan } from '../sim/party.js';
 import { xpLevel } from '../sim/battle.js';
 import { Modal } from './common.jsx';
-import { sprite } from './assets.js';
+import { PixelIcon } from './PixelIcon.jsx';
+import { sprite, POKEMON } from './assets.js';
 import { pokemonName } from './format.js';
 import { josa } from '../sim/text.js';
 
@@ -15,7 +16,9 @@ function MemberInfo({ member, life }) {
   return <span className="pm-info">
     <img className="pixel" src={sprite(member.id, member.shiny)} alt=""/>
     <span><b>{pokemonName(member.id)}</b> <small>Lv.{xpLevel(member)}</small>
-      <small className="pm-meta">{ORIGINS[member.origin] || '동료'} · 친밀도 {member.affection} · {life.age - member.joined}년</small></span>
+      <small className="pm-meta">{ORIGINS[member.origin] || '동료'} · 친밀도 {member.affection} · {life.age - member.joined}년</small>
+      <span className="pm-types">{(POKEMON[member.id]?.types || []).map(type => <span className="pm-type" key={type}>{type}</span>)}{member.ribbons?.length > 0 && <span><PixelIcon name="ribbon"/>리본 {member.ribbons.length}</span>}</span>
+      <span className="pm-affection"><PixelIcon name="stat-bond"/><meter min="0" max="100" value={member.affection} aria-label={`친밀도 ${member.affection}`}/></span></span>
   </span>;
 }
 
@@ -41,7 +44,7 @@ export function PartyManager({ life, onMode, onPin, onMove, onLead, onClose }) {
         const pinned = plan.pinned.includes(m.uid);
         return <li key={m.uid} className="pm-member" data-lead={i === 0} data-pinned={pinned} data-locked={Boolean(m.locked)}>
           <MemberInfo member={m} life={life}/>
-          <span className="pm-tags">{i === 0 && <em className="pm-tag lead"><Crown size={11}/> 선두</em>}{m.locked && <em className="pm-tag locked"><Lock size={11}/> 전설</em>}{pinned && <em className="pm-tag pinned"><Pin size={11}/> 고정</em>}</span>
+          <span className="pm-tags">{i === 0 && <em className="pm-tag lead"><PixelIcon name="crown-lead"/> 선두</em>}{m.locked && <em className="pm-tag locked"><PixelIcon name="lock"/> 전설</em>}{pinned && <em className="pm-tag pinned"><PixelIcon name="pin"/> 고정</em>}</span>
           <span className="pm-actions">
             {incoming ? <button disabled={m.locked} onClick={() => swap(m.uid)}><Repeat size={13}/> 교체</button> : <>
               {i > 0 && <button onClick={() => onLead(m.uid)}><ArrowUp size={13}/> 선두로</button>}

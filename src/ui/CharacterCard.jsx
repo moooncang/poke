@@ -1,6 +1,7 @@
 // The character card: who this person is right now — job and rank, where they live, social standing, family,
 // goal and any conditions (debt, wanted, prison). Replaces the licence header of the trainer sidebar.
 // Class names and data-* states: docs/DESIGN-HANDOFF.md part 3.
+import { PixelIcon, conditionIcon } from './PixelIcon.jsx';
 import { GENDERS } from '../engine.js';
 import { TOWNS, CAREERS } from '../data/world.js';
 import { GOALS, goalOf } from '../sim/goals.js';
@@ -27,17 +28,17 @@ export function CharacterCard({ life }) {
       </div>
     </header>
     {standing.conditions.length > 0 && <ul className="cc-conditions" aria-label="현재 상태">
-      {standing.conditions.map(c => <li key={c} className="cc-condition">{c}</li>)}
+      {standing.conditions.map(c => <li key={c} className="cc-condition"><PixelIcon name={conditionIcon(c)}/>{c}</li>)}
     </ul>}
     <dl className="cc-facts">
-      <dt>하는 일</dt><dd className="cc-job">{life.career ? <><b>{careerTitle(life)}</b> · {isOutlaw(life) ? syndicateName(life) : CAREERS[life.career].name}
+      <dt>하는 일</dt><dd className="cc-job"><PixelIcon name={`job-${life.career || 'traveler'}`}/> {life.career ? <><b>{careerTitle(life)}</b> · {isOutlaw(life) ? syndicateName(life) : CAREERS[life.career].name}
         {life.work.retired ? ' · 은퇴' : ` · ${life.work.years}년차 · 만족 ${life.work.satisfaction}`}</> : <b>자율 활동</b>}</dd>
       <dt>사는 곳</dt><dd className="cc-place">{town.region} · {town.name}{years > 0 ? ` · ${years}년째` : ' · 올해 이주'}{life.town !== life.hometown ? <small> (고향 {hometown.region} {hometown.name})</small> : <small> (고향)</small>}</dd>
-      <dt>세상의 평가</dt><dd className="cc-standing"><span className="cc-reputation" data-value={life.reputation}>{standing.reputation} <small>명성 {life.reputation}</small></span>
-        {standing.infamy && <span className="cc-infamy" data-value={infamyOf(life)}> · {standing.infamy} <small>악명 {infamyOf(life)}</small></span>}</dd>
-      <dt>배지 · 타이틀</dt><dd>배지 {badgeCount(life)} · 챔피언 {championships(life)}</dd>
+      <dt>세상의 평가</dt><dd className="cc-standing"><span className="cc-reputation" data-value={life.reputation}><PixelIcon name="reputation"/>{standing.reputation} <small>명성 {life.reputation}</small><meter min="0" max="100" value={life.reputation} aria-label={`명성 ${life.reputation}`}/></span>
+        {standing.infamy && <span className="cc-infamy" data-value={infamyOf(life)}><PixelIcon name="infamy"/>{standing.infamy} <small>악명 {infamyOf(life)}</small><meter min="0" max="100" value={infamyOf(life)} aria-label={`악명 ${infamyOf(life)}`}/></span>}</dd>
+      <dt>배지 · 타이틀</dt><dd><PixelIcon name="league-card"/> 배지 {badgeCount(life)} · 챔피언 {championships(life)}</dd>
       <dt>가족</dt><dd>{RELATIONSHIP[rel.status]}{rel.status !== 'single' ? ` · ${rel.name}` : ''}{rel.children ? ` · 자녀 ${rel.children}` : ''}</dd>
-      <dt>삶의 목표</dt><dd>{GOALS[goalOf(life)].name}</dd>
+      <dt>삶의 목표</dt><dd><PixelIcon name={`goal-${goalOf(life)}`}/> {GOALS[goalOf(life)].name}</dd>
       <dt>가족 형편</dt><dd>{life.family} · {life.background.wealth}</dd>
     </dl>
   </section>;

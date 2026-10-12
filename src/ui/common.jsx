@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { EFFECT_LABELS } from '../sim/labels.js';
+import { PixelIcon } from './PixelIcon.jsx';
 import { WORLD_KEYS } from '../sim/world.js';
 
 export function PokeBall({ className = '' }) {
@@ -41,9 +42,9 @@ export function Modal({ title, onClose, children, className = '', labelledBy }) 
 
 export function EffectChips({ effects, world }) {
   const chips = [
-    ...Object.entries(effects || {}).filter(([, v]) => v).map(([k, v]) => [k, `${EFFECT_LABELS[k]} ${v > 0 ? '+' : ''}${v}${k === 'money' ? 'P' : ''}`, v < 0]),
+    ...Object.entries(effects || {}).filter(([, v]) => v).map(([k, v]) => [k, `${EFFECT_LABELS[k]} ${v > 0 ? '+' : ''}${v}${k === 'money' ? 'P' : ''}`, ['infamy', 'debt'].includes(k) ? v > 0 : v < 0]),
     ...Object.entries(world || {}).filter(([, v]) => v).map(([k, v]) => [`world-${k}`, `지방 ${WORLD_KEYS[k]} ${v > 0 ? '+' : ''}${v}`, v < 0]),
   ];
   if (!chips.length) return null;
-  return <div className="effect-chips">{chips.map(([key, label, negative]) => <span key={key} className={`${negative ? 'negative' : ''} ${key.startsWith('world') ? 'world' : ''}`}>{label}</span>)}</div>;
+  return <div className="effect-chips">{chips.map(([key, label, negative]) => <span key={key} className={`${negative ? 'negative' : ''} ${key.startsWith('world') ? 'world' : ''}`}><PixelIcon name={key.startsWith('world-') ? 'event-news' : ['joy', 'vitality', 'courage', 'wisdom', 'bond'].includes(key) ? `stat-${key}` : key}/>{label}</span>)}</div>;
 }
