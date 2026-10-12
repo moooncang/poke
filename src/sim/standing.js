@@ -52,7 +52,11 @@ export function tickStanding(s) {
     s.infamy = clamp(s.infamy - 4, 0, 100);
     s.stats.joy = clamp(s.stats.joy - 3, 0, 100);
     s.stats.vitality = clamp(s.stats.vitality - 1, 0, 100);
-    if (s.prison === 0) records.push({ kind: 'milestone', title: '출소', effects: { joy: 6 }, body: '형기를 마치고 교도소 문을 나섰다. 파트너들이 센터에서 기다리고 있었다. 세상은 조금 달라져 있었고, 사람들의 눈길도 그랬다.' });
+    if (s.prison === 0) {
+      // Time served clears the warrant; the name stays tarnished.
+      s.infamy = Math.min(s.infamy, WANTED_INFAMY - 15);
+      records.push({ kind: 'milestone', title: '출소', effects: { joy: 6 }, body: '형기를 마치고 교도소 문을 나섰다. 파트너들이 센터에서 기다리고 있었다. 세상은 조금 달라져 있었고, 사람들의 눈길도 그랬다.' });
+    }
     return records;
   }
   if (s.debt > 0) {

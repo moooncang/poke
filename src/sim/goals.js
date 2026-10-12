@@ -10,6 +10,7 @@ export const GOALS = {
   career: { name: '일의 정점', detail: '직업·경력·사업 기회 사건이 더 자주 열린다.', weights: { career: 1.5, work: 1.8, opportunity: 1.5 } },
   coordinator: { name: '콘테스트 스타', detail: '콘테스트·쇼케이스가 자주 열리고 캐릭터가 무대를 고른다. 호연·신오·칼로스에 콘테스트 회장이 있다.', weights: { contest: 4, pokemon: 1.3 } },
   frontier: { name: '배틀 시설 정복', detail: '배틀프런티어와 지방 배틀 시설 도전이 자주 열린다. 파티 육성 +15%.', weights: { frontier: 4, league: 1.5 }, training: 1.15 },
+  outlaw: { name: '뒷골목의 제왕', detail: '어두운 제안과 조직의 사건이 자주 열리고, 캐릭터가 그 길을 택한다. 악명·수배·체포의 위험을 감수한다.', weights: { dark: 4, misfortune: 1.2 } },
 };
 
 export const goalOf = s => Object.hasOwn(GOALS, s.goal) ? s.goal : 'free';
@@ -24,6 +25,10 @@ export function goalFit(s, choice) {
     if (/^league-[a-z]+-licensed$/.test(choice.flag || '')) return 4;
     return ['league', 'gym'].includes(battle) ? 3 : 1;
   }
+  // The dark road is a deliberate choice: only the outlaw goal walks into it on its own.
+  const dark = choice.career === 'syndicate' || (choice.effects?.infamy || 0) > 0;
+  if (goal === 'outlaw') return choice.career === 'syndicate' ? 5 : dark ? 2.5 : choice.leaveCareer ? 0.3 : 1;
+  if (dark) return choice.career === 'syndicate' ? 0.08 : 0.4;
   if (goal === 'coordinator') return choice.contest ? 3 : choice.affection ? 1.4 : 1;
   if (goal === 'frontier') return choice.battle?.kind === 'facility' ? 3 : choice.battle ? 1.5 : 1;
   if (goal === 'collector') return choice.captureJoin || choice.join || choice.observe || choice.battle?.capture ? 2.2 : 1;

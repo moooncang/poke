@@ -27,7 +27,7 @@ PAGES_BASE_PATH=/poke/ npm run build
 | `src/sim/standing.js` | 사회적 위치: 명성·악명 등급, 직업 등급명(`careerTitle`), 빚·이자·파산, 수배·체포·복역, 조직(`syndicate`) 직업. 연간 처리 `tickStanding` |
 | `src/data/misfortune.js` · `villain-route.js` | 불운 팩, 어두운 길 팩(유혹·조직 생활·탈출·감옥·악명의 그림자) |
 | `src/data/town-stories.js` · `type-companions.js` · `villain-arcs.js` · `hobbies.js` · `life-chapters.js` · `vignettes-extra.js` | 이벤트 팩: 마을 120, 타입·종 67, 악당 조직 45, 취미·축제 75, 삶의 장 75, 일상 220. 검증은 `node scripts/check-pack.mjs <파일> <EXPORT> [vignettes]` |
-| `src/sim/goals.js` | 삶의 목표(`GOALS`)와 사건 분류 가중치·자동 결정·육성 보정 |
+| `src/sim/goals.js` | 삶의 목표(`GOALS`, 8종)와 사건 분류 가중치·자동 결정·육성 보정. 조직 가입·악명 선택은 `outlaw` 목표가 아니면 자동 결정이 거의 고르지 않음 |
 | `src/sim/legacy.js` | 다회차 기록(`pokelife.legacy.v1`): 엔딩 카드, 메달, 트레이너 카드, 누적 도감, 다음 세대 알(`heritageFor`). 모두 순수 함수 |
 | `src/sim/talent.js` · `src/data/talent-events.js` | 5단계 재능·20개 사건·판정 보정. 저장 v3. [규칙](docs/CHANGES-talents.md) |
 | `src/sim/random.js` | 결정적 난수(`random`, `pick`, `chance`, `between`, `weighted`) |

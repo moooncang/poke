@@ -14,6 +14,7 @@ import { VILLAIN_ARCS } from '../data/villain-arcs.js';
 import { HOBBIES } from '../data/hobbies.js';
 import { LIFE_CHAPTERS } from '../data/life-chapters.js';
 import { MISFORTUNE } from '../data/misfortune.js';
+import { VILLAIN_ROUTE } from '../data/villain-route.js';
 // Picks each year's main event. Instead of a fixed age ladder, every pool is a "storylet" with conditions,
 // and categories are weighted by the state of the world, the people around the player and their personality.
 import { STORYLETS } from '../data/storylets.js';
@@ -135,7 +136,7 @@ const yearlyPlan = {
     ] }; },
 };
 
-export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...MISFORTUNE, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, PROMOTION_REVIEW, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
+export const ALL_STORYLETS = [...TALENT_EVENTS, ...ADVENTURE_SAGAS, ...BREEDING_EVENTS, ...CAREER_SAGAS, ...LEAGUE_SAGAS, ...LEAGUE_TRAVEL, ...LEGACY_EVENTS, ...CONTEST_EVENTS, ...FRONTIER_EVENTS, ...TOWN_STORIES, ...TYPE_COMPANIONS, ...VILLAIN_ARCS, ...HOBBIES, ...LIFE_CHAPTERS, ...MISFORTUNE, ...VILLAIN_ROUTE, ...STORYLETS, ...MORE_LIFE, ...MORE_WORK, ...MORE_PLACES, ...careerReviews, PROMOTION_REVIEW, ...LIFE_STORYLETS, ...challengeStorylets, academyRetry, ...routeStorylets, ...regionalStorylets,
   romance, legendEncounter, shinyEncounter, npcEncounter, yearlyPlan];
 
 // How strongly each kind of event pulls this year. Only categories with an available event compete.
@@ -144,7 +145,7 @@ const CATEGORY_WEIGHT = {
   contest: s => 0.7 + (s.flags['contest-registered'] ? 0.6 : 0),
   frontier: () => 0.9,
   prison: () => 5,
-  dark: s => (s.career === 'syndicate' ? 3.5 : 0.6) + (s.infamy || 0) / 60 + (hasCondition(s, 'syndicate') ? 0.8 : 0),
+  dark: s => (s.career === 'syndicate' ? 3.5 : 2.5) + (s.infamy || 0) / 40 + (hasCondition(s, 'syndicate') ? 0.8 : 0),
   misfortune: s => 3 + (s.money <= 0 ? 0.8 : 0) + ((s.debt || 0) > 0 ? 0.8 : 0) + (s.stats.vitality < 40 ? 0.8 : 0) + (regionState(s).safety < 40 ? 0.8 : 0),
   childhood: () => 3,
   career: () => 3,

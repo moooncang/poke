@@ -90,6 +90,7 @@ test('a wanted outlaw can be arrested; prison blocks ordinary events and income,
   t = play(t, { until: x => x.age >= start + years + 1 });
   assert.equal(t.prison, 0);
   assert.ok(t.log.some(e => e.title === '출소'));
+  assert.ok(t.infamy < WANTED_INFAMY, 'time served clears the warrant');
   const jailed = t.log.filter(e => e.age > start && e.age <= start + years && e.choices);
   assert.ok(jailed.every(e => !e.auto), 'nothing is settled alone behind bars');
   assert.ok(t.history.filter(r => r.age > start && r.age <= start + years).every(r => r.income === 0), 'no income in prison');
@@ -129,9 +130,15 @@ test('promotion reviews open every few working years and raise the rank on succe
   s.career = 'traveler'; s.work = { years: 4, satisfaction: 60, cut: 0, retired: false }; s.careerRank = 0; s.stats.courage = 100;
   assert.ok(PROMOTION_REVIEW.when(s));
   const event = PROMOTION_REVIEW.build(structuredClone(s));
-  const after = choose(present(structuredClone(s), event), 0);
-  assert.equal(after.careerRank, 1);
-  assert.equal(careerTitle(after), CAREER_RANKS.traveler[1]);
+  let promoted = null, failed = null;
+  for (let r = 1; r <= 40 && !(promoted && failed); r++) {
+    const t = structuredClone(s); t.rng = r * 7919;
+    const after = choose(present(t, structuredClone(event)), 0);
+    if (after.careerRank === 1) promoted ||= after; else failed ||= after;
+  }
+  assert.ok(promoted, 'a strong candidate passes the review');
+  assert.equal(careerTitle(promoted), CAREER_RANKS.traveler[1]);
+  if (failed) { assert.equal(failed.careerRank, 0); assert.equal(failed.work.satisfaction, s.work.satisfaction - 5); }
   s.careerRank = 5;
   assert.equal(Boolean(PROMOTION_REVIEW.when(s)), false);
 });

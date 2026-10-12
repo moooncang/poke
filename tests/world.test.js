@@ -46,8 +46,9 @@ test('conditions in the current region unlock their own events', () => {
     }
     return hits;
   };
+  // The dark-road and misfortune packs also react to the condition, so the share of these two events is smaller now.
   assert.equal(count(false), 0);
-  assert.ok(count(true) > 10);
+  assert.ok(count(true) > 5, `${count(true)} condition events`);
 });
 
 test("a choice's world effects shift the current region", () => {
