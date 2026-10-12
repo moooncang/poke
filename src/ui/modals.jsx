@@ -1,3 +1,4 @@
+import { PixelIcon } from './PixelIcon.jsx';
 import { talentLabel, talentBonus, TALENT_FIELDS } from '../sim/talent.js';
 import { ArrowRight, BookOpen, Download, Heart, Lock, RotateCcw, Sprout } from 'lucide-react';
 import { GENDERS, STAT_LABELS, successChance, townOf, toneOf } from '../engine.js';
@@ -50,18 +51,24 @@ function ChoiceDetail({ life, choice }) {
   const lasting = choice.follow?.length || choice.after || choice.challenge?.failure?.follow;
   return <>
     {choice.challenge ? <div className="chance-preview">
-      <strong>성공 확률 {successChance(life, choice)}% · {STAT_LABELS[choice.challenge.stat]} {life.stats[choice.challenge.stat]}</strong>
+      <strong className="chance-heading"><PixelIcon name={`stat-${choice.challenge.stat}`}/>성공 확률 {successChance(life, choice)}% · {STAT_LABELS[choice.challenge.stat]} {life.stats[choice.challenge.stat]}</strong>
+      <meter className="chance-meter" min="0" max="100" value={successChance(life, choice)} aria-label={`성공 확률 ${successChance(life, choice)}%`}/>
       {choice.challenge.talent && <small>재능 적용 분야: {TALENT_FIELDS[choice.challenge.talent].name}</small>}
       {talentBonus(life, choice)>0 && <small>재능·숙련 보정 +{talentBonus(life, choice)}%p 반영 · 최종 상한 95%</small>}
       <small>성공: {formatText(choice.outcome, life)}</small><EffectChips effects={choice.effects} world={choice.world}/>
-      <small>실패: {formatText(choice.challenge.failure.outcome, life)}</small><EffectChips effects={choice.challenge.failure.effects} world={choice.challenge.failure.world}/>
+      <small className="failure-preview">실패: {formatText(choice.challenge.failure.outcome, life)}</small><EffectChips effects={choice.challenge.failure.effects} world={choice.challenge.failure.world}/>
       {choice.cost > 0 && <small>성공 여부와 관계없이 {choice.cost}P 사용</small>}
     </div> : <>
       <small className="certain-result">확정 효과{choice.battle || choice.simulation ? ' · 배틀·포획 결과는 별도 판정' : ''}</small>
       <EffectChips effects={choice.effects} world={choice.world}/>
     </>}
+    {(choice.loan || choice.prison || choice.losePokemon) && <span className="choice-costs">
+      {choice.loan > 0 && <span><PixelIcon name="debt"/>대출 {choice.loan.toLocaleString()}P</span>}
+      {choice.prison > 0 && <span><PixelIcon name="status-prison"/>복역 {choice.prison}년</span>}
+      {choice.losePokemon && <span><PixelIcon name="ball-empty"/>동료 상실</span>}
+    </span>}
     <span className="choice-tags">
-      <em>{DISPOSITIONS[toneOf(choice)]}</em>
+      <em data-tone={toneOf(choice)}>{DISPOSITIONS[toneOf(choice)]}</em>
       {lasting && <em className="lasting">여파 있음</em>}
       {choice.join && <em>파티 합류{life.party.length >= 6 ? ' · 자동 재편성' : ''}</em>}
     </span>
@@ -70,7 +77,7 @@ function ChoiceDetail({ life, choice }) {
 
 export function DecisionModal({ life, entry, onChoose, onHide }) {
   return <Modal key={entry.id} title="행동 선택" onClose={onHide} className="decision-modal">
-    <div className="decision-banner"><span>DECISION REQUIRED</span><b>{life.age}세 · {townOf(life).name}</b></div>
+    <div className="decision-banner"><span><PixelIcon name="event-choice" size={24}/> 행동 선택</span><b>{life.age}세 · {townOf(life).name}</b></div>
     <div className="decision-body">
       <button className="secondary-button decision-hide" onClick={onHide}>잠깐 숨기고 화면 보기</button>
       <span className="eyebrow">{entry.echo ? '지난 선택의 여파' : '새로운 사건'} · 선택 후 진행</span>
@@ -78,7 +85,7 @@ export function DecisionModal({ life, entry, onChoose, onHide }) {
       <p>{formatText(entry.body, life, entry)}</p>
       <div className="decision-options">{entry.choices.map((c, i) =>
         <button key={`${entry.id}-${i}`} disabled={(c.cost || 0) > life.money} onClick={() => onChoose(i)}>
-          <span className="decision-number">{String(i + 1).padStart(2, '0')}</span>
+          <span className="decision-number" title={`단축키 ${i + 1}`}>{i + 1}</span>
           <span><b>{formatText(c.label, life)}</b><small>{(c.cost || 0) > life.money ? '소지금 부족' : formatText(c.description, life)}</small><ChoiceDetail life={life} choice={c}/></span>
           <ArrowRight size={17}/>
         </button>)}</div>

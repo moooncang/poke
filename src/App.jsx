@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { PixelIcon } from './ui/PixelIcon.jsx';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, BarChart3, Bookmark, BookOpen, ChevronDown, ChevronRight, Feather, Map, Pause, Play, Plus, Settings2, Sparkles, Sprout, Trophy, Volume2, VolumeX, X } from 'lucide-react';
 import { SEASONS } from './data/world.js';
 import { SAVE_KEY, createLife, advance, choose, acknowledge, toggleMemory, autoChoice, parseSave, townOf, stageOf, setPartyMode, togglePin, movePokemon, setLead, setGoal, renamePokemon, fastForward } from './engine.js';
@@ -201,7 +202,7 @@ export default function App() {
   const status = life.ended ? '생애 종료' : life.pending ? '선택을 기다리는 중' : running ? '자동 진행 중' : '일시 정지';
 
   return <>
-    <div className="app-shell" inert={Boolean(overlay)}>
+    <div className="app-shell" data-speed={prefs.speed} inert={Boolean(overlay)}>
       <header className="site-header">
         <a href="#" className="brand" onClick={e => { e.preventDefault(); selectTab('story'); }} aria-label="Pokélife 나의 플레이 기록">
           <span className="brand-icon"><PokeBall/></span><span>pokélife<span className="brand-dot">.</span></span><small>POKÉMON LIFE SIMULATOR</small>
@@ -220,8 +221,8 @@ export default function App() {
         </div>
         {notice && <div className="notice" role="status"><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><X size={16}/></button></div>}
         <nav className="main-nav" aria-label="주 메뉴">
-          {NAV.map(({ id, label, icon: Icon }) => <button key={id} className={tab === id ? 'active' : ''} onClick={() => selectTab(id)} aria-current={tab === id ? 'page' : undefined}>
-            <Icon size={17}/><span>{label}</span>{id === 'pokemon' && <small>{life.seen.length}</small>}{id === 'memories' && <small>{life.memories.length}</small>}
+          {NAV.map(({ id, label }) => <button key={id} className={tab === id ? 'active' : ''} aria-label={label} onClick={() => selectTab(id)} aria-current={tab === id ? 'page' : undefined}>
+            <PixelIcon name={({ story: 'league-card', pokemon: 'ball', map: 'goal-free', report: 'event-news', legacy: 'hall-of-fame', memories: 'event-echo' })[id]} size={24}/><span className="nav-full-label">{label}</span><span className="nav-short-label">{({story: '게임', pokemon: '도감', memories: '기록', map: '여행', report: '리포트', legacy: '전당'})[id]}</span>{id === 'pokemon' && <small>{life.seen.length}</small>}{id === 'memories' && <small>{life.memories.length}</small>}
           </button>)}
           <span className="nav-life-id">LIFE № {String(life.seed).replace(/[^0-9a-z]/gi, '').slice(-6).toUpperCase() || '000001'}</span>
         </nav>
@@ -246,7 +247,7 @@ export default function App() {
             <LifeScene life={life} running={running && !overlay}/>
             <div className="journal-title"><span><Feather size={15}/> 사건 기록 <small>{life.log.length}개 사건</small></span>
               <label><select aria-label="이야기 필터" value={filter} onChange={e => { setFilter(e.target.value); setShown(8); }}><option value="all">전체 사건</option><option value="special">주요 사건</option></select><ChevronDown size={12}/></label></div>
-            <div className="timeline" aria-live="polite" aria-relevant="additions">{logs.slice(0, shown).map(entry => <StoryCard key={entry.id} entry={entry} life={life} onMemory={keep} onReplay={replayEvent}/>)}</div>
+            <div className="timeline" aria-live="polite" aria-relevant="additions">{logs.slice(0, shown).map((entry, index) => <Fragment key={entry.id}>{(index === 0 || logs[index - 1].age !== entry.age) && <div className="story-year-divider">{entry.age}세의 기록</div>}<StoryCard entry={entry} life={life} onMemory={keep} onReplay={replayEvent}/></Fragment>)}</div>
             {logs.length > shown && <button className="load-more" onClick={() => setShown(shown + 12)}>이전 기록 더 보기 <ChevronDown size={15}/></button>}
             {life.ended && <button className="ending-banner" onClick={() => openModal('ending')}><Sparkles size={25}/><span><b>한 사람의 삶, 한 권의 플레이 기록</b><small>배틀·탐험·선택 기록을 확인합니다.</small></span><ArrowUpRight size={22}/></button>}
           </>}
